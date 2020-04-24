@@ -1,0 +1,15 @@
+.col-container {
+    position: absolute;
+    width: 20%;
+    height: 90%;
+    border: 1px solid black;
+
+    &--today{
+        background-color: lightgray; 
+    }
+}
+
+.event-container {
+    position: absolute;
+    border: 1px solid black;
+}

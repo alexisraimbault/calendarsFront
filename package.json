@@ -1,0 +1,40 @@
+{
+  "name": "calendasFront",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production",
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "date-fns": "^2.12.0",
+    "moment": "^2.24.0",
+    "node-sass": "^4.13.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.12.20",
+    "react-router-dom": "^5.1.2",
+    "react-sidebar": "^3.0.2",
+    "sass": "^1.26.3",
+    "sass-loader": "^8.0.2"
+  },
+  "devDependencies": {
+    "@neutrinojs/airbnb": "^9.1.0",
+    "@neutrinojs/jest": "^9.1.0",
+    "@neutrinojs/react": "^9.1.0",
+    "eslint": "^6.8.0",
+    "jest": "^25.3.0",
+    "neutrino": "^9.1.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}

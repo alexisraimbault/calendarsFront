@@ -1,0 +1,291 @@
+import React, {
+  Component
+} from 'react';
+import CalendarHeader from './calendarHeader';
+import CalendarGridColumn from './calendarGridColumn';
+import * as moment from 'moment';
+import { startOfWeek, addDays, isToday, format, getDayOfYear } from 'date-fns';
+
+import Sidebar from '../../components/sideBar'
+import _ from 'lodash';
+import './styles.scss'
+
+import {
+  useParams
+} from "react-router-dom";
+
+class Calendar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.events = [
+      {
+        id: 1,
+        name: "test event 1",
+        description: "test event description",
+        date: addDays(new Date(), 1),
+        time_from: "10:30",
+        time_to: "14:30",
+        recipients: [
+          {
+            id: 1011,
+            firstname: "Jean",
+            lastname: "Michel",
+          },
+          {
+            id: 1012,
+            firstname: "Sophie",
+            lastname: "Pic",
+          },
+          {
+            id: 1013,
+            firstname: "Alain",
+            lastname: "Bernard",
+          },
+        ]
+      },
+      {
+        id: 2,
+        name: "test event 2",
+        description: "test event description",
+        date: new Date(),
+        time_from: "10:30",
+        time_to: "12:30",
+        recipients: [
+          {
+            id: 1011,
+            firstname: "Jean",
+            lastname: "Michel",
+          },
+          {
+            id: 1014,
+            firstname: "Alexis",
+            lastname: "Raimbault",
+          },
+          {
+            id: 1015,
+            firstname: "Clara",
+            lastname: "Blanc",
+          },
+        ]
+      },
+      {
+        id: 3,
+        name: "test event 3",
+        description: "test event description",
+        date: addDays(new Date(), 4),
+        time_from: "10:30",
+        time_to: "15:30",
+        recipients: [
+          {
+            id: 1011,
+            firstname: "Jean",
+            lastname: "Michel",
+          },
+          {
+            id: 1012,
+            firstname: "Sophie",
+            lastname: "Pic",
+          },
+          {
+            id: 1013,
+            firstname: "Alain",
+            lastname: "Bernard",
+          },
+        ]
+      },
+      {
+        id: 4,
+        name: "test event 4",
+        description: "test event description",
+        date: new Date(),
+        time_from: "10:30",
+        time_to: "12:30",
+        recipients: [
+          {
+            id: 1014,
+            firstname: "Alexis",
+            lastname: "Raimbault",
+          },
+          {
+            id: 1015,
+            firstname: "Clara",
+            lastname: "Blanc",
+          },
+        ]
+      },
+      {
+        id: 5,
+        name: "test event 5",
+        description: "test event description",
+        date: addDays(new Date(), 2),
+        time_from: "10:30",
+        time_to: "16:30",
+        recipients: [
+          {
+            id: 1016,
+            firstname: "Tania",
+            lastname: "Sollogoub",
+          },
+          {
+            id: 1017,
+            firstname: "Thierry",
+            lastname: "Henry",
+          },
+        ]
+      },
+      {
+        id: 6,
+        name: "test event 6",
+        description: "test event description",
+        date: addDays(new Date(), 1),
+        time_from: "10:30",
+        time_to: "12:30",
+        recipients: [
+          {
+            id: 1013,
+            firstname: "Alain",
+            lastname: "Bernard",
+          },
+        ]
+      }
+    ];
+
+    this.state = {
+      weekStart: null,
+      year: _.parseInt(props.match.params.year) || moment().year(),
+      week: _.parseInt(props.match.params.week) || moment().week(),
+      sidebarOpen: false,
+      collabsToDisplay: [],
+    }
+  }
+
+  componentDidMount() {
+    const { week, year } = this.props.match.params;
+
+    // this.props.history.push(`/calendar/100/2003`)
+    
+    if(_.isNil(week) || _.isNil(year)){
+      this.setState({weekStart: startOfWeek(new Date(), {weekStartsOn: 1})});
+    }else{
+      const weekStart = this.getDayFromWeekAndYear(week, year);
+      this.setState({weekStart: weekStart});
+    }
+
+    //TODO fetch data
+    this.setState({collabsToDisplay: _.map(this.getRecipients(this.events), 'id')})
+  }
+
+  onSetSidebarOpen(open) {
+    this.setState({ sidebarOpen: open });
+  }
+
+  navigateToNextWeek = () => {
+    const { weekStart } = this.state;
+    const nextWeekStart = moment(weekStart).add(1, 'w');
+    const newWeek = moment(nextWeekStart).week();
+    const newYear = moment(nextWeekStart).year();
+
+    this.props.history.push(`/calendar/${newWeek}/${newYear}`);
+
+    this.setState({
+      weekStart: nextWeekStart,
+      year: newYear,
+      week: newWeek,
+    });
+  }
+
+  navigateToPreviousWeek = () => {
+    const { weekStart } = this.state;
+    const nextWeekStart = moment(weekStart).add(-1, 'w');
+    const newWeek = moment(nextWeekStart).week();
+    const newYear = moment(nextWeekStart).year();
+
+    this.props.history.push(`/calendar/${newWeek}/${newYear}`);
+
+    this.setState({
+      weekStart: nextWeekStart,
+      year: newYear,
+      week: newWeek,
+    });
+  }
+
+
+  getDayFromWeekAndYear = (week, year) => {
+    return moment().day("Monday").year(year).week(week).toDate();
+  };
+
+  getRecipients = (events) => {
+    let recipients = [];
+
+    _.each(events, event => {
+      recipients = _.uniqBy(_.concat(recipients, event.recipients), 'id');
+    });
+
+    return recipients;
+  }
+
+  toggleRecipient = (id, isChecked) => {
+    if(isChecked) {
+      this.setState(prevState => ({collabsToDisplay: _.uniq(_.concat(prevState.collabsToDisplay, id))}))
+    }else{
+      this.setState(prevState => ({collabsToDisplay: _.difference(prevState.collabsToDisplay, [id])}))
+    }
+  }
+
+  render() {
+    const { weekStart } = this.state;
+
+    const filteredEvents = _.filter(this.events, event => !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.recipients, 'id'))));
+
+    const groupedEvents = _.groupBy(filteredEvents, event => getDayOfYear(event.date));
+
+    let daysOfWeek = [];
+    
+    _.forEach(_.times(5), item => {
+      const day = moment(weekStart).add(item, 'd')._d;
+      daysOfWeek.push(
+        {
+          day: day,
+          isToday: isToday(day)
+        }
+      );
+    });
+
+    // console.log("ALEXIS", groupedEvents, this.events, daysOfWeek);
+    
+    return (
+      !_.isNil(weekStart) && 
+      <div>
+        <Sidebar recipients={this.getRecipients(this.events)} toggleRecipient={this.toggleRecipient}/>
+        <div className="week-navigation-container">
+          <div className="week-navigation-holder">
+            <div className="calendar-navigation-container" onClick={this.navigateToPreviousWeek}>
+              <svg viewBox="0 0 512 512" width="20" height="20">
+                <path d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12
+                  C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084
+                  c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864
+                  l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"/>
+              </svg>
+            </div>
+            <div>{`${moment(weekStart).format("MMM D")} - ${moment(weekStart).add(4, 'd').format("MMM D")}`}</div>
+            <div className="calendar-navigation-container" onClick={this.navigateToNextWeek}>
+              <svg viewBox="0 0 512 512" width="20" height="20">
+                <path d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12
+                  c-10.492,10.504-10.492,27.576,0,38.064L293.398,245.9l-184.06,184.06c-5.064,5.068-7.86,11.824-7.86,19.028
+                  c0,7.212,2.796,13.968,7.86,19.04l16.124,16.116c5.068,5.068,11.824,7.86,19.032,7.86s13.968-2.792,19.032-7.86L382.678,265
+                  c5.076-5.084,7.864-11.872,7.848-19.088C390.542,238.668,387.754,231.884,382.678,226.804z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div className="calendar-center-container">
+          <CalendarHeader daysOfWeek={daysOfWeek} />
+          {_.map(daysOfWeek, (dayObject, index) => <CalendarGridColumn day={dayObject.day} index={index} events={_.get(groupedEvents, `[${getDayOfYear(dayObject.day)}]`, [])} />)}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Calendar;

@@ -1,0 +1,31 @@
+
+.week-navigation-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    
+    .week-navigation-holder{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 18px;
+        border-radius: 12px;
+        background-color: lightblue;
+        width: 180px;
+
+        .calendar-navigation-container{
+            cursor: pointer;
+            height: 22px;
+            display: flex;
+            align-items: flex-end;
+        }
+    }
+}
+
+.calendar-center-container{
+    position: absolute;
+    width: 70%;
+    left: 15%;
+    height: 90%;
+}

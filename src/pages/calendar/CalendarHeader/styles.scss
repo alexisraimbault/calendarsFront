@@ -1,0 +1,11 @@
+.calendar-header-container {
+    display: flex;
+    width: 100%;
+
+    .calendar-day-title {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+}
