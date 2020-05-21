@@ -1,0 +1,10 @@
+@import "src/utils/variables";
+
+.action-button-container{
+    cursor: pointer;
+    font-family: $font;
+    padding: 8px 20px;
+    background-color: $light-blue;
+    font-weight: 600;
+    border-radius: 12px;
+}

@@ -1,11 +1,25 @@
+@import "src/utils/variables";
+
 .calendar-header-container {
     display: flex;
     width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
 
-    .calendar-day-title {
-        padding: 20px;
+    .calendar-day-title-container {
         flex: 1;
         display: flex;
         justify-content: center;
+        align-items: center;
+        font-family: $font;
+
+        .calendar-day-title {
+            padding: 8px 16px;
+            border-radius: 12px;
+
+            &--today{
+                background-color: $rose;
+            }
+        }
     }
 }

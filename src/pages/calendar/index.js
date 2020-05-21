@@ -3,12 +3,18 @@ import React, {
 } from 'react';
 import CalendarHeader from './calendarHeader';
 import CalendarGridColumn from './calendarGridColumn';
+import NewEventPopup from './NewEventPopup';
 import * as moment from 'moment';
 import { startOfWeek, addDays, isToday, format, getDayOfYear } from 'date-fns';
 
-import Sidebar from '../../components/sideBar'
+import ActionButton from '../../components/ActionButton';
+import Sidebar from '../../components/sideBar';
 import _ from 'lodash';
 import './styles.scss'
+import classNames from 'classnames';
+import { connect } from 'react-redux'
+import { fetchEvents } from '../../redux/actions/eventActions'
+import { bindActionCreators } from 'redux';
 
 import {
   useParams
@@ -18,145 +24,15 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
 
-    this.events = [
-      {
-        id: 1,
-        name: "test event 1",
-        description: "test event description",
-        date: addDays(new Date(), 1),
-        time_from: "10:30",
-        time_to: "14:30",
-        recipients: [
-          {
-            id: 1011,
-            firstname: "Jean",
-            lastname: "Michel",
-          },
-          {
-            id: 1012,
-            firstname: "Sophie",
-            lastname: "Pic",
-          },
-          {
-            id: 1013,
-            firstname: "Alain",
-            lastname: "Bernard",
-          },
-        ]
-      },
-      {
-        id: 2,
-        name: "test event 2",
-        description: "test event description",
-        date: new Date(),
-        time_from: "10:30",
-        time_to: "12:30",
-        recipients: [
-          {
-            id: 1011,
-            firstname: "Jean",
-            lastname: "Michel",
-          },
-          {
-            id: 1014,
-            firstname: "Alexis",
-            lastname: "Raimbault",
-          },
-          {
-            id: 1015,
-            firstname: "Clara",
-            lastname: "Blanc",
-          },
-        ]
-      },
-      {
-        id: 3,
-        name: "test event 3",
-        description: "test event description",
-        date: addDays(new Date(), 4),
-        time_from: "10:30",
-        time_to: "15:30",
-        recipients: [
-          {
-            id: 1011,
-            firstname: "Jean",
-            lastname: "Michel",
-          },
-          {
-            id: 1012,
-            firstname: "Sophie",
-            lastname: "Pic",
-          },
-          {
-            id: 1013,
-            firstname: "Alain",
-            lastname: "Bernard",
-          },
-        ]
-      },
-      {
-        id: 4,
-        name: "test event 4",
-        description: "test event description",
-        date: new Date(),
-        time_from: "10:30",
-        time_to: "12:30",
-        recipients: [
-          {
-            id: 1014,
-            firstname: "Alexis",
-            lastname: "Raimbault",
-          },
-          {
-            id: 1015,
-            firstname: "Clara",
-            lastname: "Blanc",
-          },
-        ]
-      },
-      {
-        id: 5,
-        name: "test event 5",
-        description: "test event description",
-        date: addDays(new Date(), 2),
-        time_from: "10:30",
-        time_to: "16:30",
-        recipients: [
-          {
-            id: 1016,
-            firstname: "Tania",
-            lastname: "Sollogoub",
-          },
-          {
-            id: 1017,
-            firstname: "Thierry",
-            lastname: "Henry",
-          },
-        ]
-      },
-      {
-        id: 6,
-        name: "test event 6",
-        description: "test event description",
-        date: addDays(new Date(), 1),
-        time_from: "10:30",
-        time_to: "12:30",
-        recipients: [
-          {
-            id: 1013,
-            firstname: "Alain",
-            lastname: "Bernard",
-          },
-        ]
-      }
-    ];
-
     this.state = {
       weekStart: null,
       year: _.parseInt(props.match.params.year) || moment().year(),
       week: _.parseInt(props.match.params.week) || moment().week(),
       sidebarOpen: false,
       collabsToDisplay: [],
+      isPopupDisplayed: false,
+      popupContent: null,
+      fetchDate: '',
     }
   }
 
@@ -164,20 +40,52 @@ class Calendar extends Component {
     const { week, year } = this.props.match.params;
 
     // this.props.history.push(`/calendar/100/2003`)
-    
     if(_.isNil(week) || _.isNil(year)){
-      this.setState({weekStart: startOfWeek(new Date(), {weekStartsOn: 1})});
+      this.setState({weekStart: startOfWeek(new Date(), {weekStartsOn: 1})}, () => {
+        const month = moment(this.state.weekStart).month() + 1;
+        const year = moment(this.state.weekStart).year();
+        const monthFormatted = month < 10 ? `0${month}` : month;
+        this.setState({fetchDate: `${year}_${monthFormatted}`}, () => {
+          this.props.fetchEvents(this.state.fetchDate);
+        })
+      });
     }else{
       const weekStart = this.getDayFromWeekAndYear(week, year);
-      this.setState({weekStart: weekStart});
+      this.setState({weekStart: weekStart}, () => {
+        const month = moment(this.state.weekStart).month() + 1;
+        const year = moment(this.state.weekStart).year();
+        const monthFormatted = month < 10 ? `0${month}` : month;
+        this.setState({fetchDate: `${year}_${monthFormatted}`}, () => {
+          this.props.fetchEvents(this.state.fetchDate);
+        })
+      });
     }
-
-    //TODO fetch data
-    this.setState({collabsToDisplay: _.map(this.getRecipients(this.events), 'id')})
+    
+    this.setState({collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id')})
   }
 
   onSetSidebarOpen(open) {
     this.setState({ sidebarOpen: open });
+  }
+
+  setPopupState = (state) => {
+    this.setState({isPopupDisplayed: state});
+  }
+
+  setPopupContent = (content) => {
+    this.setState({popupContent: content});
+  }
+
+  openNewEventPopup = () => {
+    const newEventPopup = <NewEventPopup closePopup={() => {this.setPopupState(false)}} fetchEventsData={this.fetchEventsData}/>
+    this.setState({
+      popupContent: newEventPopup,
+      isPopupDisplayed: true
+    });
+  }
+
+  fetchEventsData = () => {
+    this.props.fetchEvents(this.state.fetchDate);
   }
 
   navigateToNextWeek = () => {
@@ -219,7 +127,7 @@ class Calendar extends Component {
     let recipients = [];
 
     _.each(events, event => {
-      recipients = _.uniqBy(_.concat(recipients, event.recipients), 'id');
+      recipients = _.uniqBy(_.concat(recipients, _.get(event, "recipients", [])), 'id');
     });
 
     return recipients;
@@ -234,11 +142,14 @@ class Calendar extends Component {
   }
 
   render() {
-    const { weekStart } = this.state;
+    const { weekStart, isPopupDisplayed, popupContent } = this.state;
 
-    const filteredEvents = _.filter(this.events, event => !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.recipients, 'id'))));
+    const filteredEvents = _.filter(this.props.events, event => !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.recipients, 'id'))));
 
-    const groupedEvents = _.groupBy(filteredEvents, event => getDayOfYear(event.date));
+    // const groupedEvents = _.groupBy(filteredEvents, event => getDayOfYear(event.date));
+
+    const groupedEvents = _.groupBy(this.props.events, event => {
+      return getDayOfYear(moment(event.date)._d)});
 
     let daysOfWeek = [];
     
@@ -252,12 +163,15 @@ class Calendar extends Component {
       );
     });
 
-    // console.log("ALEXIS", groupedEvents, this.events, daysOfWeek);
-    
+    const popupHaloClass = classNames({
+			"popup-halo": true,
+			"popup-halo--toggled": isPopupDisplayed,
+		});
+
     return (
       !_.isNil(weekStart) && 
       <div>
-        <Sidebar recipients={this.getRecipients(this.events)} toggleRecipient={this.toggleRecipient}/>
+        <Sidebar recipients={this.getRecipients(this.props.events)} toggleRecipient={this.toggleRecipient}/>
         <div className="week-navigation-container">
           <div className="week-navigation-holder">
             <div className="calendar-navigation-container" onClick={this.navigateToPreviousWeek}>
@@ -279,13 +193,44 @@ class Calendar extends Component {
             </div>
           </div>
         </div>
+        <div className="add-action-btn-container">
+          <ActionButton clickAction={this.openNewEventPopup} label={"Add event"}/>
+        </div>
         <div className="calendar-center-container">
           <CalendarHeader daysOfWeek={daysOfWeek} />
-          {_.map(daysOfWeek, (dayObject, index) => <CalendarGridColumn day={dayObject.day} index={index} events={_.get(groupedEvents, `[${getDayOfYear(dayObject.day)}]`, [])} />)}
+          {_.map(daysOfWeek, (dayObject, index) => (
+            <CalendarGridColumn 
+              setPopupState={this.setPopupState} 
+              setPopupContent={this.setPopupContent} 
+              day={dayObject.day} 
+              index={index} 
+              events={_.get(groupedEvents, `[${getDayOfYear(dayObject.day)}]`, [])} 
+            />
+          ))}
         </div>
+        {isPopupDisplayed && (
+          <div>
+            <div className={popupHaloClass} onClick={() => {this.setPopupState(false)}}>
+            </div>
+            <div className="popup-container">
+              {popupContent}
+            </div>
+          </div>
+          )}
       </div>
     );
   }
 }
 
-export default Calendar;
+// Map Redux state to React component props
+const mapStateToProps = state => ({
+  loading: state.events.loading,
+  events: state.events.events,
+  hasErrors: state.events.hasErrors,
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchEvents: fetchEvents,
+}, dispatch);
+// Connect Redux to React
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar)

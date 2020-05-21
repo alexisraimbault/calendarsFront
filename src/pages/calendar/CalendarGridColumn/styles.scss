@@ -1,15 +1,67 @@
+@import "src/utils/variables";
+
 .col-container {
     position: absolute;
     width: 20%;
     height: 90%;
-    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &--today{
-        background-color: lightgray; 
+    .col-holder{
+        position: absolute;
+        width: 90%;
+        height: 100%;
+        background-color: rgba($rose, 0.3);
+        border-radius: 8px;
+
+        &--today{
+            background-color: rgba($light-blue, 0.3);
+        }
+
+        .event-container {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+
+            .event-holder{
+                cursor: pointer;
+                border-radius: 8px;
+                width: 95%;
+                height: 100%;
+                background-color: $card-color;
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                .event-holder-2{
+                    height: 95%;
+                    width: 85%;
+                    font-family: $font;
+
+                    .event-author{
+                        font-weight: 600;
+                    }
+                    .event-description{
+                        margin: 12px 0px;
+                    }
+                }
+            }
+        }
     }
 }
 
-.event-container {
-    position: absolute;
-    border: 1px solid black;
+.event-popup-container{
+    width: 600px;
+    height: 400px;
+    z-index: 3;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    opacity: 1;
 }

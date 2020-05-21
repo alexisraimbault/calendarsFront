@@ -1,16 +1,19 @@
+@import "src/utils/variables";
+
 .sidebar-container{
     position: absolute;
     height: 100%;
-    background-color: lightblue;
+    background-color: $rose;
     width: 4%;
     top: 0;
     transition: all 0.4s ease-out;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-family: $font;
 
     &--toggled{
-        width: 12%;
+        width: 200px;
     }
 
     .sidebar-bottom-menu{
@@ -49,5 +52,35 @@
                 opacity: 1;
             }
         }
+    }
+}
+.submenu-container{
+    position: absolute;
+    height: 400px;
+    left: 200px;
+    width: 0px;
+    background-color: lightgrey;
+    transition: all 0.3s ease-out;
+    bottom: 0px;
+    z-index: 3;
+
+    &--toggled{
+        width: 350px;
+    }
+}
+
+.submenu-halo-container{
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    left: 200px;
+    right: 0px;
+    background-color: black;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+
+    &--toggled{
+        opacity: 0.75;
+        z-index: 2;
     }
 }

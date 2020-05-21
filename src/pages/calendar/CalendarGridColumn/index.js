@@ -73,7 +73,7 @@ class CalendarGridColumn extends Component {
   }
   
   render() {
-    const { events, index, day } = this.props;
+    const { events, index, day, setPopupState, setPopupContent } = this.props;
 
     const widthMap = this.formatWidth(events);
 
@@ -84,17 +84,31 @@ class CalendarGridColumn extends Component {
 
     return (
       <div className={columnClass} style={{left: `${index * 20}%`}}>
-        {_.map(events, (event) => {
-          const coords = this.calculateCoords(event);
+        <div className="col-holder">
+          {_.map(events, (event) => {
+            const coords = this.calculateCoords(event);
 
-          return (
-            <div className="event-container" style={{top: `${coords.from}%`, height: `${coords.to - coords.from}%`,left: `${widthMap[event.id].position * widthMap[event.id].width}%`, width: `${widthMap[event.id].width}%`}}>
-              <div>{event.name}</div>
-              <div>{event.description}</div>
-              {_.map(event.recipients, recipient => <div>{`${recipient.firstname} ${recipient.lastname}`}</div>)}
-            </div>
-          );
-        })}
+            return (
+              <div className="event-container" style={{top: `${coords.from}%`, height: `${coords.to - coords.from}%`,left: `${widthMap[event.id].position * widthMap[event.id].width}%`, width: `${widthMap[event.id].width}%`}}>
+                <div className="event-holder" onClick={() => {
+                    setPopupContent((
+                    <div className="event-popup-container">
+                      <div className="event-author">{event.name}</div>
+                      <div className="event-description">{event.description}</div>
+                      {_.map(event.recipients, recipient => <div>{`${recipient.firstname} ${recipient.lastname}`}</div>)}
+                    </div>));
+                    setPopupState(true)
+                  }}>
+                  <div className="event-holder-2">
+                    <div className="event-author">{event.name}</div>
+                    <div className="event-description">{event.description}</div>
+                    {/* {_.map(event.recipients, recipient => <div>{`${recipient.firstname} ${recipient.lastname}`}</div>)} */}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

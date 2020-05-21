@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import _ from 'lodash';
-import format from 'date-fns/format'
+import { isToday, format, addDays } from 'date-fns';
+import classNames from 'classnames';
 import './styles.scss'
 
 class CalendarHeader extends Component {
@@ -15,7 +16,17 @@ class CalendarHeader extends Component {
     const { daysOfWeek } = this.props;
     return (
       <div className="calendar-header-container">
-        {_.map(daysOfWeek, dayOfWeek => <div className="calendar-day-title" >{format(dayOfWeek.day, 'EEE d MMMM')}</div>)}
+        {_.map(daysOfWeek, dayOfWeek => {
+          const titleClassName = classNames({
+            "calendar-day-title": true,
+            "calendar-day-title--today": isToday(dayOfWeek.day),
+          });
+
+          return (
+            <div className="calendar-day-title-container">
+              <div className={titleClassName} >{format(dayOfWeek.day, 'EEE d MMMM')}</div>
+            </div>
+          );})}
       </div>
     );
   }
