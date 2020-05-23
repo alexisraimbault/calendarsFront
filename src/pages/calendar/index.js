@@ -46,7 +46,9 @@ class Calendar extends Component {
         const year = moment(this.state.weekStart).year();
         const monthFormatted = month < 10 ? `0${month}` : month;
         this.setState({fetchDate: `${year}_${monthFormatted}`}, () => {
-          this.props.fetchEvents(this.state.fetchDate);
+          this.props.fetchEvents(this.state.fetchDate).then( () => {
+            this.setState({collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id')});
+          });
         })
       });
     }else{
@@ -56,12 +58,12 @@ class Calendar extends Component {
         const year = moment(this.state.weekStart).year();
         const monthFormatted = month < 10 ? `0${month}` : month;
         this.setState({fetchDate: `${year}_${monthFormatted}`}, () => {
-          this.props.fetchEvents(this.state.fetchDate);
+          this.props.fetchEvents(this.state.fetchDate).then( () => {
+            this.setState({collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id')});
+          });
         })
       });
     }
-    
-    this.setState({collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id')})
   }
 
   onSetSidebarOpen(open) {
@@ -127,7 +129,7 @@ class Calendar extends Component {
     let recipients = [];
 
     _.each(events, event => {
-      recipients = _.uniqBy(_.concat(recipients, _.get(event, "recipients", [])), 'id');
+      recipients = _.uniqBy(_.concat(recipients, _.get(event, "invitations", [])), 'id');
     });
 
     return recipients;
@@ -144,12 +146,11 @@ class Calendar extends Component {
   render() {
     const { weekStart, isPopupDisplayed, popupContent } = this.state;
 
-    const filteredEvents = _.filter(this.props.events, event => !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.recipients, 'id'))));
+    const filteredEvents = _.filter(this.props.events, event => !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.invitations, 'id'))));
 
-    // const groupedEvents = _.groupBy(filteredEvents, event => getDayOfYear(event.date));
+    const groupedEvents = _.groupBy(filteredEvents, event => getDayOfYear(moment(event.date)._d));
 
-    const groupedEvents = _.groupBy(this.props.events, event => {
-      return getDayOfYear(moment(event.date)._d)});
+    // const groupedEvents = _.groupBy(this.props.events, event => getDayOfYear(moment(event.date)._d));
 
     let daysOfWeek = [];
     

@@ -62,7 +62,7 @@ class Sidebar extends Component {
 							</svg>
 						</div> */}
 					<div className="recipients-container">
-						{_.map(recipients, recipient => <div className="recipient-container"> {`${recipient.firstname} ${recipient.lastname}`}<CheckBox applyToggle={toggleRecipient} id={recipient.id} /></div>)}
+						{_.map(recipients, recipient => <div className="recipient-container"> {`${recipient.name}`}<CheckBox applyToggle={toggleRecipient} id={recipient.id} /></div>)}
 					</div>
 					<div className="sidebar-bottom-menu">
 					<div className="sidebar-item-container" onClick={this.setSubMenuToggle(1)}>

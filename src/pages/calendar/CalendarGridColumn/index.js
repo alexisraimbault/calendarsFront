@@ -95,14 +95,14 @@ class CalendarGridColumn extends Component {
                     <div className="event-popup-container">
                       <div className="event-author">{event.name}</div>
                       <div className="event-description">{event.description}</div>
-                      {_.map(event.recipients, recipient => <div>{`${recipient.firstname} ${recipient.lastname}`}</div>)}
+                      {_.map(event.invitations, recipient => <div>{`${recipient.name}`}</div>)}
                     </div>));
                     setPopupState(true)
                   }}>
                   <div className="event-holder-2">
                     <div className="event-author">{event.name}</div>
                     <div className="event-description">{event.description}</div>
-                    {/* {_.map(event.recipients, recipient => <div>{`${recipient.firstname} ${recipient.lastname}`}</div>)} */}
+                    {_.map(event.invitations, recipient => <div>{`${recipient.name}`}</div>)}
                   </div>
                 </div>
               </div>

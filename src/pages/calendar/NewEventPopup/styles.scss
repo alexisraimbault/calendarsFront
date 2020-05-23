@@ -24,4 +24,33 @@
         display: flex;
         flex-direction: column;
     }
+
+    .date-picker {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+
+        input{
+            border: solid 1px $rose;
+            border-radius: 5px;
+            line-height: 32px;
+            padding: 0 12px;
+        }
+    }
+
+    .time-pickers-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+
+        .time-picker {
+            border: solid 1px #f6e5f5;
+            border-radius: 8px;
+            padding: 0 8px;
+
+            .react-time-picker__wrapper {
+                border: none;
+            }
+        }
+    }
 }

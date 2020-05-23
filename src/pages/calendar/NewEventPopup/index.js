@@ -4,11 +4,13 @@ import React, {
 import './styles.scss'
 
 import EditableLabel from '../../../components/EditableLabel'
+import UserSelector from '../../../components/UserSelector'
 
 import ActionButton from '../../../components/ActionButton';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { createEvent } from '../../../redux/actions/eventActions'
+import { fetchUsers } from '../../../redux/actions/userActions'
 import * as moment from 'moment';
 
 import DatePicker from "react-datepicker";
@@ -29,6 +31,11 @@ class NewEventPopup extends Component {
 		}
     }
 
+    componentDidMount() {
+        //TODO unmock corp_id
+        this.props.fetchUsers(1);
+    }
+
     handleChangeDate = date => {
         this.setState({
             eventDate: date
@@ -39,13 +46,9 @@ class NewEventPopup extends Component {
 
     onChangeEndTime = time => this.setState({ end_time: time })
 
-    updateTitle = e => {
-        this.setState({title: e.target.value});
-    }
+    updateTitle = e => this.setState({title: e.target.value})
 
-    updateDescription = e => {
-        this.setState({description: e.target.value});
-    }
+    updateDescription = e => this.setState({description: e.target.value})
 
     sendCreateEventRequest = () => {
         const {
@@ -76,18 +79,27 @@ class NewEventPopup extends Component {
                 <div className="edit-box" >
                     <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} />
                     <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} />
-                    <DatePicker
-                        selected={this.state.eventDate}
-                        onChange={this.handleChangeDate}
-                    />
-                    <TimePicker
-                        onChange={this.onChangeStartTime}
-                        value={this.state.start_time}
-                    />
-                    <TimePicker
-                        onChange={this.onChangeEndTime}
-                        value={this.state.end_time}
-                    />
+                    <div className="date-picker">
+                        <DatePicker
+                            selected={this.state.eventDate}
+                            onChange={this.handleChangeDate}
+                        />
+                    </div>
+                    <div className="time-pickers-container">
+                        <div className="time-picker">
+                            <TimePicker
+                                onChange={this.onChangeStartTime}
+                                value={this.state.start_time}
+                            />
+                        </div>
+                        <div className="time-picker">
+                            <TimePicker
+                                onChange={this.onChangeEndTime}
+                                value={this.state.end_time}
+                            />
+                        </div>
+                    </div>
+                    <UserSelector />
                     {/* TODO assign users to the event -> searchBar and scrollbar */}
                 </div>
                 <div className="save-btn">
@@ -99,8 +111,17 @@ class NewEventPopup extends Component {
 
 }
 
+
+// Map Redux state to React component props
+const mapStateToProps = state => ({
+    loading: state.users.loading,
+    users: state.users.users,
+    hasErrors: state.users.hasErrors,
+})
+
 const mapDispatchToProps = dispatch => bindActionCreators({
     createEvent: createEvent,
+    fetchUsers: fetchUsers,
 }, dispatch);
     // Connect Redux to React
-export default connect(null, mapDispatchToProps)(NewEventPopup)
+export default connect(mapStateToProps, mapDispatchToProps)(NewEventPopup)
