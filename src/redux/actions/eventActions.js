@@ -19,12 +19,13 @@ export const getEventsFailure = () => ({
   type: GET_EVENTS_FAILURE,
   })
 
-export function fetchEvents(date) {
+export function fetchEvents(date, sessionToken) {
   return async dispatch => {
     dispatch(getEvents())
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?date=${date}`);
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?date=${date}`,
+      {headers: {authorization: sessionToken}});
       const data = await response.json();
 
       dispatch(getEventsSuccess(JSON. parse(data.body)));
@@ -39,25 +40,26 @@ export const putEvents = () => ({
 })
 
 export const putEventsSuccess = events => ({
-type: PUT_EVENTS_SUCCESS,
-payload: events,
+  type: PUT_EVENTS_SUCCESS,
+  payload: events,
 })
 
 export const putEventsFailure = () => ({
 type: PUT_EVENTS_FAILURE,
 })
 
-export function createEvent(name, description, date, time_from, time_to) {
+export function createEvent(name, description, date, time_from, time_to, users, sessionToken) {
 return async dispatch => {
   dispatch(putEvents())
 
   try {
-    const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${name}&description=${description}&date=${date}&time_from=${time_from}&time_to=${time_to}`,{
+    const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${name}&description=${description}&date=${date}&time_from=${time_from}&time_to=${time_to}&users=${users}`,{
+      headers: {authorization: sessionToken},
       method: "PUT",
     });
     const data = await response.json();
 
-    dispatch(putEventsSuccess(JSON. parse(data.body)));
+    dispatch(putEventsSuccess());
   } catch (error) {
     dispatch(putEventsFailure());
   }

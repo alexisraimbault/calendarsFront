@@ -22,18 +22,21 @@ import TimePicker from 'react-time-picker';
 class NewEventPopup extends Component {
 	constructor(props) {
         super(props);
+
         this.state = {
 			title: 'Title',
             description: 'Description',
             eventDate: new Date(),
             start_time: '10:00',
             end_time: '12:00',
+            selectedUsersIds: [],
 		}
     }
 
     componentDidMount() {
+        const { fetchUsers, sessionToken } = this.props;
         //TODO unmock corp_id
-        this.props.fetchUsers(1);
+        fetchUsers(1, sessionToken);
     }
 
     handleChangeDate = date => {
@@ -41,6 +44,8 @@ class NewEventPopup extends Component {
             eventDate: date
         });
     };
+
+    setSelectedUsersIds = array => this.setState({ selectedUsersIds: array })
 
     onChangeStartTime = time => this.setState({ start_time: time })
 
@@ -57,13 +62,15 @@ class NewEventPopup extends Component {
             eventDate,
             start_time,
             end_time,
+            selectedUsersIds
         } = this.state;
-        const { createEvent, fetchEventsData, closePopup } = this.props
+        const { createEvent, fetchEventsData, closePopup, sessionToken } = this.props
 
         const formattedDate = `${moment(eventDate).year()}-${moment(eventDate).month() + 1}-${moment(eventDate).date()}`;
-        const newFormattedDate = moment(eventDate).format();
 
-        createEvent(title, description, formattedDate, start_time, end_time).then( () => {
+        const selectedUserIds = _.join(selectedUsersIds, ',');
+
+        createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken).then( () => {
             fetchEventsData();
             closePopup();
         });
@@ -75,32 +82,34 @@ class NewEventPopup extends Component {
 
         return (
             <div className="new-event-popup-container">
+                <div className="top-popup-container">
                 <div className="title">{"New event"}</div>
-                <div className="edit-box" >
-                    <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} />
-                    <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} />
-                    <div className="date-picker">
-                        <DatePicker
-                            selected={this.state.eventDate}
-                            onChange={this.handleChangeDate}
-                        />
-                    </div>
-                    <div className="time-pickers-container">
-                        <div className="time-picker">
-                            <TimePicker
-                                onChange={this.onChangeStartTime}
-                                value={this.state.start_time}
+                    <div className="edit-box" >
+                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} />
+                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} />
+                        <div className="date-picker">
+                            <DatePicker
+                                selected={this.state.eventDate}
+                                onChange={this.handleChangeDate}
                             />
                         </div>
-                        <div className="time-picker">
-                            <TimePicker
-                                onChange={this.onChangeEndTime}
-                                value={this.state.end_time}
-                            />
+                        <div className="time-pickers-container">
+                            <div className="time-picker">
+                                <TimePicker
+                                    onChange={this.onChangeStartTime}
+                                    value={this.state.start_time}
+                                />
+                            </div>
+                            <div className="time-picker">
+                                <TimePicker
+                                    onChange={this.onChangeEndTime}
+                                    value={this.state.end_time}
+                                />
+                            </div>
                         </div>
+                        <UserSelector setSelectedUsersIds={this.setSelectedUsersIds}/>
+                        {/* TODO assign users to the event -> searchBar and scrollbar */}
                     </div>
-                    <UserSelector />
-                    {/* TODO assign users to the event -> searchBar and scrollbar */}
                 </div>
                 <div className="save-btn">
                     <ActionButton clickAction={this.sendCreateEventRequest} label={"Save"}/>
@@ -117,6 +126,7 @@ const mapStateToProps = state => ({
     loading: state.users.loading,
     users: state.users.users,
     hasErrors: state.users.hasErrors,
+    sessionToken: state.me.sessionToken,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

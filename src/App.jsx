@@ -4,6 +4,9 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import { persistStore, persistReducer } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 //import store from './redux/store'
 import {
   BrowserRouter as Router,
@@ -13,21 +16,36 @@ import {
 } from "react-router-dom";
 import './App.css';
 import Calendar from './pages/calendar'
+import LoginPage from './pages/login/index'
 import rootReducer from './redux/reducers'
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(thunk)))
+
+const persistor = persistStore(store)
 
 const App = () => (
   <Provider store={store}>
-    <Router>
-      <Switch>
-        <Route path="/calendar/:week?/:year?" component={Calendar}>
-        </Route>
-        <Route path="/">
-          <div>{"Hello from home"}</div>
-        </Route>
-      </Switch>
-    </Router>
+    <PersistGate loading={null} persistor={persistor}>
+      <Router>
+        <Switch>
+          <Route path="/calendar/:week?/:year?" component={Calendar}>
+          </Route>
+          <Route path="/login" component={LoginPage}>
+          </Route>
+          <Route path="/">
+            <div>{"Hello from home test"}</div>
+          </Route>
+        </Switch>
+      </Router>
+    </PersistGate>
   </Provider>
 );
 

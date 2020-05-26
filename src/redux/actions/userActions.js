@@ -15,12 +15,13 @@ export const getUsersFailure = () => ({
     type: GET_USERS_FAILURE,
 })
 
-export function fetchUsers(corpId) {
+export function fetchUsers(corpId, sessionToken) {
     return async dispatch => {
         dispatch(getUsers())
 
         try {
-            const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?corpId=${corpId}`);
+            const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?corpId=${corpId}`,
+            {headers: {authorization: sessionToken}});
             const data = await response.json();
 
             dispatch(getUsersSuccess(JSON. parse(data.body)));

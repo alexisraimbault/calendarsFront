@@ -14,6 +14,8 @@ class UserSelector extends Component {
 		this.state = {
             selectedUsers: props.defaultSelected || [],
             value: '',
+            isFocused: false,
+            isHovered: false,
 		}
     }
 
@@ -27,16 +29,22 @@ class UserSelector extends Component {
 
     addUser = user => () => {
         const { selectedUsers } = this.state;
+        const { setSelectedUsersIds } = this.props;
 
         const newSelected = _.uniq(_.concat(selectedUsers, user));
-        this.setState({selectedUsers: newSelected});
+        this.setState({selectedUsers: newSelected}, () =>{
+            setSelectedUsersIds(this.getSelectedUsersIds());
+        });
     }
 
     addUser = user => () => {
         const { selectedUsers } = this.state;
+        const { setSelectedUsersIds } = this.props;
 
         const newSelected = _.uniq(_.concat(selectedUsers, user));
-        this.setState({selectedUsers: newSelected});
+        this.setState({selectedUsers: newSelected}, () =>{
+            setSelectedUsersIds(this.getSelectedUsersIds());
+        });
     }
 
     removeUser = user => () => {
@@ -46,8 +54,12 @@ class UserSelector extends Component {
         this.setState({selectedUsers: newSelected});
     }
 
+    setFocus = isFocused => () => this.setState({isFocused: isFocused})
+
+    setHover = isHovered => () => this.setState({isHovered: isHovered})
+
 	render() {
-        const { selectedUsers, value } = this.state;
+        const { selectedUsers, value, isFocused, isHovered } = this.state;
         const { users } = this.props;
 
         const selectedIds = this.getSelectedUsersIds();
@@ -62,10 +74,15 @@ class UserSelector extends Component {
                     value={value}
                     onChange={this.onValueChange}
                     placeholder={"Search for users"}
+                    onFocus={this.setFocus(true)}
+                    onBlur={this.setFocus(false)}
                 />
-                <div className="selection-container">
-                    {_.map(filteredUsers, user => <div className="selection-item" onClick={this.addUser(user)}>{user.name}</div>)}
-                </div>
+                {(isFocused || isHovered) && (
+                    <div className="selection-container" onMouseEnter={this.setHover(true)} onMouseLeave={this.setHover(false)}>
+                        {_.map(filteredUsers, user => <div className="selection-item" onClick={this.addUser(user)}>{user.name}</div>)}
+                    </div>)}
+                {!(isFocused || isHovered) && (
+                    <div className="selection-placebo" />)}
                 <div className="selected-container">
                     {_.map(selectedUsers, user => <div className="selected-item" onClick={this.removeUser(user)}>{user.name}</div>)}
                 </div>
@@ -79,6 +96,7 @@ const mapStateToProps = state => ({
     loading: state.users.loading,
     users: state.users.users,
     hasErrors: state.users.hasErrors,
+    sessionToken: state.me.sessionToken,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
