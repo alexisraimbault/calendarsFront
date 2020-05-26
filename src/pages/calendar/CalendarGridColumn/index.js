@@ -44,10 +44,13 @@ class CalendarGridColumn extends Component {
       overleapMap[event1.id] = overleapingEvents;
     })
 
+    const groupedOverleapMap = this.getGroupedOverleapMap(overleapMap);
+
     let widthMap = {};
     
     _.forEach(overleapMap, (overleapingEvents, id) => {
-      const nbOverleap = _.size(overleapingEvents) + 1;
+      // const nbOverleap = _.size(overleapingEvents) + 1;
+      const nbOverleap = _.size(_.maxBy(groupedOverleapMap[id], group => _.size(group))) + 1;
       const defaultWidth = Math.floor(100/nbOverleap);
       let widthGained = {};
       let takenPositions = [];
@@ -70,6 +73,48 @@ class CalendarGridColumn extends Component {
     })
     
     return widthMap;
+  }
+
+  // from 
+  // {
+  //   52: [54, 56]
+  //   54: [52, 56]
+  //   56: [52, 54, 58]
+  //   58: [56]
+  // }
+  // to 
+  // {
+  //   52: [[54, 56]]
+  //   54: [[52, 56]]
+  //   56: [[52, 54], [58]]
+  //   58: [[56]]
+  // }
+  getGroupedOverleapMap = overleapMap => {
+    let res = {};
+    _.forEach(overleapMap, (events, id) => {
+      if(_.isEmpty(events)){
+        res[id] = [[]];
+      }else{
+        res[id] = [[events[0]]];
+        let cpt1 = 1;
+        while (cpt1 < _.size(events)){
+          let cpt2 = 0;
+          let assigned = false;
+          while(cpt2 < _.size(res[id]) && !assigned ){
+            if(_.includes(overleapMap[res[id][cpt2]], events[cpt1])){
+              res[id][cpt2].push(events[cpt1]);
+              assigned = true;
+            }
+            cpt2++;
+          }
+          if(!assigned){
+            res[id].push([events[cpt1]]);
+          }
+          cpt1++;
+        }
+      }
+    })
+    return res;
   }
   
   render() {
