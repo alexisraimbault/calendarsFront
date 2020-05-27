@@ -2,8 +2,9 @@ import React, {
   Component
 } from 'react';
 import CalendarHeader from './calendarHeader';
-import CalendarGridColumn from './calendarGridColumn';
+import CalendarGridColumn from './calendarGridColumn';InvitationPopup
 import NewEventPopup from './NewEventPopup';
+import InvitationPopup from './invitationPopup';
 import * as moment from 'moment';
 import { startOfWeek, addDays, isToday, format, getDayOfYear } from 'date-fns';
 
@@ -87,12 +88,20 @@ class Calendar extends Component {
     });
   }
 
+  openInvitationPopup = () => {
+    const invitationPopup = <InvitationPopup closePopup={() => {this.setPopupState(false)}}/>
+    this.setState({
+      popupContent: invitationPopup,
+      isPopupDisplayed: true
+    });
+  }
+
   fetchEventsData = () => {
     const { sessionToken, fetchEvents } = this.props;
 
     fetchEvents(this.state.fetchDate, sessionToken);
   }
-
+  
   navigateToNextWeek = () => {
     const { weekStart } = this.state;
     const nextWeekStart = moment(weekStart).add(1, 'w');
@@ -175,7 +184,7 @@ class Calendar extends Component {
     return (
       !_.isNil(weekStart) && 
       <div>
-        <Sidebar recipients={this.getRecipients(this.props.events)} toggleRecipient={this.toggleRecipient}/>
+        <Sidebar recipients={this.getRecipients(this.props.events)} toggleRecipient={this.toggleRecipient} openInvitationPopup={this.openInvitationPopup}/>
         <div className="week-navigation-container">
           <div className="week-navigation-holder">
             <div className="calendar-navigation-container" onClick={this.navigateToPreviousWeek}>

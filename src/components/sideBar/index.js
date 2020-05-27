@@ -6,6 +6,7 @@ import './styles.scss'
 import CheckBox from '../CheckBox';
 import SettingsMenu from './components/settingsMenu'
 import TeamMenu from './components/teamMenu'
+import InvitationPopup from '../../pages/calendar/invitationPopup';
 
 class Sidebar extends Component {
 	constructor(props) {
@@ -26,7 +27,7 @@ class Sidebar extends Component {
 
 
 	render() {
-		const { recipients, toggleRecipient } = this.props;
+		const { recipients, toggleRecipient, openInvitationPopup } = this.props;
 		const { isToggled, menuToggle } = this.state;
 
 		const sidebarClass = classNames({
@@ -65,7 +66,7 @@ class Sidebar extends Component {
 						{_.map(recipients, recipient => <div className="recipient-container"> {`${recipient.name}`}<CheckBox applyToggle={toggleRecipient} id={recipient.id} /></div>)}
 					</div>
 					<div className="sidebar-bottom-menu">
-					<div className="sidebar-item-container" onClick={this.setSubMenuToggle(1)}>
+					<div className="sidebar-item-container" onClick={openInvitationPopup}>
 							<div>
 								<svg viewBox="0 0 512 512" width="20" height="20">
 									<g>
