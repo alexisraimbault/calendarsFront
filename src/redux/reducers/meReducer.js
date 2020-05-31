@@ -10,11 +10,14 @@ export default function meReducer(state = initialState, action) {
 		case actions.AUTHENTICATE:
 			return { ...state, loading: true }
 
+		case actions.LOGOUT:
+			return { sessionToken: null, loading: false, hasErrors: true }
+
 		case actions.AUTHENTICATE_SUCCESS:
 			return { sessionToken: action.payload, loading: false, hasErrors: false }
 
 		case actions.AUTHENTICATE_FAILURE:
-			return { ...state, loading: false, hasErrors: true }
+			return { sessionToken: null, loading: false, hasErrors: true }
 
 		default:
 			return state

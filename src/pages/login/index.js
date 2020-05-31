@@ -16,6 +16,22 @@ class LoginPage extends Component {
             createAccoundMode: false,
 		}
     }
+
+    componentDidMount() {
+        const { history, sessionToken } = this.props;
+
+        if(!_.isNil(sessionToken)) {
+            history.push("/calendar");
+        }
+    }
+    
+    componentDidUpdate(prevProps, prevState) {
+        const { history, sessionToken } = this.props;
+
+        if(!_.isNil(sessionToken)) {
+            history.push("/calendar");
+        }
+    }
     
     createAccount = () => this.setState({createAccoundMode: true})
 
@@ -28,7 +44,7 @@ class LoginPage extends Component {
         const { createAccoundMode } = this.state;
 
         return (
-            <div>
+            <div className="login-page-container">
                 {createAccoundMode ?
                     <CreateAccountBox /> 
                 : 

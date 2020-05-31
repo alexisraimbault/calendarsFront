@@ -15,6 +15,7 @@ import './styles.scss'
 import classNames from 'classnames';
 import { connect } from 'react-redux'
 import { fetchEvents } from '../../redux/actions/eventActions'
+import { logout } from '../../redux/actions/meActions'
 import { bindActionCreators } from 'redux';
 
 import {
@@ -39,7 +40,10 @@ class Calendar extends Component {
 
   componentDidMount() {
     const { week, year } = this.props.match.params;
-    const { sessionToken, fetchEvents } = this.props;
+    const { sessionToken, fetchEvents, history } = this.props;
+    if(_.isNil(sessionToken)) {
+      history.push("/login");
+    }
 
     // this.props.history.push(`/calendar/100/2003`)
     if(_.isNil(week) || _.isNil(year)){
@@ -155,6 +159,13 @@ class Calendar extends Component {
     }
   }
 
+  logout = () => {
+    const { logout, history } = this.props;
+
+    logout();
+    history.push("/login");
+  }
+
   render() {
     const { weekStart, isPopupDisplayed, popupContent } = this.state;
 
@@ -184,7 +195,7 @@ class Calendar extends Component {
     return (
       !_.isNil(weekStart) && 
       <div>
-        <Sidebar recipients={this.getRecipients(this.props.events)} toggleRecipient={this.toggleRecipient} openInvitationPopup={this.openInvitationPopup}/>
+        <Sidebar recipients={this.getRecipients(this.props.events)} toggleRecipient={this.toggleRecipient} openInvitationPopup={this.openInvitationPopup} logout={this.logout}/>
         <div className="week-navigation-container">
           <div className="week-navigation-holder">
             <div className="calendar-navigation-container" onClick={this.navigateToPreviousWeek}>
@@ -245,6 +256,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchEvents: fetchEvents,
+  logout: logout,
 }, dispatch);
 // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(Calendar)

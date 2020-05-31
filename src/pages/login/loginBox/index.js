@@ -37,7 +37,9 @@ class LoginBox extends Component {
             <div className="login-box-container">
                 <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} />
                 <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} />
-                <ActionButton clickAction={this.sendAuthRequest} label={"LOGIN"} />
+                <div className="login-btn">
+                    <ActionButton clickAction={this.sendAuthRequest} label={"LOGIN"} />
+                </div>
             </div>
         );
     }

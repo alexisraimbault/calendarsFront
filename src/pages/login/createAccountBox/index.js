@@ -37,11 +37,13 @@ class CreateAccountBox extends Component {
 	render() {
         const { login, password, name } = this.state;
         return (
-            <div className="login-box-container">
+            <div className="create-account-box-container">
                 <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} />
                 <EditableLabel value={name} onChange={this.updateName} placeholder={"Name"} />
                 <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} />
-                <ActionButton clickAction={this.sendRequest} label={"CREATE ACCOUNT"} />
+                <div className="login-btn">
+                    <ActionButton clickAction={this.sendRequest} label={"CREATE ACCOUNT"} />
+                </div>
             </div>
         );
     }

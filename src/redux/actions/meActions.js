@@ -23,9 +23,19 @@ export function requestAuthentication(mail, password) {
             const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/authentication?mail=${mail}&password=${password}`);
             const data = await response.json();
 
-            dispatch(authenticateSuccess(data.body));
+            if(data.statusCode === 200 ) {
+                dispatch(authenticateSuccess(data.body));
+            }else{
+                dispatch(authenticateFailure());
+            }
         } catch (error) {
             dispatch(authenticateFailure());
         }
     }
 }
+
+export const LOGOUT = 'LOGOUT'
+
+export const logout = () => ({
+    type: LOGOUT,
+})
