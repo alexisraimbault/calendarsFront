@@ -1,0 +1,14 @@
+@import "src/utils/variables";
+
+.users-container{
+    height: 200px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    margin-bottom: 4px;
+    width: 100%;
+
+    .user-item{
+        cursor: pointer;
+
+    }
+}

@@ -5,6 +5,7 @@ import './styles.scss'
 
 import EditableLabel from '../../../components/EditableLabel'
 import ActionButton from '../../../components/ActionButton'
+import UserDisplay from '../../../components/UserDisplay'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
@@ -32,6 +33,7 @@ class InvitationPopup extends Component {
         const { mail } = this.state;
         return (
             <div className="invitation-popup-container">
+                <UserDisplay />
                 <EditableLabel value={mail} onChange={this.updateMail} placeholder={"Mail"} />
                 <ActionButton clickAction={this.sendInvitation} label={"SEND INVITATION"} />
             </div>

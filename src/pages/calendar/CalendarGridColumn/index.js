@@ -3,6 +3,9 @@ import _ from 'lodash';
 import { isToday } from 'date-fns';
 import classNames from 'classnames';
 import './styles.scss'
+import * as moment from 'moment';
+
+import EventDetailsPopup from '../EventDetailsPopup'
 
 class CalendarGridColumn extends Component {
   constructor(props) {
@@ -137,11 +140,22 @@ class CalendarGridColumn extends Component {
               <div className="event-container" style={{top: `${coords.from}%`, height: `${coords.to - coords.from}%`,left: `${widthMap[event.id].position * widthMap[event.id].width}%`, width: `${widthMap[event.id].width}%`}}>
                 <div className="event-holder" onClick={() => {
                     setPopupContent((
-                    <div className="event-popup-container">
-                      <div className="event-author">{event.name}</div>
-                      <div className="event-description">{event.description}</div>
-                      {_.map(event.invitations, recipient => <div>{`${recipient.name}`}</div>)}
-                    </div>));
+                      <EventDetailsPopup 
+                        closePopup={() => {this.props.setPopupState(false)}} 
+                        fetchEventsData={this.props.fetchEventsData}
+                        title={event.name}
+                        description={event.description}
+                        date={moment(event.date)._d}
+                        startTime={event.time_from}
+                        endTime={event.time_to}
+                        invited={event.invitations}
+                      />
+                    // <div className="event-popup-container">
+                    //   <div className="event-author">{event.name}</div>
+                    //   <div className="event-description">{event.description}</div>
+                    //   {_.map(event.invitations, recipient => <div>{`${recipient.name}`}</div>)}
+                    // </div>
+                    ));
                     setPopupState(true)
                   }}>
                   <div className="event-holder-2">

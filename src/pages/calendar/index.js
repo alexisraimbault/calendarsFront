@@ -229,6 +229,7 @@ class Calendar extends Component {
               day={dayObject.day} 
               index={index} 
               events={_.get(groupedEvents, `[${getDayOfYear(dayObject.day)}]`, [])} 
+              fetchEventsData={this.fetchEventsData}
             />
           ))}
         </div>
