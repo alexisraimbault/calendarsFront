@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import './styles.scss'
 
-import LabelClickToEdit from '../../../components/LabelClickToEdit'
+import EditableLabel from '../../../components/EditableLabel'
 import UserSelector from '../../../components/UserSelector'
 
 import ActionButton from '../../../components/ActionButton';
@@ -84,10 +84,10 @@ class EventDetailsPopup extends Component {
         return (
             <div className="new-event-popup-container">
                 <div className="top-popup-container">
-                <div className="title">{"New event"}</div>
+                <div className="title">{"Event details"}</div>
                     <div className="edit-box" >
-                        <LabelClickToEdit value={title} onChange={this.updateTitle} placeholder={"Title here"} />
-                        <LabelClickToEdit value={description} onChange={this.updateDescription} placeholder={"Description here"} />
+                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} />
+                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} />
                         <div className="date-picker">
                             <DatePicker
                                 selected={this.state.eventDate}
