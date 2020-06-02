@@ -145,10 +145,11 @@ class CalendarGridColumn extends Component {
                         fetchEventsData={this.props.fetchEventsData}
                         title={event.name}
                         description={event.description}
-                        date={moment(event.date)._d}
+                        date={event.date}
                         startTime={event.time_from}
                         endTime={event.time_to}
                         invited={event.invitations}
+                        eventId={event.id}
                       />
                     // <div className="event-popup-container">
                     //   <div className="event-author">{event.name}</div>

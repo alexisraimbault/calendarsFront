@@ -9,7 +9,7 @@ import UserSelector from '../../../components/UserSelector'
 import ActionButton from '../../../components/ActionButton';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import { createEvent } from '../../../redux/actions/eventActions'
+import { postUpdateEvent } from '../../../redux/actions/eventActions'
 import { fetchUsers } from '../../../redux/actions/userActions'
 import * as moment from 'moment';
 
@@ -29,7 +29,7 @@ class EventDetailsPopup extends Component {
             eventDate: props.date,
             start_time: props.startTime,
             end_time: props.endTime,
-            selectedUsers: props.invited,
+            selectedUsersIds: _.map(props.invited, user => user.id),
 		}
     }
 
@@ -56,30 +56,27 @@ class EventDetailsPopup extends Component {
     updateDescription = e => this.setState({description: e.target.value})
 
     sendCreateEventRequest = () => {
-        //TODO edit event instead of creating it
-        // const {
-        //     title,
-        //     description,
-        //     eventDate,
-        //     start_time,
-        //     end_time,
-        //     selectedUsersIds
-        // } = this.state;
-        // const { createEvent, fetchEventsData, closePopup, sessionToken } = this.props
+        const {
+            title,
+            description,
+            start_time,
+            end_time,
+            selectedUsersIds
+        } = this.state;
+        const { postUpdateEvent, fetchEventsData, closePopup, sessionToken, eventId } = this.props
 
-        // const formattedDate = `${moment(eventDate).year()}-${moment(eventDate).month() + 1}-${moment(eventDate).date()}`;
+        const selectedUserIds = _.join(selectedUsersIds, ',');
 
-        // const selectedUserIds = _.join(selectedUsersIds, ',');
-
-        // createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken).then( () => {
-        //     fetchEventsData();
-        //     closePopup();
-        // });
+        postUpdateEvent(eventId, title, description, start_time, end_time, selectedUserIds, sessionToken).then( () => {
+            fetchEventsData();
+            closePopup();
+        });
 
     }
 
 	render() {
-        const { title, description, selectedUsers } = this.state; 
+        const { title, description } = this.state; 
+        const { invited } = this.props;
 
         return (
             <div className="new-event-popup-container">
@@ -89,10 +86,7 @@ class EventDetailsPopup extends Component {
                         <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} />
                         <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} />
                         <div className="date-picker">
-                            <DatePicker
-                                selected={this.state.eventDate}
-                                onChange={this.handleChangeDate}
-                            />
+                            {this.state.eventDate}
                         </div>
                         <div className="time-pickers-container">
                             <div className="time-picker">
@@ -108,7 +102,7 @@ class EventDetailsPopup extends Component {
                                 />
                             </div>
                         </div>
-                        <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={selectedUsers}/>
+                        <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={invited}/>
                         {/* TODO assign users to the event -> searchBar and scrollbar */}
                     </div>
                 </div>
@@ -131,7 +125,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    createEvent: createEvent,
+    postUpdateEvent: postUpdateEvent,
     fetchUsers: fetchUsers,
 }, dispatch);
     // Connect Redux to React

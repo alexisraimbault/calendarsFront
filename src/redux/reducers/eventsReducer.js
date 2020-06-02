@@ -10,16 +10,19 @@ export default function eventsReducer(state = initialState, action) {
 	switch (action.type) {
 		case actions.GET_EVENTS:
 		case actions.PUT_EVENTS:
+		case actions.UPDATE_EVENT:
 			return { ...state, loading: true }
 
 		case actions.GET_EVENTS_SUCCESS:
 			return { events: action.payload, loading: false, hasErrors: false }
 		
+		case actions.UPDATE_EVENT_SUCCESS:
 		case actions.PUT_EVENTS_SUCCESS:
 			return { ...state, loading: false, hasErrors: false }
 
 		case actions.GET_EVENTS_FAILURE:
-		case actions.PUT_EVENTS_FAILURE:
+		case actions.GET_EVENTS_FAILURE:
+		case actions.UPDATE_EVENT_FAILURE:
 			return { ...state, loading: false, hasErrors: true }
 
 		default:

@@ -37,21 +37,14 @@ class UserSelector extends Component {
         });
     }
 
-    addUser = user => () => {
+    removeUser = user => () => {
         const { selectedUsers } = this.state;
         const { setSelectedUsersIds } = this.props;
 
-        const newSelected = _.uniq(_.concat(selectedUsers, user));
+        const newSelected = _.differenceBy(selectedUsers, [user], item => item.id);
         this.setState({selectedUsers: newSelected}, () =>{
             setSelectedUsersIds(this.getSelectedUsersIds());
         });
-    }
-
-    removeUser = user => () => {
-        const { selectedUsers } = this.state;
-
-        const newSelected = _.differenceBy(selectedUsers, [user], item => item.id);
-        this.setState({selectedUsers: newSelected});
     }
 
     setFocus = isFocused => () => this.setState({isFocused: isFocused})
