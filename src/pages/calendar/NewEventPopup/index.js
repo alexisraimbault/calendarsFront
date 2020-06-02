@@ -108,7 +108,6 @@ class NewEventPopup extends Component {
                             </div>
                         </div>
                         <UserSelector setSelectedUsersIds={this.setSelectedUsersIds}/>
-                        {/* TODO assign users to the event -> searchBar and scrollbar */}
                     </div>
                 </div>
                 <div className="save-btn">

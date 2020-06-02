@@ -29,6 +29,7 @@ export function requestAuthentication(mail, password) {
                 dispatch(authenticateFailure());
             }
         } catch (error) {
+            console.log(error);
             dispatch(authenticateFailure());
         }
     }

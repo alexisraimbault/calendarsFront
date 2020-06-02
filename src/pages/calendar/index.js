@@ -72,6 +72,8 @@ class Calendar extends Component {
     }
   }
 
+  //TODO when props change check if needed to call new data (if different month)
+
   onSetSidebarOpen(open) {
     this.setState({ sidebarOpen: open });
   }

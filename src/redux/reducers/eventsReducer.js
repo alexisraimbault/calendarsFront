@@ -14,6 +14,7 @@ export default function eventsReducer(state = initialState, action) {
 			return { ...state, loading: true }
 
 		case actions.GET_EVENTS_SUCCESS:
+			//TODO MERGE DATA instead of replacing for the case of a week on 2 months
 			return { events: action.payload, loading: false, hasErrors: false }
 		
 		case actions.UPDATE_EVENT_SUCCESS:
