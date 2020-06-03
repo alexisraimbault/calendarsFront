@@ -34,9 +34,9 @@ class NewEventPopup extends Component {
     }
 
     componentDidMount() {
-        const { fetchUsers, sessionToken } = this.props;
-        //TODO unmock corp_id
-        fetchUsers(1, sessionToken);
+        const { fetchUsers, sessionToken, userInfos } = this.props;
+
+        fetchUsers(_.get(userInfos, "corpId"), sessionToken);
     }
 
     handleChangeDate = date => {
@@ -64,13 +64,13 @@ class NewEventPopup extends Component {
             end_time,
             selectedUsersIds
         } = this.state;
-        const { createEvent, fetchEventsData, closePopup, sessionToken } = this.props
+        const { createEvent, fetchEventsData, closePopup, sessionToken, userInfos } = this.props
 
         const formattedDate = `${moment(eventDate).year()}-${moment(eventDate).month() + 1}-${moment(eventDate).date()}`;
 
         const selectedUserIds = _.join(selectedUsersIds, ',');
 
-        createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken).then( () => {
+        createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, "corpId")).then( () => {
             fetchEventsData();
             closePopup();
         });
@@ -126,6 +126,7 @@ const mapStateToProps = state => ({
     users: state.users.users,
     hasErrors: state.users.hasErrors,
     sessionToken: state.me.sessionToken,
+    userInfos: state.me.infos,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

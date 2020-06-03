@@ -28,10 +28,10 @@ class CreateAccountBox extends Component {
     updatePassword = e => this.setState({password: e.target.value})
 
     sendRequest = () => {
-        const { requestcreateUser } = this.props;
+        const { requestcreateUser, userInfos } = this.props;
         const { login, password, name } = this.state;
 
-        requestcreateUser(login, name, password, "user", 1 )//TODO unmock corp_id
+        requestcreateUser(login, name, password, "user", _.get(userInfos, "corpId") )
     }
 
 	render() {
@@ -54,6 +54,7 @@ class CreateAccountBox extends Component {
 // Map Redux state to React component props
 const mapStateToProps = state => ({
     sessionToken: state.me.sessionToken,
+    userInfos: state.me.infos,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

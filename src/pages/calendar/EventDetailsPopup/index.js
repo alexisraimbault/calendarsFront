@@ -9,7 +9,7 @@ import UserSelector from '../../../components/UserSelector'
 import ActionButton from '../../../components/ActionButton';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import { postUpdateEvent } from '../../../redux/actions/eventActions'
+import { postUpdateEvent, postDeleteEvent } from '../../../redux/actions/eventActions'
 import { fetchUsers } from '../../../redux/actions/userActions'
 import * as moment from 'moment';
 
@@ -34,9 +34,9 @@ class EventDetailsPopup extends Component {
     }
 
     componentDidMount() {
-        const { fetchUsers, sessionToken } = this.props;
-        //TODO unmock corp_id
-        fetchUsers(1, sessionToken);
+        const { fetchUsers, sessionToken, userInfos } = this.props;
+
+        fetchUsers(_.get(userInfos, "corpId"), sessionToken);
     }
 
     handleChangeDate = date => {
@@ -55,7 +55,7 @@ class EventDetailsPopup extends Component {
 
     updateDescription = e => this.setState({description: e.target.value})
 
-    sendCreateEventRequest = () => {
+    sendUpdateEventRequest = () => {
         const {
             title,
             description,
@@ -68,6 +68,16 @@ class EventDetailsPopup extends Component {
         const selectedUserIds = _.join(selectedUsersIds, ',');
 
         postUpdateEvent(eventId, title, description, start_time, end_time, selectedUserIds, sessionToken).then( () => {
+            fetchEventsData();
+            closePopup();
+        });
+
+    }
+
+    sendDeleteEventRequest = () => {
+        const { postDeleteEvent, eventId, sessionToken } = this.props
+
+        postDeleteEvent(eventId, sessionToken).then( () => {
             fetchEventsData();
             closePopup();
         });
@@ -103,11 +113,15 @@ class EventDetailsPopup extends Component {
                             </div>
                         </div>
                         <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={invited}/>
-                        {/* TODO assign users to the event -> searchBar and scrollbar */}
                     </div>
                 </div>
-                <div className="save-btn">
-                    <ActionButton clickAction={this.sendCreateEventRequest} label={"Save modifications"}/>
+                <div className="btns-container">
+                    <div className="save-btn">
+                        <ActionButton clickAction={this.sendUpdateEventRequest} label={"Save modifications"}/>
+                    </div>
+                    <div className="delete-btn">
+                        <ActionButton isDanger clickAction={this.sendDeleteEventRequest} label={"Delete"}/>
+                    </div>
                 </div>
             </div>
         );
@@ -122,11 +136,13 @@ const mapStateToProps = state => ({
     users: state.users.users,
     hasErrors: state.users.hasErrors,
     sessionToken: state.me.sessionToken,
+    userInfos: state.me.infos,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     postUpdateEvent: postUpdateEvent,
     fetchUsers: fetchUsers,
+    postDeleteEvent: postDeleteEvent,
 }, dispatch);
     // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(EventDetailsPopup)

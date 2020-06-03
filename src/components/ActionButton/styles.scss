@@ -7,4 +7,8 @@
     background-color: $light-blue;
     font-weight: 600;
     border-radius: 12px;
+
+    &--danger{
+        background-color: $dark-rose;
+    }
 }

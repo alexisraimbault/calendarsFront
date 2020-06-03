@@ -10,6 +10,10 @@ export const CREATE_USER = 'CREATE_USER'
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS'
 export const CREATE_USER_FAILURE = 'CREATE_USER_FAILURE'
 
+export const UPDATE_USER_STATUS = 'UPDATE_USER_STATUS'
+export const UPDATE_USER_STATUS_SUCCESS = 'UPDATE_USER_STATUS_SUCCESS'
+export const UPDATE_USER_STATUS_FAILURE = 'UPDATE_USER_STATUS_FAILURE'
+
 export const getUsers = () => ({
     type: GET_USERS,
 })
@@ -94,6 +98,36 @@ export function requestcreateUser(name, mail, password, status, corp_id ) {
             dispatch(createUserSuccess());
         } catch (error) {
             dispatch(createUserFailure());
+        }
+    }
+}
+
+export const updateUserStatus = () => ({
+    type: UPDATE_USER_STATUS,
+})
+
+export const updateUserStatusSuccess = () => ({
+    type: UPDATE_USER_STATUS_SUCCESS,
+})
+
+export const updateUserStatusFailure = () => ({
+    type: UPDATE_USER_STATUS_FAILURE,
+})
+
+export function requestUpdateUserStatus(id, status, sessionToken) {
+    return async dispatch => {
+        dispatch(updateUserStatus())
+
+        try {
+            const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users/status?id=${id}&status=${status}`,{
+                method: "POST",
+                headers: {authorization: sessionToken},
+            })
+            const data = await response.json();
+
+            dispatch(updateUserStatusSuccess());
+        } catch (error) {
+            dispatch(updateUserStatusFailure());
         }
     }
 }

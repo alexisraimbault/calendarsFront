@@ -40,7 +40,7 @@ class Calendar extends Component {
 
   componentDidMount() {
     const { week, year } = this.props.match.params;
-    const { sessionToken, fetchEvents, history } = this.props;
+    const { sessionToken, fetchEvents, history, userInfos } = this.props;
     if(_.isNil(sessionToken)) {
       history.push("/login");
     }
@@ -52,7 +52,7 @@ class Calendar extends Component {
         const year = moment(this.state.weekStart).year();
         const monthFormatted = month < 10 ? `0${month}` : month;
         this.setState({fetchDate: `${year}_${monthFormatted}`}, () => {
-          fetchEvents(this.state.fetchDate, sessionToken).then( () => {
+          fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId')).then( () => {
             this.setState({collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id')});
           });
         })
@@ -64,7 +64,7 @@ class Calendar extends Component {
         const year = moment(this.state.weekStart).year();
         const monthFormatted = month < 10 ? `0${month}` : month;
         this.setState({fetchDate: `${year}_${monthFormatted}`}, () => {
-          fetchEvents(this.state.fetchDate, sessionToken).then( () => {
+          fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId')).then( () => {
             this.setState({collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id')});
           });
         })
@@ -72,7 +72,15 @@ class Calendar extends Component {
     }
   }
 
-  //TODO when props change check if needed to call new data (if different month)
+  componentDidUpdate(prevProps, prevState) {
+    const { sessionToken, fetchEvents, userInfos } = this.props;
+
+    if (prevState.fetchDate !== this.state.fetchDate) {
+      fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId')).then( () => {
+        this.setState({collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id')});
+      });
+    }
+  }
 
   onSetSidebarOpen(open) {
     this.setState({ sidebarOpen: open });
@@ -103,9 +111,9 @@ class Calendar extends Component {
   }
 
   fetchEventsData = () => {
-    const { sessionToken, fetchEvents } = this.props;
+    const { sessionToken, fetchEvents, userInfos } = this.props;
 
-    fetchEvents(this.state.fetchDate, sessionToken);
+    fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId'));
   }
   
   navigateToNextWeek = () => {
@@ -113,10 +121,13 @@ class Calendar extends Component {
     const nextWeekStart = moment(weekStart).add(1, 'w');
     const newWeek = moment(nextWeekStart).week();
     const newYear = moment(nextWeekStart).year();
+    const newMonth = moment(nextWeekStart).month() + 1;
+    const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
 
     this.props.history.push(`/calendar/${newWeek}/${newYear}`);
 
     this.setState({
+      fetchDate: `${newYear}_${newMonthFormatted}`,
       weekStart: nextWeekStart,
       year: newYear,
       week: newWeek,
@@ -128,10 +139,13 @@ class Calendar extends Component {
     const nextWeekStart = moment(weekStart).add(-1, 'w');
     const newWeek = moment(nextWeekStart).week();
     const newYear = moment(nextWeekStart).year();
+    const newMonth = moment(nextWeekStart).month() + 1;
+    const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
 
     this.props.history.push(`/calendar/${newWeek}/${newYear}`);
 
     this.setState({
+      fetchDate: `${newYear}_${newMonthFormatted}`,
       weekStart: nextWeekStart,
       year: newYear,
       week: newWeek,
@@ -255,6 +269,7 @@ const mapStateToProps = state => ({
   events: state.events.events,
   hasErrors: state.events.hasErrors,
   sessionToken: state.me.sessionToken,
+  userInfos: state.me.infos,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

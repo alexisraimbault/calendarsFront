@@ -10,6 +10,11 @@ export const UPDATE_EVENT = 'UPDATE_EVENT'
 export const UPDATE_EVENT_SUCCESS = 'UPDATE_EVENT_SUCCESS'
 export const UPDATE_EVENT_FAILURE = 'UPDATE_EVENT_FAILURE'
 
+export const DELETE_EVENT = 'DELETE_EVENT'
+export const DELETE_EVENT_SUCCESS = 'DELETE_EVENT_SUCCESS'
+export const DELETE_EVENT_FAILURE = 'DELETE_EVENT_FAILURE'
+
+
 export const getEvents = () => ({
     type: GET_EVENTS,
   })
@@ -23,12 +28,12 @@ export const getEventsFailure = () => ({
   type: GET_EVENTS_FAILURE,
   })
 
-export function fetchEvents(date, sessionToken) {
+export function fetchEvents(date, sessionToken, corp_id) {
   return async dispatch => {
     dispatch(getEvents())
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?date=${date}`,
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?date=${date}&corp_id=${corp_id}`,
       {headers: {authorization: sessionToken}});
       const data = await response.json();
 
@@ -52,12 +57,12 @@ export const putEventsFailure = () => ({
 type: PUT_EVENTS_FAILURE,
 })
 
-export function createEvent(name, description, date, time_from, time_to, users, sessionToken) {
+export function createEvent(name, description, date, time_from, time_to, users, sessionToken, corp_id) {
   return async dispatch => {
     dispatch(putEvents())
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${name}&description=${description}&date=${date}&time_from=${time_from}&time_to=${time_to}&users=${users}`,{
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${name}&description=${description}&date=${date}&time_from=${time_from}&time_to=${time_to}&users=${users}&corp_id=${corp_id}`,{
         headers: {authorization: sessionToken},
         method: "PUT",
       });
@@ -87,7 +92,7 @@ export function postUpdateEvent(event_id, name, description, time_from, time_to,
     dispatch(updateEvent())
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?event_id=${event_id}&name=${name}&description=${description}&time_from=${time_from}&time_to=${time_to}&users=${users}&`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?event_id=${event_id}&name=${name}&description=${description}&time_from=${time_from}&time_to=${time_to}&users=${users}`, {
         headers: {authorization: sessionToken},
         method: "POST",
       });
@@ -95,6 +100,35 @@ export function postUpdateEvent(event_id, name, description, time_from, time_to,
       dispatch(updateEventSuccess());
     } catch (error) {
       dispatch(updateEventFailure());
+    }
+  }
+}
+
+export const deleteEvent = () => ({
+  type: DELETE_EVENT,
+})
+
+export const deleteEventSuccess = () => ({
+  type: DELETE_EVENT_SUCCESS,
+})
+
+export const deleteEventFailure = () => ({
+  type: DELETE_EVENT_FAILURE,
+})
+
+export function postDeleteEvent(id, sessionToken) {
+  return async dispatch => {
+    dispatch(deleteEvent())
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?id=${id}`, {
+        headers: {authorization: sessionToken},
+        method: "DELETE",
+      });
+
+      dispatch(deleteEventSuccess(id));
+    } catch (error) {
+      dispatch(deleteEventFailure());
     }
   }
 }

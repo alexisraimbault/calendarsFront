@@ -3,17 +3,27 @@ import React, {
 } from 'react';
 import './styles.scss'
 import _ from 'lodash';
+import classNames from 'classnames';
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import { fetchUsers } from '../../redux/actions/userActions'
+import { fetchUsers, requestUpdateUserStatus } from '../../redux/actions/userActions'
 
 class UserDisplay extends Component {
 
     componentDidMount() {
-        const { fetchUsers, sessionToken } = this.props;
+        const { fetchUsers, sessionToken, userInfos } = this.props;
 
-        fetchUsers(sessionToken);
+        fetchUsers(_.get(userInfos, "corpId"), sessionToken);
+    }
+
+    updateStatus = (userId, status) => () => {
+        console.log("ALEXIS test")
+        const { sessionToken, fetchUsers, requestUpdateUserStatus, userInfos } = this.props;
+
+        requestUpdateUserStatus(userId, status, sessionToken).then( () => {
+            fetchUsers(_.get(userInfos, "corpId"), sessionToken);
+        });
     }
 
 	render() {
@@ -21,7 +31,24 @@ class UserDisplay extends Component {
 
         return (
             <div className="users-container">
-                {_.map(users, user => <div className="user-item" >{user.name}</div>)}
+                {_.map(_.orderBy(users, 'name'), user => {
+                    const adminClass = classNames({
+                        "status-container": true,
+                        "status-container--toggled": user.status === "admin",
+                    });
+
+                    const userClass = classNames({
+                        "status-container": true,
+                        "status-container--toggled": user.status === "user",
+                    });
+            
+                    return(<div className="user-item" >
+                        {user.name}
+                        <div className="status-selector-container">
+                            <div className={adminClass} onClick={this.updateStatus(user.id, "admin")}>{"ADMIN"}</div>
+                            <div className={userClass} onClick={this.updateStatus(user.id, "user")}>{"USER"}</div>
+                        </div>
+                        </div>)})}
             </div>
         );
     }
@@ -33,10 +60,12 @@ const mapStateToProps = state => ({
     users: state.users.users,
     hasErrors: state.users.hasErrors,
     sessionToken: state.me.sessionToken,
+    userInfos: state.me.infos,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     fetchUsers: fetchUsers,
+    requestUpdateUserStatus: requestUpdateUserStatus,
 }, dispatch);
 // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(UserDisplay)

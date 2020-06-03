@@ -53,4 +53,17 @@
             }
         }
     }
+
+    .btns-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .save-btn{
+            margin-right: 8px;
+        }
+        .delete-btn{
+            margin-left: 8px;
+        }
+    }
 }
