@@ -9,6 +9,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { fetchUsers, requestUpdateUserStatus } from '../../redux/actions/userActions'
 
+import { Scrollbars } from 'react-custom-scrollbars';
+
 class UserDisplay extends Component {
 
     componentDidMount() {
@@ -18,7 +20,6 @@ class UserDisplay extends Component {
     }
 
     updateStatus = (userId, status) => () => {
-        console.log("ALEXIS test")
         const { sessionToken, fetchUsers, requestUpdateUserStatus, userInfos } = this.props;
 
         requestUpdateUserStatus(userId, status, sessionToken).then( () => {
@@ -30,26 +31,32 @@ class UserDisplay extends Component {
         const { users } = this.props;
 
         return (
-            <div className="users-container">
-                {_.map(_.orderBy(users, 'name'), user => {
-                    const adminClass = classNames({
-                        "status-container": true,
-                        "status-container--toggled": user.status === "admin",
-                    });
+            <Scrollbars
+                autoHeight
+                autoHeightMin={0}
+                autoHeightMax={200}
+            >
+                <div className="users-container">
+                    {_.map(_.orderBy(users, 'name'), user => {
+                        const adminClass = classNames({
+                            "status-container": true,
+                            "status-container--toggled": user.status === "admin",
+                        });
 
-                    const userClass = classNames({
-                        "status-container": true,
-                        "status-container--toggled": user.status === "user",
-                    });
-            
-                    return(<div className="user-item" >
-                        {user.name}
-                        <div className="status-selector-container">
-                            <div className={adminClass} onClick={this.updateStatus(user.id, "admin")}>{"ADMIN"}</div>
-                            <div className={userClass} onClick={this.updateStatus(user.id, "user")}>{"USER"}</div>
-                        </div>
-                        </div>)})}
-            </div>
+                        const userClass = classNames({
+                            "status-container": true,
+                            "status-container--toggled": user.status === "user",
+                        });
+                
+                        return(<div className="user-item" >
+                            {user.name}
+                            <div className="status-selector-container">
+                                <div className={adminClass} onClick={this.updateStatus(user.id, "admin")}>{"ADMIN"}</div>
+                                <div className={userClass} onClick={this.updateStatus(user.id, "user")}>{"USER"}</div>
+                            </div>
+                            </div>)})}
+                </div>
+            </Scrollbars>
         );
     }
 }

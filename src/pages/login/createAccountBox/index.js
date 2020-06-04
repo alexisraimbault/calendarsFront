@@ -38,9 +38,9 @@ class CreateAccountBox extends Component {
         const { login, password, name } = this.state;
         return (
             <div className="create-account-box-container">
-                <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} />
-                <EditableLabel value={name} onChange={this.updateName} placeholder={"Name"} />
-                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} />
+                <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} isDescription={false} />
+                <EditableLabel value={name} onChange={this.updateName} placeholder={"Name"} isDescription={false} />
+                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} isDescription={false} />
                 <div className="login-btn">
                     <ActionButton clickAction={this.sendRequest} label={"CREATE ACCOUNT"} />
                 </div>

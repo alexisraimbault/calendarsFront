@@ -12,17 +12,36 @@ export default class EditableLabel extends Component {
 		}
     }
 
+    test = (e) => {
+        console.log("ALEXIS", e)
+    }
+
 	render() {
         const { isToggled } = this.state;
-        const { onChange , value, placeholder} = this.props;
+        const { onChange , value, placeholder, isDescription } = this.props;
 
         return (
-            <input
-                className="editable-label-input"
-                value={value}
-                onChange={onChange}
-                placeholder={placeholder}
-            />
+            <div>
+                {isDescription ? (
+                    <textArea
+                        className="editable-label-description"
+                        onChange={onChange}
+                        placeholder={placeholder}
+                    >
+                        {value}
+                    </textArea>
+                )
+            :(
+                <input
+                    className="editable-label-input"
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                />
+            )
+            }
+            </div>
+            
         );
     }
 

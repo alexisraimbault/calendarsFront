@@ -86,15 +86,15 @@ class EventDetailsPopup extends Component {
 
 	render() {
         const { title, description } = this.state; 
-        const { invited } = this.props;
+        const { invited, userInfos } = this.props;
 
         return (
             <div className="new-event-popup-container">
                 <div className="top-popup-container">
                 <div className="title">{"Event details"}</div>
                     <div className="edit-box" >
-                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} />
-                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} />
+                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} isDescription={false} />
+                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} isDescription />
                         <div className="date-picker">
                             {this.state.eventDate}
                         </div>
@@ -119,9 +119,10 @@ class EventDetailsPopup extends Component {
                     <div className="save-btn">
                         <ActionButton clickAction={this.sendUpdateEventRequest} label={"Save modifications"}/>
                     </div>
-                    <div className="delete-btn">
-                        <ActionButton isDanger clickAction={this.sendDeleteEventRequest} label={"Delete"}/>
-                    </div>
+                    {_.get(userInfos, "status", "user") === "admin" && (
+                        <div className="delete-btn">
+                            <ActionButton isDanger clickAction={this.sendDeleteEventRequest} label={"Delete"}/>
+                        </div>)}
                 </div>
             </div>
         );

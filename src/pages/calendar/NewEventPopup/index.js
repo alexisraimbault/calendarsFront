@@ -85,8 +85,8 @@ class NewEventPopup extends Component {
                 <div className="top-popup-container">
                 <div className="title">{"New event"}</div>
                     <div className="edit-box" >
-                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} />
-                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} />
+                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} isDescription={false} />
+                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} isDescription />
                         <div className="date-picker">
                             <DatePicker
                                 selected={this.state.eventDate}

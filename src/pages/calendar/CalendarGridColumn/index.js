@@ -4,6 +4,7 @@ import { isToday } from 'date-fns';
 import classNames from 'classnames';
 import './styles.scss'
 import * as moment from 'moment';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import EventDetailsPopup from '../EventDetailsPopup'
 
@@ -145,24 +146,23 @@ class CalendarGridColumn extends Component {
                         fetchEventsData={this.props.fetchEventsData}
                         title={event.name}
                         description={event.description}
-                        date={event.date}
+                        date={moment(event.date).format('MM/DD/YYYY')}
                         startTime={event.time_from}
                         endTime={event.time_to}
                         invited={event.invitations}
                         eventId={event.id}
                       />
-                    // <div className="event-popup-container">
-                    //   <div className="event-author">{event.name}</div>
-                    //   <div className="event-description">{event.description}</div>
-                    //   {_.map(event.invitations, recipient => <div>{`${recipient.name}`}</div>)}
-                    // </div>
                     ));
                     setPopupState(true)
                   }}>
                   <div className="event-holder-2">
-                    <div className="event-author">{event.name}</div>
-                    <div className="event-description">{event.description}</div>
-                    {_.map(event.invitations, recipient => <div>{`${recipient.name}`}</div>)}
+                    <Scrollbars className="custom-scrollbars" renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>}>
+                      <div className="event-author">{event.name}</div>
+                      <div className="event-recipients">
+                        {_.join(_.map(event.invitations, recipient => recipient.name), ' · ')}
+                      </div>
+                      <div className="event-description">{event.description}</div>
+                    </Scrollbars>
                   </div>
                 </div>
               </div>

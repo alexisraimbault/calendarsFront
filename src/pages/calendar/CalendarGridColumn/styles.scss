@@ -39,16 +39,39 @@
                 align-items: center;
                 justify-content: center;
 
+                .custom-scrollbars  > div:last-child {
+                    opacity: 0;
+                    transition: opacity 200ms ease;
+                }
+                
+                .custom-scrollbars:hover > div:last-child {
+                    opacity: 1;
+                }
+
                 .event-holder-2{
                     height: 95%;
                     width: 85%;
                     font-family: $font;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    justify-content: flex-start;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
 
                     .event-author{
+                        flex: 0 1 auto;
                         font-weight: 600;
                     }
                     .event-description{
+                        flex: 1 1 auto;
+                        font-size: 0.9em;
                         margin: 12px 0px;
+                        flex-shrink: 1;
+                    }
+                    .event-recipients{
+                        flex: 0 1 auto;
+                        font-size: 0.8em;
                     }
                 }
             }

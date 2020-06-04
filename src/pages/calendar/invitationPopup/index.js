@@ -34,7 +34,7 @@ class InvitationPopup extends Component {
         return (
             <div className="invitation-popup-container">
                 <UserDisplay />
-                <EditableLabel value={mail} onChange={this.updateMail} placeholder={"Mail"} />
+                <EditableLabel value={mail} onChange={this.updateMail} placeholder={"Mail"} isDescription={false} />
                 <ActionButton clickAction={this.sendInvitation} label={"SEND INVITATION"} />
             </div>
         );

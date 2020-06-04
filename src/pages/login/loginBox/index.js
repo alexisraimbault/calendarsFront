@@ -35,8 +35,8 @@ class LoginBox extends Component {
         const { login, password } = this.state;
         return (
             <div className="login-box-container">
-                <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} />
-                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} />
+                <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} isDescription={false} />
+                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} isDescription={false} />
                 <div className="login-btn">
                     <ActionButton clickAction={this.sendAuthRequest} label={"LOGIN"} />
                 </div>
