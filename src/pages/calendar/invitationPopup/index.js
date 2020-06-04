@@ -31,11 +31,17 @@ class InvitationPopup extends Component {
 
 	render() {
         const { mail } = this.state;
+        const { userInfos } = this.props;
+
+        const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
+        
         return (
             <div className="invitation-popup-container">
                 <UserDisplay />
-                <EditableLabel value={mail} onChange={this.updateMail} placeholder={"Mail"} isDescription={false} />
-                <ActionButton clickAction={this.sendInvitation} label={"SEND INVITATION"} />
+                {isAdmin && (
+                        <EditableLabel value={mail} onChange={this.updateMail} placeholder={"Mail"} isDescription={false} />)}
+                {isAdmin && (
+                        <ActionButton clickAction={this.sendInvitation} label={"SEND INVITATION"} />)}
             </div>
         );
     }
@@ -44,6 +50,7 @@ class InvitationPopup extends Component {
 // Map Redux state to React component props
 const mapStateToProps = state => ({
     sessionToken: state.me.sessionToken,
+    userInfos: state.me.infos,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

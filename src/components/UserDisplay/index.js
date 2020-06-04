@@ -28,7 +28,9 @@ class UserDisplay extends Component {
     }
 
 	render() {
-        const { users } = this.props;
+        const { users, userInfos } = this.props;
+        const isAdmin = _.get(userInfos, "status", "user") === "admin";
+        const userId = _.get(userInfos, "id");
 
         return (
             <Scrollbars
@@ -48,13 +50,15 @@ class UserDisplay extends Component {
                             "status-container--toggled": user.status === "user",
                         });
                 
-                        return(<div className="user-item" >
+                        return(
+                        <div className="user-item" >
                             {user.name}
-                            <div className="status-selector-container">
-                                <div className={adminClass} onClick={this.updateStatus(user.id, "admin")}>{"ADMIN"}</div>
-                                <div className={userClass} onClick={this.updateStatus(user.id, "user")}>{"USER"}</div>
-                            </div>
-                            </div>)})}
+                            {isAdmin && user.id !== userId && (
+                                <div className="status-selector-container">
+                                    <div className={adminClass} onClick={this.updateStatus(user.id, "admin")}>{"ADMIN"}</div>
+                                    <div className={userClass} onClick={this.updateStatus(user.id, "user")}>{"USER"}</div>
+                                </div>)}
+                        </div>)})}
                 </div>
             </Scrollbars>
         );
