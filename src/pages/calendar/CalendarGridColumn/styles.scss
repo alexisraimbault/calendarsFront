@@ -62,16 +62,19 @@
                     .event-author{
                         flex: 0 1 auto;
                         font-weight: 600;
+                        overflow-wrap: break-word;
                     }
                     .event-description{
                         flex: 1 1 auto;
                         font-size: 0.9em;
                         margin: 12px 0px;
                         flex-shrink: 1;
+                        overflow-wrap: break-word;
                     }
                     .event-recipients{
                         flex: 0 1 auto;
                         font-size: 0.8em;
+                        overflow-wrap: break-word;
                     }
                 }
             }

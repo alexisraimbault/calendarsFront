@@ -10,9 +10,11 @@
     
     .week-navigation-holder{
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
         align-items: center;
         padding: 8px 18px;
+        padding-top: 12px;
         border-radius: 12px;
         background-color: $rose;
         width: 180px;
@@ -20,12 +22,26 @@
         font-family: $font;
         font-weight: 600;
 
-        .calendar-navigation-container{
-            cursor: pointer;
-            height: 22px;
+        .top {
+            width: 100%;
             display: flex;
-            align-items: flex-end;
+            justify-content: space-between;
+            align-items: center;
+
+            .calendar-navigation-container{
+                cursor: pointer;
+                height: 22px;
+                display: flex;
+                align-items: flex-end;
+            }
         }
+
+        .bottom{
+            font-weight: 600;
+            font-size: 0.7em;
+            color: grey;
+        }
+        
     }
 }
 
