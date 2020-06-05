@@ -35,6 +35,8 @@ class LoginPage extends Component {
     
     createAccount = () => this.setState({createAccoundMode: true})
 
+    login = () => this.setState({createAccoundMode: false})
+
     navigateToCalendar = () => {
         this.props.history.push(`/calendar`);
     }
@@ -50,9 +52,11 @@ class LoginPage extends Component {
                 : 
                     <LoginBox />
                 }
-                {/* {_.isNil(sessionToken) && ( */}
-                <div onClick={this.createAccount}>{"Not user yet ? Create account !"}</div>
-                {/* )} */}
+                {createAccoundMode ?
+                    <div className="login-link" onClick={this.login}>{"Already have an account ? Login !"}</div>
+                :
+                    <div className="login-link" onClick={this.createAccount}>{"Not user yet ? Create account !"}</div>
+                }
                 {!_.isNil(sessionToken) && <div onClick={this.navigateToCalendar}>{"Authenticated ! go to calendars"}</div>}
             </div>
         );

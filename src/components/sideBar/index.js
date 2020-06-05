@@ -27,7 +27,7 @@ class Sidebar extends Component {
 
 
 	render() {
-		const { recipients, toggleRecipient, openInvitationPopup, logout } = this.props;
+		const { recipients, toggleRecipient, openInvitationPopup, logout, userName } = this.props;
 		const { isToggled, menuToggle } = this.state;
 
 		const sidebarClass = classNames({
@@ -52,6 +52,9 @@ class Sidebar extends Component {
 
 		return (
 			<div className="sidebar-big-container" >
+				<div className="sidebar-user-display">
+					{userName}
+				</div>
 				<div className={sidebarClass} >
 						{/* <div>
 							<svg viewBox="0 0 512 512" width="20" height="20">

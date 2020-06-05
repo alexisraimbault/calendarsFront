@@ -22,7 +22,7 @@ export default function eventsReducer(state = initialState, action) {
 			return { events: newEvents, loading: false, hasErrors: false }
 
 		case actions.DELETE_EVENT_SUCCESS:
-			const newEventsPostDelete = _.remove(state.events, item => item.id === action.payload);
+			const newEventsPostDelete = _.remove(state.events, item => item.id !== action.payload);
 			return { events: newEventsPostDelete, loading: false, hasErrors: false }
 		
 		case actions.UPDATE_EVENT_SUCCESS:

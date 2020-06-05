@@ -78,7 +78,8 @@ class NewEventPopup extends Component {
     }
 
 	render() {
-        const { title, description } = this.state; 
+        const { title, description } = this.state;
+        const { isLoading } = this.props; 
 
         return (
             <div className="new-event-popup-container">
@@ -111,7 +112,7 @@ class NewEventPopup extends Component {
                     </div>
                 </div>
                 <div className="save-btn">
-                    <ActionButton clickAction={this.sendCreateEventRequest} label={"Save"}/>
+                    <ActionButton clickAction={this.sendCreateEventRequest} label={"Save"} isLoading={isLoading}/>
                 </div>
             </div>
         );
@@ -127,6 +128,7 @@ const mapStateToProps = state => ({
     hasErrors: state.users.hasErrors,
     sessionToken: state.me.sessionToken,
     userInfos: state.me.infos,
+    isLoading: state.events.loading,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

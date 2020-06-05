@@ -33,12 +33,14 @@ class LoginBox extends Component {
 
 	render() {
         const { login, password } = this.state;
+        const { isLoading } = this.props;
+
         return (
             <div className="login-box-container">
                 <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} isDescription={false} />
-                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} isDescription={false} />
+                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} isDescription={false} isPassword />
                 <div className="login-btn">
-                    <ActionButton clickAction={this.sendAuthRequest} label={"LOGIN"} />
+                    <ActionButton clickAction={this.sendAuthRequest} label={"LOGIN"} isLoading={isLoading} />
                 </div>
             </div>
         );
@@ -50,6 +52,7 @@ class LoginBox extends Component {
 // Map Redux state to React component props
 const mapStateToProps = state => ({
     sessionToken: state.me.sessionToken,
+    isLoading: state.me.loading,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

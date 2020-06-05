@@ -28,21 +28,25 @@ class CreateAccountBox extends Component {
     updatePassword = e => this.setState({password: e.target.value})
 
     sendRequest = () => {
-        const { requestcreateUser, userInfos } = this.props;
+        const { requestcreateUser, userInfos, isLoading } = this.props;
         const { login, password, name } = this.state;
+
+        if(isLoading) {return;}
 
         requestcreateUser(login, name, password, "user", _.get(userInfos, "corpId") )
     }
 
 	render() {
+        const { isLoading } = this.props;
         const { login, password, name } = this.state;
+
         return (
             <div className="create-account-box-container">
                 <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} isDescription={false} />
                 <EditableLabel value={name} onChange={this.updateName} placeholder={"Name"} isDescription={false} />
-                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} isDescription={false} />
+                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} isDescription={false} isPassword/>
                 <div className="login-btn">
-                    <ActionButton clickAction={this.sendRequest} label={"CREATE ACCOUNT"} />
+                    <ActionButton clickAction={this.sendRequest} label={ "CREATE ACCOUNT" } isLoading={isLoading} />
                 </div>
             </div>
         );
@@ -55,6 +59,7 @@ class CreateAccountBox extends Component {
 const mapStateToProps = state => ({
     sessionToken: state.me.sessionToken,
     userInfos: state.me.infos,
+    isLoading: state.events.loading,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

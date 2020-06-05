@@ -75,18 +75,15 @@ class EventDetailsPopup extends Component {
     }
 
     sendDeleteEventRequest = () => {
-        const { postDeleteEvent, eventId, sessionToken } = this.props
+        const { postDeleteEvent, eventId, sessionToken, closePopup } = this.props
 
-        postDeleteEvent(eventId, sessionToken).then( () => {
-            fetchEventsData();
-            closePopup();
-        });
-
+        postDeleteEvent(eventId, sessionToken);
+        closePopup();
     }
 
 	render() {
         const { title, description } = this.state; 
-        const { invited, userInfos } = this.props;
+        const { invited, userInfos, isLoading } = this.props;
 
         return (
             <div className="new-event-popup-container">
@@ -117,11 +114,11 @@ class EventDetailsPopup extends Component {
                 </div>
                 <div className="btns-container">
                     <div className="save-btn">
-                        <ActionButton clickAction={this.sendUpdateEventRequest} label={"Save modifications"}/>
+                        <ActionButton clickAction={this.sendUpdateEventRequest} label={"Save modifications"} isLoading={isLoading}/>
                     </div>
                     {_.get(userInfos, "status", "user") === "admin" && (
                         <div className="delete-btn">
-                            <ActionButton isDanger clickAction={this.sendDeleteEventRequest} label={"Delete"}/>
+                            <ActionButton isDanger clickAction={this.sendDeleteEventRequest} label={"Delete"} isLoading={isLoading}/>
                         </div>)}
                 </div>
             </div>
@@ -138,6 +135,7 @@ const mapStateToProps = state => ({
     hasErrors: state.users.hasErrors,
     sessionToken: state.me.sessionToken,
     userInfos: state.me.infos,
+    isLoading: state.events.loading
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

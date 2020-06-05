@@ -6,4 +6,10 @@
     align-items: center;
     justify-content: center;
     height: 80vh;
+    font-family: $font;
+
+    .login-link{
+        cursor: pointer;
+        margin-top: 8px;
+    }
 }

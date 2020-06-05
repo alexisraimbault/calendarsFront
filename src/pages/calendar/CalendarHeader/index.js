@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import _ from 'lodash';
 import { isToday, format, addDays } from 'date-fns';
+import * as moment from 'moment';
 import classNames from 'classnames';
 import './styles.scss'
 
@@ -24,7 +25,7 @@ class CalendarHeader extends Component {
 
           return (
             <div className="calendar-day-title-container">
-              <div className={titleClassName} >{format(dayOfWeek.day, 'EEE d MMMM')}</div>
+              <div className={titleClassName} >{moment(dayOfWeek.day).format('dddd D MMMM')}</div>
             </div>
           );})}
       </div>

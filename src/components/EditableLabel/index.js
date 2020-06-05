@@ -12,13 +12,9 @@ export default class EditableLabel extends Component {
 		}
     }
 
-    test = (e) => {
-        console.log("ALEXIS", e)
-    }
-
 	render() {
         const { isToggled } = this.state;
-        const { onChange , value, placeholder, isDescription } = this.props;
+        const { onChange , value, placeholder, isDescription, isPassword } = this.props;
 
         return (
             <div>
@@ -32,12 +28,21 @@ export default class EditableLabel extends Component {
                     </textArea>
                 )
             :(
-                <input
-                    className="editable-label-input"
-                    value={value}
-                    onChange={onChange}
-                    placeholder={placeholder}
-                />
+                isPassword ? 
+                    <input
+                        className="editable-label-input"
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                        type={"password"}
+                    />
+                    :
+                    <input
+                        className="editable-label-input"
+                        value={value}
+                        onChange={onChange}
+                        placeholder={placeholder}
+                    />
             )
             }
             </div>

@@ -17,7 +17,7 @@ export default function usersReducer(state = initialState, action) {
 		case actions.INVITE_USER_SUCCESS:
 		case actions.CREATE_USER_SUCCESS:
 		case actions.UPDATE_USER_STATUS_SUCCESS:
-			return { loading: false, hasErrors: false }
+			return { ...state, loading: false, hasErrors: false }
 		
 		case actions.GET_USERS_SUCCESS:
 			return { users: action.payload, loading: false, hasErrors: false }

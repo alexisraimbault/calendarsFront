@@ -41,6 +41,9 @@ class Calendar extends Component {
   componentDidMount() {
     const { week, year } = this.props.match.params;
     const { sessionToken, fetchEvents, history, userInfos } = this.props;
+
+    moment.locale('fr');
+
     if(_.isNil(sessionToken)) {
       history.push("/login");
     }
@@ -184,6 +187,7 @@ class Calendar extends Component {
 
   render() {
     const { weekStart, isPopupDisplayed, popupContent } = this.state;
+    const { userInfos } = this.props;
 
     const filteredEvents = _.filter(this.props.events, event => !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.invitations, 'id'))));
 
@@ -194,7 +198,7 @@ class Calendar extends Component {
     let daysOfWeek = [];
     
     _.forEach(_.times(5), item => {
-      const day = moment(weekStart).add(item, 'd')._d;
+      const day = moment(weekStart).add(item + 1, 'd')._d;
       daysOfWeek.push(
         {
           day: day,
@@ -211,7 +215,13 @@ class Calendar extends Component {
     return (
       !_.isNil(weekStart) && 
       <div>
-        <Sidebar recipients={this.getRecipients(this.props.events)} toggleRecipient={this.toggleRecipient} openInvitationPopup={this.openInvitationPopup} logout={this.logout}/>
+        <Sidebar 
+          recipients={this.getRecipients(this.props.events)}
+          toggleRecipient={this.toggleRecipient} 
+          openInvitationPopup={this.openInvitationPopup} 
+          logout={this.logout}
+          userName={_.get(userInfos, 'name')}
+        />
         <div className="week-navigation-container">
           <div className="week-navigation-holder">
             <div className="calendar-navigation-container" onClick={this.navigateToPreviousWeek}>
@@ -222,7 +232,7 @@ class Calendar extends Component {
                   l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"/>
               </svg>
             </div>
-            <div>{`${moment(weekStart).format("MMM D")} - ${moment(weekStart).add(4, 'd').format("MMM D")}`}</div>
+            <div>{`${moment(weekStart).format("D MMM")} - ${moment(weekStart).add(4, 'd').format("D MMM")}`}</div>
             <div className="calendar-navigation-container" onClick={this.navigateToNextWeek}>
               <svg viewBox="0 0 512 512" width="20" height="20">
                 <path d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12

@@ -14,7 +14,7 @@ export default function meReducer(state = initialState, action) {
 			return { ...state, loading: true }
 
 		case actions.LOGOUT:
-			return { sessionToken: null, loading: false, hasErrors: true }
+			return { ...state, sessionToken: null, loading: false, hasErrors: true }
 
 		case actions.AUTHENTICATE_SUCCESS:
 			const sessionToken = action.payload;
@@ -24,7 +24,7 @@ export default function meReducer(state = initialState, action) {
 			return { sessionToken: sessionToken, infos: JSON.parse(decodedPayload), loading: false, hasErrors: false }
 
 		case actions.AUTHENTICATE_FAILURE:
-			return { sessionToken: null, loading: false, hasErrors: true }
+			return { ...state, sessionToken: null, loading: false, hasErrors: true }
 
 		default:
 			return state

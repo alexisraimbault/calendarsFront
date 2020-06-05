@@ -108,8 +108,9 @@ export const deleteEvent = () => ({
   type: DELETE_EVENT,
 })
 
-export const deleteEventSuccess = () => ({
+export const deleteEventSuccess = id => ({
   type: DELETE_EVENT_SUCCESS,
+  payload: id,
 })
 
 export const deleteEventFailure = () => ({

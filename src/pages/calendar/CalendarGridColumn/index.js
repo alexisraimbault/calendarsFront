@@ -146,7 +146,7 @@ class CalendarGridColumn extends Component {
                         fetchEventsData={this.props.fetchEventsData}
                         title={event.name}
                         description={event.description}
-                        date={moment(event.date).format('MM/DD/YYYY')}
+                        date={moment(event.date).format('DD/MM/YYYY')}
                         startTime={event.time_from}
                         endTime={event.time_to}
                         invited={event.invitations}

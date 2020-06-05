@@ -26,12 +26,14 @@ class InvitationPopup extends Component {
         const { requestInviteUser, sessionToken } = this.props;
         const { mail } = this.state;
 
-        requestInviteUser(mail, sessionToken);
+        requestInviteUser(mail, sessionToken).then(() => {
+            this.setState({mail: ''})
+        });
     }
 
 	render() {
         const { mail } = this.state;
-        const { userInfos } = this.props;
+        const { userInfos, isLoading } = this.props;
 
         const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
         
@@ -41,7 +43,7 @@ class InvitationPopup extends Component {
                 {isAdmin && (
                         <EditableLabel value={mail} onChange={this.updateMail} placeholder={"Mail"} isDescription={false} />)}
                 {isAdmin && (
-                        <ActionButton clickAction={this.sendInvitation} label={"SEND INVITATION"} />)}
+                        <ActionButton clickAction={this.sendInvitation} label={"SEND INVITATION"} isLoading={isLoading} />)}
             </div>
         );
     }
@@ -51,6 +53,7 @@ class InvitationPopup extends Component {
 const mapStateToProps = state => ({
     sessionToken: state.me.sessionToken,
     userInfos: state.me.infos,
+    isLoading: state.users.loading,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
