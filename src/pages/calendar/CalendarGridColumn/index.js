@@ -167,7 +167,7 @@ class CalendarGridColumn extends Component {
                     <Scrollbars className="custom-scrollbars" renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>}>
                       <div className="event-author">{event.name}</div>
                       <div className="event-recipients">
-                        {_.join(_.map(event.invitations, recipient => recipient.name), ' · ')}
+                        {_.map(event.invitations, recipient => <div className="event-recipient">{recipient.name}</div>)}
                       </div>
                       <div className="event-description">{event.description}</div>
                     </Scrollbars>

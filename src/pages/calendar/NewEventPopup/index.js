@@ -84,32 +84,38 @@ class NewEventPopup extends Component {
         return (
             <div className="new-event-popup-container">
                 <div className="top-popup-container">
-                <div className="title">{"New event"}</div>
+                    <div className="title">{"New event"}</div>
                     <div className="edit-box" >
-                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} isDescription={false} />
-                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} isDescription />
-                        <div className="date-picker">
-                            <DatePicker
-                                selected={this.state.eventDate}
-                                onChange={this.handleChangeDate}
-                            />
+                        <div className="left">
+                            <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} isDescription={false} />
+                            <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} isDescription />
                         </div>
-                        <div className="time-pickers-container">
-                            <div className="time-picker">
-                                <TimePicker
-                                    onChange={this.onChangeStartTime}
-                                    value={this.state.start_time}
+                        <div className="right">
+                            <div className="date-picker">
+                                <DatePicker
+                                    selected={this.state.eventDate}
+                                    onChange={this.handleChangeDate}
                                 />
                             </div>
-                            <div className="time-picker">
-                                <TimePicker
-                                    onChange={this.onChangeEndTime}
-                                    value={this.state.end_time}
-                                />
+                            <div className="time-pickers-container">
+                                <div className="time-picker">
+                                    <div className="time-label">{"from : "}</div>
+                                    <TimePicker
+                                        onChange={this.onChangeStartTime}
+                                        value={this.state.start_time}
+                                    />
+                                </div>
+                                <div className="time-picker">
+                                    <div className="time-label">{"to : "}</div>
+                                    <TimePicker
+                                        onChange={this.onChangeEndTime}
+                                        value={this.state.end_time}
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <UserSelector setSelectedUsersIds={this.setSelectedUsersIds}/>
                     </div>
+                    <UserSelector setSelectedUsersIds={this.setSelectedUsersIds}/>
                 </div>
                 <div className="save-btn">
                     <ActionButton clickAction={this.sendCreateEventRequest} label={"Save"} isLoading={isLoading}/>

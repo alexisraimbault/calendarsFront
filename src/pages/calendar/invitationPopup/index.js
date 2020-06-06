@@ -39,6 +39,7 @@ class InvitationPopup extends Component {
         
         return (
             <div className="invitation-popup-container">
+                <div className="title">{"Users"}</div>
                 <UserDisplay />
                 {isAdmin && (
                         <EditableLabel value={mail} onChange={this.updateMail} placeholder={"Mail"} isDescription={false} />)}

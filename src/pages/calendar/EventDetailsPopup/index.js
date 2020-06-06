@@ -86,31 +86,37 @@ class EventDetailsPopup extends Component {
         const { invited, userInfos, isLoading } = this.props;
 
         return (
-            <div className="new-event-popup-container">
+            <div className="event-details-popup-container">
                 <div className="top-popup-container">
                 <div className="title">{"Event details"}</div>
                     <div className="edit-box" >
-                        <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} isDescription={false} />
-                        <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} isDescription />
-                        <div className="date-picker">
-                            {this.state.eventDate}
+                        <div className="left">
+                            <EditableLabel value={title} onChange={this.updateTitle} placeholder={"Title here"} isDescription={false} />
+                            <EditableLabel value={description} onChange={this.updateDescription} placeholder={"Description here"} isDescription />
                         </div>
-                        <div className="time-pickers-container">
-                            <div className="time-picker">
-                                <TimePicker
-                                    onChange={this.onChangeStartTime}
-                                    value={this.state.start_time}
-                                />
+                        <div className="right">
+                            <div className="date-picker">
+                                {this.state.eventDate}
                             </div>
-                            <div className="time-picker">
-                                <TimePicker
-                                    onChange={this.onChangeEndTime}
-                                    value={this.state.end_time}
-                                />
+                            <div className="time-pickers-container">
+                                <div className="time-picker">
+                                    <div className="time-label">{"from : "}</div>
+                                    <TimePicker
+                                        onChange={this.onChangeStartTime}
+                                        value={this.state.start_time}
+                                    />
+                                </div>
+                                <div className="time-picker">
+                                    <div className="time-label">{"to : "}</div>
+                                    <TimePicker
+                                        onChange={this.onChangeEndTime}
+                                        value={this.state.end_time}
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={invited}/>
                     </div>
+                    <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={invited}/>
                 </div>
                 <div className="btns-container">
                     <div className="save-btn">

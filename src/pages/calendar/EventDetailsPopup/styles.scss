@@ -1,8 +1,7 @@
 @import "src/utils/variables";
 
-.new-event-popup-container{
+.event-details-popup-container{
     width: 640px;
-    height: 500px;
     z-index: 3;
     background-color: white;
     border-radius: 8px;
@@ -14,15 +13,40 @@
     align-items: center;
     justify-content: space-between;
 
+    .top-popup-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .title {
         font-size: 18px;
         font-weight: 600;
         margin-bottom: 12px;
     }
 
+    .top-popup-container {
+        width: 100%;
+    }
+
     .edit-box {
         display: flex;
-        flex-direction: column;
+        flex-direction: row !important;
+        width: 100%;
+
+        .left{
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: center;
+        }
+        .right{
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
     }
 
     .date-picker {
@@ -40,13 +64,21 @@
 
     .time-pickers-container {
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
         margin-top: 12px;
 
+        .time-label {
+            width: 50px;
+        }
+
         .time-picker {
+            display: flex;
+            align-items: center;
             border: solid 1px #f6e5f5;
             border-radius: 8px;
             padding: 0 8px;
+            margin: 8px;
 
             .react-time-picker__wrapper {
                 border: none;
@@ -58,6 +90,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: 8px;
 
         .save-btn{
             margin-right: 8px;
