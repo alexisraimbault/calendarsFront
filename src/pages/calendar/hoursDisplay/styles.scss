@@ -1,17 +1,21 @@
 @import "src/utils/variables";
 
 .hours-container {
+    @include light-content;
     position: absolute;
     width: 30px;
-    height: calc(90% + 14px);
+    height: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     left: -42px;
-    transform: translateY(-7px);
-    font-family: $font;
-    font-size: 0.8em;
-    font-weight: 500;
-    color: grey;
+    transform: translateY(-13px);
+
+    .hour-container {
+        height: 26px;
+        display: flex;
+        align-items: center;
+        position: absolute;
+    }
 }

@@ -1,0 +1,16 @@
+@import "src/utils/variables";
+
+.hours-lines-container {
+    @include light-content;
+    position: absolute;
+    width: 100%;
+    height: 90%;
+    
+    .hour-line-container{
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background-color: $grey;
+        opacity: 0.5;
+    }
+}

@@ -60,18 +60,21 @@
                     text-overflow: ellipsis;
 
                     .event-author{
+                        @include title;
                         flex: 0 1 auto;
-                        font-weight: 600;
                         overflow-wrap: break-word;
+                        margin-top: 4px;
                     }
                     .event-description{
+                        @include content;
                         flex: 1 1 auto;
-                        font-size: 0.9em;
                         margin: 12px 0px;
                         flex-shrink: 1;
                         overflow-wrap: break-word;
                     }
                     .event-recipients{
+                        @include small-content;
+                        margin-top: 4px;
                         flex: 0 1 auto;
                         font-size: 0.8em;
                         overflow-wrap: break-word;

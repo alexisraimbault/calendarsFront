@@ -7,5 +7,72 @@ $blue: #b9cced;
 $light-blue: #43d8c9;
 $card-color: #dae1e7;
 $dark-rose: #f96d80;
+$darker-grey: #342b38;
+$grey: #bbbbbb;
 
 $font: 'Nunito', sans-serif;
+
+//TODO mixins and use them
+@mixin big-title {
+    font-family: $font;
+    font-weight: 600;
+    font-size: 16px;
+    color: $darker-grey;
+    line-height: 16px;
+}
+
+@mixin title {
+    font-family: $font;
+    font-weight: 600;
+    font-size: 14px;
+    color: $darker-grey;
+    line-height: 15px;
+}
+
+@mixin small-title {
+    font-family: $font;
+    font-weight: 600;
+    font-size: 12px;
+    color: $darker-grey;
+    line-height: 15px;
+}
+
+@mixin light-title {
+    font-family: $font;
+    font-weight: 600;
+    font-size: 12px;
+    color: $grey;
+    line-height: 15px;
+}
+
+@mixin content {
+    font-family: $font;
+    font-weight: 400;
+    font-size: 14px;
+    color: $darker-grey;
+    line-height: 15px;
+}
+
+@mixin light-content {
+    font-family: $font;
+    font-weight: 400;
+    font-size: 14px;
+    color: $grey;
+    line-height: 15px;
+}
+
+@mixin small-content {
+    font-family: $font;
+    font-weight: 400;
+    font-size: 12px;
+    color: $darker-grey;
+    line-height: 15px;
+}
+
+@mixin small-light-content {
+    font-family: $font;
+    font-weight: 400;
+    font-size: 12px;
+    color: $grey;
+    line-height: 15px;
+}

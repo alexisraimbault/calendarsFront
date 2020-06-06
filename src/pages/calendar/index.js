@@ -6,6 +6,7 @@ import CalendarGridColumn from './calendarGridColumn';InvitationPopup
 import NewEventPopup from './NewEventPopup';
 import InvitationPopup from './invitationPopup';
 import HoursDisplay from './hoursDisplay';
+import HoursLines from './HoursLines';
 import * as moment from 'moment';
 import { startOfWeek, addDays, isToday, format, getDayOfYear } from 'date-fns';
 
@@ -255,6 +256,7 @@ class Calendar extends Component {
         <div className="calendar-center-container">
           <CalendarHeader daysOfWeek={daysOfWeek} />
           <HoursDisplay />
+          <HoursLines />
           {_.map(daysOfWeek, (dayObject, index) => (
             <CalendarGridColumn 
               setPopupState={this.setPopupState} 
