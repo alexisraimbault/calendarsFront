@@ -16,6 +16,14 @@ class CalendarGridColumn extends Component {
 
 
   //"10:30" => (10.5 - 6) * 100 / (20 - 6) -> bring the time t from an interval from 6h00 to 20h00 to an interval from 0 to 100
+  // 6h -> 0
+  // 7h -> 7.1
+  // 8h -> 14.3
+  // 9h -> 21.4
+  // 10h -> 28.6
+  // ...
+
+
   formatTime = (time) => {
     const timeData = _.split(time, ':');
     const normalizedTime = _.parseInt(timeData[0]) + (_.parseInt(timeData[1]) / 60);
