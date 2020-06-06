@@ -19,6 +19,9 @@ import { connect } from 'react-redux'
 import { fetchEvents } from '../../redux/actions/eventActions'
 import { logout } from '../../redux/actions/meActions'
 import { bindActionCreators } from 'redux';
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 import {
   useParams
@@ -27,6 +30,8 @@ import {
 class Calendar extends Component {
   constructor(props) {
     super(props);
+
+    this.datePickerRef = React.createRef();
 
     this.state = {
       weekStart: null,
@@ -157,6 +162,23 @@ class Calendar extends Component {
     });
   }
 
+  navigateToDate = date => {
+    const newWeekStart = startOfWeek(date, {weekStartsOn: 1});
+    const newWeek = moment(newWeekStart).week();
+    const newYear = moment(newWeekStart).year();
+    const newMonth = moment(newWeekStart).month() + 1;
+    const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
+
+    this.props.history.push(`/calendar/${newWeek}/${newYear}`);
+
+    this.setState({
+      fetchDate: `${newYear}_${newMonthFormatted}`,
+      weekStart: newWeekStart,
+      year: newYear,
+      week: newWeek,
+    });
+  }
+
 
   getDayFromWeekAndYear = (week, year) => {
     return moment().day("Monday").year(year).week(week).add(1, 'd').toDate();
@@ -185,6 +207,10 @@ class Calendar extends Component {
 
     logout();
     history.push("/login");
+  }
+
+  openDatePicker = () => {
+    this.datePickerRef.current.setOpen(true);
   }
 
   render() {
@@ -235,7 +261,7 @@ class Calendar extends Component {
                     l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"/>
                 </svg>
               </div>
-              <div>{`${moment(weekStart).format("D MMM")} - ${moment(weekStart).add(4, 'd').format("D MMM")}`}</div>
+              <div onClick={this.openDatePicker}>{`${moment(weekStart).format("D MMM")} - ${moment(weekStart).add(4, 'd').format("D MMM")}`}</div>
               <div className="calendar-navigation-container" onClick={this.navigateToNextWeek}>
                 <svg viewBox="0 0 512 512" width="20" height="20">
                   <path d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12
@@ -245,9 +271,14 @@ class Calendar extends Component {
                 </svg>
               </div>
             </div>
-            <div className="bottom">
+            <div className="bottom"  onClick={this.openDatePicker}>
               {`${moment(weekStart).format("YYYY")}`}
             </div>
+            <DatePicker
+              ref={this.datePickerRef}
+              selected={weekStart._d}
+              onChange={this.navigateToDate}
+            />
           </div>
         </div>
         <div className="add-action-btn-container">

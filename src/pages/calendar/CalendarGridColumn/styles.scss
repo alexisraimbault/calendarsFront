@@ -63,7 +63,7 @@
                         @include title;
                         flex: 0 1 auto;
                         overflow-wrap: break-word;
-                        margin-top: 4px;
+                        margin: 4px 0px;
                     }
                     .event-description{
                         @include content;
