@@ -1,120 +1,135 @@
 import React, {
-	Component
+  Component,
 } from 'react';
 import classNames from 'classnames';
-import './styles.scss'
+import './styles.scss';
 import CheckBox from '../CheckBox';
-import SettingsMenu from './components/settingsMenu'
-import TeamMenu from './components/teamMenu'
+import SettingsMenu from './components/settingsMenu';
+import TeamMenu from './components/teamMenu';
 import InvitationPopup from '../../pages/calendar/invitationPopup';
+import SingleUser from '../SingleUser'
 
 class Sidebar extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isToggled: true,
-			menuToggle: -1,
-		}
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      isToggled: true,
+      menuToggle: -1,
+    };
+  }
 
 	setToggle = (toggle) => () => {
-		this.setState({isToggled: toggle})
-	}
+	  this.setState({ isToggled: toggle });
+	};
 
 	setSubMenuToggle = (toggle) => () => {
-		this.setState({menuToggle: toggle})
-	}
+	  this.setState({ menuToggle: toggle });
+	};
 
 
 	render() {
-		const { recipients, toggleRecipient, openInvitationPopup, logout, userName } = this.props;
-		const { isToggled, menuToggle } = this.state;
+	  const {
+	    recipients, toggleRecipient, openInvitationPopup, logout, userName,
+	  } = this.props;
+	  const { isToggled, menuToggle } = this.state;
 
-		const sidebarClass = classNames({
-			"sidebar-container": true,
-			"sidebar-container--toggled": isToggled,
-		});
+	  const sidebarClass = classNames({
+	    'sidebar-container': true,
+	    'sidebar-container--toggled': isToggled,
+	  });
 
-		const sidebarLabelClass = classNames({
-			"sidebar-item-label": true,
-			"sidebar-item-label--toggled": isToggled,
-		});
+	  const sidebarLabelClass = classNames({
+	    'sidebar-item-label': true,
+	    'sidebar-item-label--toggled': isToggled,
+	  });
 
-		const submenuContainerClass = classNames({
-			"submenu-container": true,
-			"submenu-container--toggled": menuToggle !== -1,
-		})
-		
-		const submenuHaloClass = classNames({
-			"submenu-halo-container": true,
-			"submenu-halo-container--toggled": menuToggle !== -1,
-		})
+	  const submenuContainerClass = classNames({
+	    'submenu-container': true,
+	    'submenu-container--toggled': menuToggle !== -1,
+	  });
 
-		return (
-			<div className="sidebar-big-container" >
-				<div className="sidebar-user-display">
-					{userName}
-				</div>
-				<div className={sidebarClass} >
-						{/* <div>
+	  const submenuHaloClass = classNames({
+	    'submenu-halo-container': true,
+	    'submenu-halo-container--toggled': menuToggle !== -1,
+	  });
+
+	  return (
+  <div className="sidebar-big-container">
+    <div className="sidebar-user-display">
+      <SingleUser user={{name: userName}} inverted />
+    </div>
+    <div className={sidebarClass}>
+      {/* <div>
 							<svg viewBox="0 0 512 512" width="20" height="20">
-							<path d="m474.667969 0h-437.335938c-20.585937 0-37.332031 16.746094-37.332031 37.332031v49.386719c0 10.410156 4.394531 20.4375 12.097656 
-								27.542969l171.242188 156.863281c5.523437 5.011719 8.660156 12.183594 8.660156 19.648438v205.226562c0 5.886719 3.242188 11.328125 8.449219 
-								14.101562 2.367187 1.28125 4.96875 1.898438 7.550781 1.898438 3.113281 0 6.207031-.894531 8.875-2.6875l86.507812-57.664062c10.410157-6.933594 
-								16.617188-18.558594 16.617188-31.0625v-129.8125c0-7.464844 3.136719-14.636719 8.660156-19.667969l171.242188-156.886719c7.703125-7.0625 
+							<path d="m474.667969 0h-437.335938c-20.585937 0-37.332031 16.746094-37.332031 37.332031v49.386719c0 10.410156 4.394531 20.4375 12.097656
+								27.542969l171.242188 156.863281c5.523437 5.011719 8.660156 12.183594 8.660156 19.648438v205.226562c0 5.886719 3.242188 11.328125 8.449219
+								14.101562 2.367187 1.28125 4.96875 1.898438 7.550781 1.898438 3.113281 0 6.207031-.894531 8.875-2.6875l86.507812-57.664062c10.410157-6.933594
+								16.617188-18.558594 16.617188-31.0625v-129.8125c0-7.464844 3.136719-14.636719 8.660156-19.667969l171.242188-156.886719c7.703125-7.0625
 								12.097656-17.089844 12.097656-27.5v-49.386719c0-20.585937-16.746094-37.332031-37.332031-37.332031zm0 0"/>
 							</svg>
 						</div> */}
-					<div className="recipients-container">
-						{_.map(recipients, recipient => <div className="recipient-container"> {`${recipient.name}`}<CheckBox applyToggle={toggleRecipient} id={recipient.id} /></div>)}
-					</div>
-					<div className="sidebar-bottom-menu">
-					<div className="sidebar-item-container" onClick={openInvitationPopup}>
-							<div>
-								<svg viewBox="0 0 512 512" width="20" height="20">
-									<g>
-										<g>
-											<path d="M438.09,273.32h-39.596c4.036,11.05,6.241,22.975,6.241,35.404v149.65c0,5.182-0.902,10.156-2.543,14.782h65.461
-												c24.453,0,44.346-19.894,44.346-44.346v-81.581C512,306.476,478.844,273.32,438.09,273.32z"/>
-										</g>
-									</g>
-									<g>
-										<g>
-											<path d="M107.265,308.725c0-12.43,2.205-24.354,6.241-35.404H73.91c-40.754,0-73.91,33.156-73.91,73.91v81.581
-												c0,24.452,19.893,44.346,44.346,44.346h65.462c-1.641-4.628-2.543-9.601-2.543-14.783V308.725z"/>
-										</g>
-									</g>
-									<g>
-										<g>
-											<path d="M301.261,234.815h-90.522c-40.754,0-73.91,33.156-73.91,73.91v149.65c0,8.163,6.618,14.782,14.782,14.782h208.778
-												c8.164,0,14.782-6.618,14.782-14.782v-149.65C375.171,267.971,342.015,234.815,301.261,234.815z"/>
-										</g>
-									</g>
-									<g>
-										<g>
-											<path d="M256,38.84c-49.012,0-88.886,39.874-88.886,88.887c0,33.245,18.349,62.28,45.447,77.524
+      <div className="recipients-container">
+        {_.map(recipients, (recipient) => (
+          <div className="recipient-container">
+            {' '}
+            {`${recipient.name}`}
+            <CheckBox applyToggle={toggleRecipient} id={recipient.id} />
+          </div>
+        ))}
+      </div>
+      <div className="sidebar-bottom-menu">
+        <div className="sidebar-item-container" onClick={openInvitationPopup}>
+          <div>
+            <svg viewBox="0 0 512 512" width="20" height="20">
+              <g>
+                <g>
+                  <path d="M438.09,273.32h-39.596c4.036,11.05,6.241,22.975,6.241,35.404v149.65c0,5.182-0.902,10.156-2.543,14.782h65.461
+												c24.453,0,44.346-19.894,44.346-44.346v-81.581C512,306.476,478.844,273.32,438.09,273.32z"
+                />
+                </g>
+              </g>
+              <g>
+                <g>
+                  <path d="M107.265,308.725c0-12.43,2.205-24.354,6.241-35.404H73.91c-40.754,0-73.91,33.156-73.91,73.91v81.581
+												c0,24.452,19.893,44.346,44.346,44.346h65.462c-1.641-4.628-2.543-9.601-2.543-14.783V308.725z"
+                />
+                </g>
+              </g>
+              <g>
+                <g>
+                  <path d="M301.261,234.815h-90.522c-40.754,0-73.91,33.156-73.91,73.91v149.65c0,8.163,6.618,14.782,14.782,14.782h208.778
+												c8.164,0,14.782-6.618,14.782-14.782v-149.65C375.171,267.971,342.015,234.815,301.261,234.815z"
+                />
+                </g>
+              </g>
+              <g>
+                <g>
+                  <path d="M256,38.84c-49.012,0-88.886,39.874-88.886,88.887c0,33.245,18.349,62.28,45.447,77.524
 												c12.853,7.23,27.671,11.362,43.439,11.362c15.768,0,30.586-4.132,43.439-11.362c27.099-15.244,45.447-44.28,45.447-77.524
-												C344.886,78.715,305.012,38.84,256,38.84z"/>
-										</g>
-									</g>
-									<g>
-										<g>
-											<path d="M99.918,121.689c-36.655,0-66.475,29.82-66.475,66.475c0,36.655,29.82,66.475,66.475,66.475
+												C344.886,78.715,305.012,38.84,256,38.84z"
+                />
+                </g>
+              </g>
+              <g>
+                <g>
+                  <path d="M99.918,121.689c-36.655,0-66.475,29.82-66.475,66.475c0,36.655,29.82,66.475,66.475,66.475
 												c9.298,0,18.152-1.926,26.195-5.388c13.906-5.987,25.372-16.585,32.467-29.86c4.98-9.317,7.813-19.946,7.813-31.227
-												C166.393,151.51,136.573,121.689,99.918,121.689z"/>
-										</g>
-									</g>
-									<g>
-										<g>
-											<path d="M412.082,121.689c-36.655,0-66.475,29.82-66.475,66.475c0,11.282,2.833,21.911,7.813,31.227
+												C166.393,151.51,136.573,121.689,99.918,121.689z"
+                />
+                </g>
+              </g>
+              <g>
+                <g>
+                  <path d="M412.082,121.689c-36.655,0-66.475,29.82-66.475,66.475c0,11.282,2.833,21.911,7.813,31.227
 												c7.095,13.276,18.561,23.874,32.467,29.86c8.043,3.462,16.897,5.388,26.195,5.388c36.655,0,66.475-29.82,66.475-66.475
-												C478.557,151.509,448.737,121.689,412.082,121.689z"/>
-										</g>
-									</g>
-								</svg>
-							</div>
-						</div>
-						{/* <div className="sidebar-item-container" onClick={this.setSubMenuToggle(0)}>
+												C478.557,151.509,448.737,121.689,412.082,121.689z"
+                />
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+        {/* <div className="sidebar-item-container" onClick={this.setSubMenuToggle(0)}>
 							<div>
 								<svg viewBox="0 0 512 512" width="20" height="20">
 								<path d="M496.659,312.107l-47.061-36.8c0.597-5.675,1.109-12.309,1.109-19.328c0-7.019-0.491-13.653-1.109-19.328l47.104-36.821
@@ -131,37 +146,37 @@ class Sidebar extends Component {
 								</svg>
 							</div>
 						</div> */}
-						<div className="sidebar-item-container" onClick={logout}>
-							<div>
-								<svg viewBox="0 0 512 512" width="20" height="20">
-								<path d="m320 277.335938c-11.796875 0-21.332031 9.558593-21.332031 21.332031v85.335937c0 11.753906-9.558594 
-									21.332032-21.335938 21.332032h-64v-320c0-18.21875-11.605469-34.496094-29.054687-40.554688l-6.316406-2.113281h99.371093c11.777344 
-									0 21.335938 9.578125 21.335938 21.335937v64c0 11.773438 9.535156 21.332032 21.332031 21.332032s21.332031-9.558594 
-									21.332031-21.332032v-64c0-35.285156-28.714843-63.99999975-64-63.99999975h-229.332031c-.8125 
-									0-1.492188.36328175-2.28125.46874975-1.027344-.085937-2.007812-.46874975-3.050781-.46874975-23.53125 0-42.667969 
-									19.13281275-42.667969 42.66406275v384c0 18.21875 11.605469 34.496093 29.054688 40.554687l128.386718 42.796875c4.351563 
-									1.34375 8.679688 1.984375 13.226563 1.984375 23.53125 0 42.664062-19.136718 42.664062-42.667968v-21.332032h64c35.285157 0 
-									64-28.714844 64-64v-85.335937c0-11.773438-9.535156-21.332031-21.332031-21.332031zm0 0"/>
-									<path d="m505.75 198.253906-85.335938-85.332031c-6.097656-6.101563-15.273437-7.9375-23.25-4.632813-7.957031 
-									3.308594-13.164062 11.09375-13.164062 19.714844v64h-85.332031c-11.777344 0-21.335938 9.554688-21.335938 21.332032 0 
-									11.777343 9.558594 21.332031 21.335938 21.332031h85.332031v64c0 8.621093 5.207031 16.40625 13.164062 19.714843 7.976563 
-									3.304688 17.152344 1.46875 23.25-4.628906l85.335938-85.335937c8.339844-8.339844 8.339844-21.824219 0-30.164063zm0 0"/>
-								</svg>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className={submenuContainerClass}>
-					{menuToggle === 0 &&
-						<SettingsMenu />
-					}
-					{menuToggle === 1 &&
-						<TeamMenu />
-					}
-				</div>
-				<div  onClick={this.setSubMenuToggle(-1)} className={submenuHaloClass} />
-			</div>
-		);
+        <div className="sidebar-item-container" onClick={logout}>
+          <div>
+            <svg viewBox="0 0 512 512" width="20" height="20">
+              <path d="m320 277.335938c-11.796875 0-21.332031 9.558593-21.332031 21.332031v85.335937c0 11.753906-9.558594
+									21.332032-21.335938 21.332032h-64v-320c0-18.21875-11.605469-34.496094-29.054687-40.554688l-6.316406-2.113281h99.371093c11.777344
+									0 21.335938 9.578125 21.335938 21.335937v64c0 11.773438 9.535156 21.332032 21.332031 21.332032s21.332031-9.558594
+									21.332031-21.332032v-64c0-35.285156-28.714843-63.99999975-64-63.99999975h-229.332031c-.8125
+									0-1.492188.36328175-2.28125.46874975-1.027344-.085937-2.007812-.46874975-3.050781-.46874975-23.53125 0-42.667969
+									19.13281275-42.667969 42.66406275v384c0 18.21875 11.605469 34.496093 29.054688 40.554687l128.386718 42.796875c4.351563
+									1.34375 8.679688 1.984375 13.226563 1.984375 23.53125 0 42.664062-19.136718 42.664062-42.667968v-21.332032h64c35.285157 0
+									64-28.714844 64-64v-85.335937c0-11.773438-9.535156-21.332031-21.332031-21.332031zm0 0"
+              />
+              <path d="m505.75 198.253906-85.335938-85.332031c-6.097656-6.101563-15.273437-7.9375-23.25-4.632813-7.957031
+									3.308594-13.164062 11.09375-13.164062 19.714844v64h-85.332031c-11.777344 0-21.335938 9.554688-21.335938 21.332032 0
+									11.777343 9.558594 21.332031 21.335938 21.332031h85.332031v64c0 8.621093 5.207031 16.40625 13.164062 19.714843 7.976563
+									3.304688 17.152344 1.46875 23.25-4.628906l85.335938-85.335937c8.339844-8.339844 8.339844-21.824219 0-30.164063zm0 0"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className={submenuContainerClass}>
+      {menuToggle === 0
+						&& <SettingsMenu />}
+      {menuToggle === 1
+						&& <TeamMenu />}
+    </div>
+    <div onClick={this.setSubMenuToggle(-1)} className={submenuHaloClass} />
+  </div>
+	  );
 	}
 }
 

@@ -1,0 +1,33 @@
+@import "src/utils/variables";
+
+.single-user-container{
+    display: flex;
+    align-items: center;
+    padding: 4px 12px;
+
+    .picto-container{
+        width: 32px;
+        height: 32px;
+        border: solid 1px $rose;
+        border-radius: 50%;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .picto-container-inverted{
+        width: 32px;
+        height: 32px;
+        border: solid 1px $rose;
+        border-radius: 50%;
+        margin-left: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .infos-container{
+        @include title;
+    }
+}

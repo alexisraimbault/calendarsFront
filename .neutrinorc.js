@@ -7,10 +7,9 @@ module.exports = {
     root: __dirname,
   },
   use: [
-    airbnb(),
     react({
       html: {
-        title: 'calendasFront'
+        title: 'Team calendar'
       },
       style: {
         test: /\.(css|sass|scss)$/,

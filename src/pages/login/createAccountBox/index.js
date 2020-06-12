@@ -1,69 +1,72 @@
 import React, {
-	Component
+  Component,
 } from 'react';
-import './styles.scss'
+import './styles.scss';
 
-import EditableLabel from '../../../components/EditableLabel'
-import ActionButton from '../../../components/ActionButton'
-
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { requestcreateUser } from '../../../redux/actions/userActions'
+import EditableLabel from '../../../components/EditableLabel';
+import ActionButton from '../../../components/ActionButton';
+
+import { requestcreateUser } from '../../../redux/actions/userActions';
+import { requestAuthentication } from '../../../redux/actions/meActions';
 
 class CreateAccountBox extends Component {
-	constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            name: '',
-            login:'',
-            password: '',
-		}
-    }
+    this.state = {
+      name: '',
+      login: '',
+      password: '',
+    };
+  }
 
-    updateName = e => this.setState({name: e.target.value})
+    updateName = (e) => this.setState({ name: e.target.value });
 
-    updateLogin = e => this.setState({login: e.target.value})
+    updateLogin = (e) => this.setState({ login: e.target.value });
 
-    updatePassword = e => this.setState({password: e.target.value})
+    updatePassword = (e) => this.setState({ password: e.target.value });
 
     sendRequest = () => {
-        const { requestcreateUser, userInfos, isLoading } = this.props;
-        const { login, password, name } = this.state;
+      const { requestcreateUser, isLoading, requestAuthentication } = this.props;
+      const { login, password, name } = this.state;
 
-        if(isLoading) {return;}
+      if (isLoading) { return; }
 
-        requestcreateUser(login, name, password, "user", _.get(userInfos, "corpId") )
+      requestcreateUser(login, name, password, 'user').then(() => {
+        requestAuthentication(login, password);
+      });
+    };
+
+    render() {
+      const { isEventsLoading, isAuthLoading } = this.props;
+      const { login, password, name } = this.state;
+
+      return (
+        <div className="create-account-box-container">
+          <EditableLabel value={login} onChange={this.updateLogin} placeholder="Mail" isDescription={false} />
+          <EditableLabel value={name} onChange={this.updateName} placeholder="Name" isDescription={false} />
+          <EditableLabel value={password} onChange={this.updatePassword} placeholder="Password" isDescription={false} isPassword />
+          <div className="login-btn">
+            <ActionButton clickAction={this.sendRequest} label="CREATE ACCOUNT" isLoading={isEventsLoading || isAuthLoading} />
+          </div>
+        </div>
+      );
     }
-
-	render() {
-        const { isLoading } = this.props;
-        const { login, password, name } = this.state;
-
-        return (
-            <div className="create-account-box-container">
-                <EditableLabel value={login} onChange={this.updateLogin} placeholder={"Mail"} isDescription={false} />
-                <EditableLabel value={name} onChange={this.updateName} placeholder={"Name"} isDescription={false} />
-                <EditableLabel value={password} onChange={this.updatePassword} placeholder={"Password"} isDescription={false} isPassword/>
-                <div className="login-btn">
-                    <ActionButton clickAction={this.sendRequest} label={ "CREATE ACCOUNT" } isLoading={isLoading} />
-                </div>
-            </div>
-        );
-    }
-
 }
 
 
 // Map Redux state to React component props
-const mapStateToProps = state => ({
-    sessionToken: state.me.sessionToken,
-    userInfos: state.me.infos,
-    isLoading: state.events.loading,
-})
+const mapStateToProps = (state) => ({
+  sessionToken: state.me.sessionToken,
+  isEventsLoading: state.events.loading,
+  isAuthLoading: state.me.loading,
+});
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-    requestcreateUser: requestcreateUser,
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  requestcreateUser,
+  requestAuthentication,
 }, dispatch);
-    // Connect Redux to React
-export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountBox)
+// Connect Redux to React
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountBox);
