@@ -1,18 +1,16 @@
 @import "src/utils/variables";
 
-.calendar-container {
+.mobile-calendar-container {
 
-    .week-navigation-container{
+    .mobile-week-navigation-container{
         display: flex;
         justify-content: center;
         align-items: center;
         margin-top: 20px;
-        width: 80%;
-        margin-left: 300px;
-    
-        @media screen and (max-width: 1400px) {
-            width: 70%;
-        }
+        margin-bottom: 24px;
+        bottom: 12px;
+        width: 100%;
+        position: absolute;
         
         .week-navigation-holder{
             display: flex;
@@ -58,20 +56,17 @@
         position: absolute;
         height: 38px;
         top: 20px;
-        left: 320px;
+        left: 10%;
         display: flex;
         align-items: center;
     }
     
     .calendar-center-container{
         position: absolute;
-        width: 80%;
-        left: 300px;
-        height: 90%;
-    
-        @media screen and (max-width: 1400px) {
-            width: 70%;
-        }
+        width: 70%;
+        left: 15%;
+        height: 80%;
+        bottom: 10%;
     }
     
     .popup-halo{

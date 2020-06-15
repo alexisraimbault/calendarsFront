@@ -24,6 +24,7 @@ import { logout } from '../../redux/actions/meActions';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import {isMobile} from 'react-device-detect';
 
 import {
   useParams,
@@ -59,6 +60,10 @@ class Calendar extends Component {
 
     if (_.isNil(sessionToken)) {
       history.push('/login');
+    }
+
+    if(isMobile) {
+      history.push('/mcalendar');
     }
 
     // this.props.history.push(`/calendar/100/2003`)
@@ -301,7 +306,7 @@ class Calendar extends Component {
     return (
       !_.isNil(weekStart)
       && (
-      <div>
+      <div className="calendar-container">
         <Sidebar
           recipients={this.getRecipients(this.props.events)}
           toggleRecipient={this.toggleRecipient}
