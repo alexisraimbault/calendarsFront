@@ -56,12 +56,12 @@ export const putOperationsFailure = () => ({
   type: PUT_OPERATION_FAILURE,
 });
 
-export function createOperation(name, data, sessionToken) {
+export function createOperation(name, infos, sessionToken) {
   return async (dispatch) => {
     dispatch(putOperations());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${name}&data=${data}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${name}&data=${infos}`, {
         headers: { authorization: sessionToken },
         method: 'PUT',
       });

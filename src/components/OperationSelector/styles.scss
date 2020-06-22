@@ -1,0 +1,41 @@
+@import "src/utils/variables";
+
+.user-selector-input {
+    width: 300px;
+    border: solid 1px $rose;
+    background-color: #ffffff;
+    border-radius: 5px;
+    line-height: 32px;
+    padding: 0 12px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+.selection-container{
+    height: 56px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    margin-bottom: 4px;
+
+    .selection-item{
+        cursor: pointer;
+
+    }
+}
+
+.selection-placebo{
+    height: 56px;
+}
+
+.selected-container{
+    display: flex;
+
+    .selected-item{
+        cursor: pointer;
+        padding: 4px 8px;
+        background-color: $light-rose;
+        border-radius: 8px;
+        margin-right: 4px;
+        margin-top: 4px;
+    }
+}

@@ -1,0 +1,14 @@
+.months-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.back-action-btn-container{
+    position: absolute;
+    height: 38px;
+    top: 60px;
+    left: 80px;
+    display: flex;
+    align-items: center;
+}

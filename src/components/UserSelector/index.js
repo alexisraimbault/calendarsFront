@@ -19,6 +19,12 @@ class UserSelector extends Component {
     };
   }
 
+  componentDidMount() {
+    const { fetchUsers, sessionToken, userInfos } = this.props;
+
+    fetchUsers(_.get(userInfos, 'corpId'), sessionToken);
+  }
+
     onValueChange = (e) => this.setState({ value: e.target.value });
 
     getSelectedUsersIds = () => {
@@ -91,6 +97,7 @@ class UserSelector extends Component {
 const mapStateToProps = (state) => ({
   loading: state.users.loading,
   users: state.users.users,
+  userInfos: state.me.infos,
   hasErrors: state.users.hasErrors,
   sessionToken: state.me.sessionToken,
 });

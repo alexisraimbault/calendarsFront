@@ -10,6 +10,7 @@ import DatePicker from 'react-datepicker';
 import TimePicker from 'react-time-picker';
 import EditableLabel from '../../../components/EditableLabel';
 import UserSelector from '../../../components/UserSelector';
+import OperationSelector from '../../../components/OperationSelector';
 
 import ActionButton from '../../../components/ActionButton';
 import { createEvent } from '../../../redux/actions/eventActions';
@@ -19,7 +20,7 @@ import { fetchUsers } from '../../../redux/actions/userActions';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-class NewEventPopup extends Component {
+class NewEventPopupAmo extends Component {
   constructor(props) {
     super(props);
 
@@ -30,6 +31,7 @@ class NewEventPopup extends Component {
       start_time: '10:00',
       end_time: '12:00',
       selectedUsersIds: [],
+      selectedOperationsIds: [],
     };
   }
 
@@ -47,6 +49,8 @@ class NewEventPopup extends Component {
 
     setSelectedUsersIds = (array) => this.setState({ selectedUsersIds: array });
 
+    setSelectedOperationsIds = (array) => this.setState({ selectedOperationsIds: array });
+
     onChangeStartTime = (time) => this.setState({ start_time: time });
 
     onChangeEndTime = (time) => this.setState({ end_time: time });
@@ -63,6 +67,7 @@ class NewEventPopup extends Component {
         start_time,
         end_time,
         selectedUsersIds,
+        selectedOperationsIds
       } = this.state;
       const {
         createEvent, fetchEventsData, closePopup, sessionToken, userInfos,
@@ -72,7 +77,7 @@ class NewEventPopup extends Component {
 
       const selectedUserIds = _.join(selectedUsersIds, ',');
 
-      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'rdv', 1).then(() => {//TODO unmock
+      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'amo', selectedOperationsIds[0]).then(() => {//TODO unmock
         fetchEventsData();
         closePopup();
       });
@@ -85,12 +90,8 @@ class NewEventPopup extends Component {
       return (
         <div className="new-event-popup-container">
           <div className="top-popup-container">
-            <div className="title">New event</div>
+            <div className="title">{"Ajouter AMO(s)"}</div>
             <div className="edit-box">
-              <div className="left">
-                <EditableLabel value={title} onChange={this.updateTitle} placeholder="Title here" isDescription={false} />
-                <EditableLabel value={description} onChange={this.updateDescription} placeholder="Description here" isDescription />
-              </div>
               <div className="right">
                 <div className="date-picker">
                   <DatePicker
@@ -98,25 +99,10 @@ class NewEventPopup extends Component {
                     onChange={this.handleChangeDate}
                   />
                 </div>
-                <div className="time-pickers-container">
-                  <div className="time-picker">
-                    <div className="time-label">{'from : '}</div>
-                    <TimePicker
-                      onChange={this.onChangeStartTime}
-                      value={this.state.start_time}
-                    />
-                  </div>
-                  <div className="time-picker">
-                    <div className="time-label">{'to : '}</div>
-                    <TimePicker
-                      onChange={this.onChangeEndTime}
-                      value={this.state.end_time}
-                    />
-                  </div>
-                </div>
               </div>
             </div>
             <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} />
+            <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} />
           </div>
           <div className="save-btn">
             <ActionButton clickAction={this.sendCreateEventRequest} label="Save" isLoading={isLoading} />
@@ -142,4 +128,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchUsers,
 }, dispatch);
 // Connect Redux to React
-export default connect(mapStateToProps, mapDispatchToProps)(NewEventPopup);
+export default connect(mapStateToProps, mapDispatchToProps)(NewEventPopupAmo);

@@ -9,8 +9,10 @@ import React, {
   import classNames from 'classnames';
   import { connect } from 'react-redux';
   import { bindActionCreators } from 'redux';
-  import NewEventPopup from './NewEventPopup';
+  import NewEventPopupAmo from './NewEventPopupAmo';
   import InvitationPopup from './invitationPopup';
+  import OperationsPopup from './OperationsPopup';
+  import CreateOperationPopup from './CreateOperationPopup';
   import DayCalendarDisplay from './DayCalendarDisplay';
   
   import ActionButton from '../../components/ActionButton';
@@ -103,7 +105,7 @@ import React, {
     };
 
     openNewEventPopup = () => {
-        const newEventPopup = <NewEventPopup closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} />;
+        const newEventPopup = <NewEventPopupAmo closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} />;
         this.setState({
             popupContent: newEventPopup,
             isPopupDisplayed: true,
@@ -117,6 +119,22 @@ import React, {
             isPopupDisplayed: true,
         });
     };
+
+    openOperationsPopup = () => {
+        const operationPopup = <OperationsPopup closePopup={() => { this.setPopupState(false); }} towardsCreateOperationPopup={this.openCreateOperationPopup} />;
+        this.setState({
+            popupContent: operationPopup,
+            isPopupDisplayed: true,
+        });
+    };
+
+    openCreateOperationPopup = () => {
+      const createOperationPopup = <CreateOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} />;
+      this.setState({
+          popupContent: createOperationPopup,
+          isPopupDisplayed: true,
+      });
+  };
 
     fetchEventsData = () => {
         const { sessionToken, fetchEvents, userInfos } = this.props;
@@ -232,6 +250,19 @@ import React, {
         return days;
     }
 
+    towardsOffDaysBoard = () => {
+      const {
+        history,
+        userInfos
+      } = this.props;
+
+      if(userInfos.status === "admin") {
+        history.push('/calendaroffdaysboard');
+      }else{
+        history.push('/calendaroffdays');
+      }
+    }
+
     render() {
       const { isPopupDisplayed, popupContent, month, year, fetchDate, operationsToDisplay } = this.state;
       const { userInfos, operations } = this.props;
@@ -262,8 +293,10 @@ import React, {
             toggleRecipient={this.toggleRecipient}
             toggleOperation={this.toggleOperation}
             openInvitationPopup={this.openInvitationPopup}
+            openOperationsPopup={this.openOperationsPopup}
             logout={this.logout}
             userName={_.get(userInfos, 'name')}
+            towardsOffDaysBoard={this.towardsOffDaysBoard}
           />
           <div className="week-navigation-container">
             <div className="week-navigation-holder">

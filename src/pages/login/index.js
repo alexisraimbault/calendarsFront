@@ -21,7 +21,7 @@ class LoginPage extends Component {
     const { history, sessionToken } = this.props;
 
     if (!_.isNil(sessionToken)) {
-      history.push('/calendar');
+      history.push('/calendarmonth');
     }
   }
 
@@ -29,7 +29,7 @@ class LoginPage extends Component {
     const { history, sessionToken } = this.props;
 
     if (!_.isNil(sessionToken)) {
-      history.push('/calendar');
+      history.push('/calendarmonth');
     }
   }
 
@@ -38,7 +38,7 @@ class LoginPage extends Component {
     login = () => this.setState({ createAccoundMode: false });
 
     navigateToCalendar = () => {
-      this.props.history.push('/calendar');
+      this.props.history.push('/calendarmonth');
     };
 
     render() {

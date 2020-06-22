@@ -16,6 +16,9 @@ import './App.scss';
 import Calendar from './pages/calendar';
 import CalendarMobile from './pages/mobile/calendarMobile';
 import MonthlyCalendar from './pages/monthlyCalendar';
+import OffDays from './pages/OffDays';
+import OffDaysBoard from './pages/OffDaysBoard';
+import CalendarCompanyExport from './pages/CalendarCompanyExport';
 import LoginPage from './pages/login/index';
 import rootReducer from './redux/reducers';
 import 'react-notifications/lib/notifications.css';
@@ -40,6 +43,9 @@ const App = () => (
           <Route path="/calendar/:week?/:year?" component={Calendar} />
           <Route path="/mcalendar/:day?/:year?" component={CalendarMobile} />
           <Route path="/calendarmonth/:month?/:year?" component={MonthlyCalendar} />
+          <Route path="/calendaroffdays/:month?/:year?" component={OffDays} />
+          <Route path="/calendaroffdaysBoard/:month?/:year?" component={OffDaysBoard} />
+          <Route path="/calendarexport/:operation_id" component={CalendarCompanyExport} />
           <Route path="/login" component={LoginPage} />
           <Route path="/"  component={LoginPage} />
         </Switch>

@@ -72,7 +72,7 @@ class NewEventPopup extends Component {
 
       const selectedUserIds = _.join(selectedUsersIds, ',');
 
-      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId')).then(() => {
+      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'rdv', 1).then(() => {//TODO unmock
         fetchEventsData();
         closePopup();
       });

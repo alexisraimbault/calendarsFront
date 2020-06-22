@@ -29,7 +29,7 @@ class SidebarMonth extends Component {
 
 	render() {
 	  const {
-	    recipients, toggleRecipient, openInvitationPopup, logout, userName,operations, toggleOperation
+	    recipients, toggleRecipient, openInvitationPopup, logout, userName,operations, toggleOperation, openOperationsPopup, towardsOffDaysBoard
 	  } = this.props;
 	  const { isToggled, menuToggle } = this.state;
 
@@ -76,6 +76,7 @@ class SidebarMonth extends Component {
             <CheckBox applyToggle={toggleRecipient} id={recipient.id} />
           </div>
         ))}
+        <div className="space-div"/>
         {_.map(operations, (operation) => (
           <div className="recipient-container">
             {' '}
@@ -85,6 +86,48 @@ class SidebarMonth extends Component {
         ))}
       </div>
       <div className="sidebar-bottom-menu">
+      <div className="sidebar-item-container" onClick={openOperationsPopup}>
+          <div>
+          <svg id="bold" enable-background="new 0 0 24 24" height="20" viewBox="0 0 24 24" width="20">
+            <path d="m13.03 1.87-10.99-1.67c-.51-.08-1.03.06-1.42.39-.39.34-.62.83-.62 1.34v21.07c0 .55.45 1 1 1h3.25v-5.25c0-.97.78-1.75 1.75-1.75h2.5c.97 0 
+            1.75.78 1.75 1.75v5.25h4.25v-20.4c0-.86-.62-1.59-1.47-1.73zm-7.53 12.88h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 
+            .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 
+            0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 
+            .75.336.75.75s-.336.75-.75.75zm5 9h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 
+            0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 
+            .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 
+            0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 .75.336.75.75s-.336.75-.75.75z"/>
+            <path d="m22.62 10.842-7.12-1.491v14.649h6.75c.965 0 1.75-.785 1.75-1.75v-9.698c0-.826-.563-1.529-1.38-1.71zm-2.37 
+            10.158h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 
+            0 .75.336.75.75s-.336.75-.75.75zm0-3h-1.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h1.5c.414 0 .75.336.75.75s-.336.75-.75.75z"/>
+          </svg>
+          </div>
+        </div>
+        <div className="sidebar-item-container" onClick={towardsOffDaysBoard}>
+          <div>
+          <svg height="20" viewBox="0 0 64 64" width="20">
+            <path d="m12 47h4.001v3h-4.001z"/>
+            <path d="m49 38a11 11 0 1 0 11 11 11.013 11.013 0 0 0 -11-11zm7.192 8.222-8.485 8.485a1 1 0 0 1 -1.414 0l-4.242-4.243a1 1 0 0 1 
+            1.414-1.414l3.535 3.536 7.778-7.778a1 1 0 0 1 1.414 1.414z"/>
+            <path d="m24 29h4.001v3h-4.001z"/>
+            <path d="m36 29h4v3h-4z"/>
+            <path d="m12 38h4.001v3h-4.001z"/>
+            <path d="m24 38h4.001v3h-4.001z"/>
+            <path d="m12 29h4.001v3h-4.001z"/>
+            <path d="m16 14a2.006 2.006 0 0 0 2-2v-6a2 2 0 0 0 -4 0v6a2.006 2.006 0 0 0 2 2z"/>
+            <path d="m32 14a2.006 2.006 0 0 0 2-2v-6a2 2 0 0 0 -4 0v6a2.006 2.006 0 0 0 2 2z"/>
+            <path d="m48 14a2.006 2.006 0 0 0 2-2v-6a2 2 0 0 0 -4 0v6a2.006 2.006 0 0 0 2 2z"/>
+            <path d="m48 29h4v3h-4z"/>
+            <path d="m57 10h-5v2a4 4 0 0 1 -8 0v-2h-8v2a4 4 0 0 1 -8 0v-2h-8v2a4 4 0 0 1 -8 0v-2h-5a3.009 3.009 0 0 0 -3 3v7h56v-7a3.009 3.009 0 0 0 -3-3z"/>
+            <path d="m24 47h4.001v3h-4.001z"/>
+            <path d="m4 22v31a3.009 3.009 0 0 0 3 3h31.063a12.984 12.984 0 1 1 21.937-13.9v-20.1zm14 28a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 
+            2zm0-9a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2zm0-9a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 
+            2zm12 18a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2zm0-9a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 
+            2zm0-9a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2zm10 6h-4v3a1 1 0 0 1 0 2 2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a1 1 0 0 1 0 
+            2zm2-6a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2zm12 0a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2-2v-3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2z"/>
+          </svg>
+          </div>
+        </div>
         <div className="sidebar-item-container" onClick={openInvitationPopup}>
           <div>
             <svg viewBox="0 0 512 512" width="20" height="20">
