@@ -8,7 +8,12 @@ export const GET_EVENTS_FAILURE = 'GET_EVENTS_FAILURE';
 
 export const GET_OPERATION_EVENTS = 'GET_OPERATION_EVENTS';
 export const GET_OPERATION_EVENTS_SUCCESS = 'GET_OPERATION_EVENTS_SUCCESS';
+export const GET_OPERATION_EVENTS_SUCCESS_MERGE = 'GET_OPERATION_EVENTS_SUCCESS_MERGE';
 export const GET_OPERATION_EVENTS_FAILURE = 'GET_OPERATION_EVENTS_FAILURE';
+
+export const GET_AMO_EVENTS = 'GET_AMO_EVENTS';
+export const GET_AMO_EVENTS_SUCCESS = 'GET_AMO_EVENTS_SUCCESS';
+export const GET_AMO_EVENTS_FAILURE = 'GET_AMO_EVENTS_FAILURE';
 
 export const PUT_EVENTS = 'PUT_EVENTS';
 export const PUT_EVENTS_SUCCESS = 'PUT_EVENTS_SUCCESS';
@@ -56,8 +61,8 @@ export const getOperationEvents = () => ({
   type: GET_OPERATION_EVENTS,
 });
 
-export const getOperationEventsSuccess = (events) => ({
-  type: GET_OPERATION_EVENTS_SUCCESS,
+export const getOperationEventsSuccess = (events, mergeData) => ({
+  type:mergeData ? GET_OPERATION_EVENTS_SUCCESS_MERGE : GET_OPERATION_EVENTS_SUCCESS,
   payload: events,
 });
 
@@ -65,7 +70,7 @@ export const getOperationEventsFailure = () => ({
   type: GET_OPERATION_EVENTS_FAILURE,
 });
 
-export function fetchOperationEvents(date, operation_id) {
+export function fetchOperationEvents(date, operation_id, mergeData = false) {
   return async (dispatch) => {
     dispatch(getOperationEvents());
 
@@ -73,9 +78,37 @@ export function fetchOperationEvents(date, operation_id) {
       const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/events?date=${date}&operation_id=${operation_id}`);
       const data = await response.json();
 
-      dispatch(getOperationEventsSuccess(JSON.parse(data.body)));
+      dispatch(getOperationEventsSuccess(JSON.parse(data.body), mergeData));
     } catch (error) {
       dispatch(getOperationEventsFailure());
+    }
+  };
+}
+
+export const getAmoEvents = () => ({
+  type: GET_AMO_EVENTS,
+});
+
+export const getAmoEventsSuccess = (events) => ({
+  type: GET_AMO_EVENTS_SUCCESS,
+  payload: events,
+});
+
+export const getAmoEventsFailure = () => ({
+  type: GET_AMO_EVENTS_FAILURE,
+});
+
+export function fetchAmoEvents(date, user_id, corp_id ) {
+  return async (dispatch) => {
+    dispatch(getAmoEvents());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/events?date=${date}&user_id=${user_id}&corp_id=${corp_id}`);
+      const data = await response.json();
+
+      dispatch(getAmoEventsSuccess(JSON.parse(data.body)));
+    } catch (error) {
+      dispatch(getAmoEventsFailure());
     }
   };
 }

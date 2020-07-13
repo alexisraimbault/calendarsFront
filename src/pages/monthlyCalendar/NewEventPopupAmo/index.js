@@ -27,11 +27,11 @@ class NewEventPopupAmo extends Component {
     this.state = {
       title: 'Title',
       description: 'Description',
-      eventDate: new Date(),
+      eventDate: props.date || new Date(),
       start_time: '10:00',
       end_time: '12:00',
-      selectedUsersIds: [],
-      selectedOperationsIds: [],
+      selectedUsersIds: props.selectedUsers || [],
+      selectedOperationsIds: props.selectedOperation || [],
     };
   }
 
@@ -101,8 +101,8 @@ class NewEventPopupAmo extends Component {
                 </div>
               </div>
             </div>
-            <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} />
-            <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} />
+            <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={this.props.selectedUsers}/>
+            <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} defaultSelected={this.props.selectedOperation}/>
           </div>
           <div className="save-btn">
             <ActionButton clickAction={this.sendCreateEventRequest} label="Save" isLoading={isLoading} />

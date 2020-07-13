@@ -14,26 +14,37 @@ class DayCalendarDisplay extends Component {
         this.state = {};
     }
 
+    openAMOPopup = (day, selectedUsers, selectedOperation) => event => {
+        const { openAMOPopup } = this.props;
+        console.log('ALEXIS test 1', selectedUsers, selectedOperation);
+        event.stopPropagation();
+
+        console.log('ALEXIS test 2');
+        openAMOPopup(day, selectedUsers, selectedOperation);
+    }
+
     render() {
         const {
-        events, index, day, setPopupState, setPopupContent,
+        events, index, day, setPopupState, setPopupContent, openAddEvent, operations
         } = this.props;
 
         const eventsByOperations = _.groupBy(events, "operation_id");
 
         return (
-        <div className="day-container">
+        <div className="day-container" onClick={openAddEvent(day)}>
             <span>{index + 1}</span>
-            {_.map(eventsByOperations, eventArray => {
+            {_.map(eventsByOperations, (eventArray, operationId) => {
                 const AMOEvents = _.filter(eventArray, event => event.type === 'amo');
                 const externalEvents = _.filter(eventArray, event => event.type === 'rdv');
                 const workingAMO = _.reduce(AMOEvents, (result, value, key) => {
                     return _.uniqBy(_.concat(result, value.invitations), 'id')
                 }, []);
+                
+                const currentOperation = _.find(operations, ['id', _.parseInt(operationId)]);
 
                 return(
-                    <div className="event-day-container" style={{ height: `${100 / _.size(eventsByOperations)}%` }}>
-                        {_.map(workingAMO, amo => <div>{amo.name}</div>)}
+                    <div onClick={this.openAMOPopup(day, _.map(workingAMO, amo => amo.id), [_.parseInt(operationId)])} className="event-day-container" style={{ height: `calc(${100 / _.size(eventsByOperations)}% - ${20 / _.size(eventsByOperations)}px)`, backgroundColor: `${currentOperation.color}` }}>
+                        <div>{_.map(workingAMO, amo => <div>{amo.name}</div>)}</div>
                         {_.size(externalEvents) > 0 && <div>{`${_.size(externalEvents)} rdv acquéreur`}</div>}
                     </div>
                 );

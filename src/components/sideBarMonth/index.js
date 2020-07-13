@@ -81,7 +81,7 @@ class SidebarMonth extends Component {
           <div className="recipient-container">
             {' '}
             {`${operation.name}`}
-            <CheckBox applyToggle={toggleOperation} id={operation.id} />
+            <CheckBox applyToggle={toggleOperation} id={operation.id} color={operation.color} />
           </div>
         ))}
       </div>

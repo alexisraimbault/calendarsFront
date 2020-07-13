@@ -12,7 +12,7 @@ class OperationSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedUsers: props.defaultSelected || [],
+      selectedUsers: [],
       value: '',
       isFocused: false,
       isHovered: false,
@@ -20,9 +20,11 @@ class OperationSelector extends Component {
   }
 
   componentDidMount() {
-    const { fetchOperations, sessionToken } = this.props;
+    const { fetchOperations, sessionToken, operations, defaultSelected } = this.props;
 
-    fetchOperations(sessionToken);
+    fetchOperations(sessionToken).then(() => {
+      this.setState({selectedUsers: _.filter(operations, operation => _.includes(defaultSelected, operation.id))})
+    });
   }
 
   onValueChange = (e) => this.setState({ value: e.target.value });
@@ -37,7 +39,7 @@ class OperationSelector extends Component {
     const { selectedUsers } = this.state;
     const { setSelectedUsersIds } = this.props;
 
-    const newSelected = _.uniq(_.concat(selectedUsers, user));
+    const newSelected = [user];
     this.setState({ selectedUsers: newSelected }, () => {
       setSelectedUsersIds(this.getSelectedUsersIds());
     });

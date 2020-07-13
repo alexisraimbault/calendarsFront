@@ -65,7 +65,7 @@ class CalendarCompanyExport extends Component {
               const endMonth = moment(weekEnd).month() + 1;
               const endYear = moment(weekEnd).year();
               const endMonthFormatted = endMonth < 10 ? `0${endMonth}` : endMonth;
-              fetchOperationEvents(`${endYear}_${endMonthFormatted}`, operation_id).then(() => {
+              fetchOperationEvents(`${endYear}_${endMonthFormatted}`, operation_id, true).then(() => {
                 this.setState({ collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id') });
               });
             }else{
@@ -87,7 +87,7 @@ class CalendarCompanyExport extends Component {
               const endMonth = moment(weekEnd).month() + 1;
               const endYear = moment(weekEnd).year();
               const endMonthFormatted = endMonth < 10 ? `0${endMonth}` : endMonth;
-              fetchOperationEvents(`${endYear}_${endMonthFormatted}`, operation_id).then(() => {
+              fetchOperationEvents(`${endYear}_${endMonthFormatted}`, operation_id, true).then(() => {
                 this.setState({ collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id') });
               });
             }else{
@@ -109,7 +109,7 @@ class CalendarCompanyExport extends Component {
         const endMonth = moment(weekEnd).month() + 1;
         const endYear = moment(weekEnd).year();
         const endMonthFormatted = endMonth < 10 ? `0${endMonth}` : endMonth;
-        fetchOperationEvents(`${endYear}_${endMonthFormatted}`, operation_id).then(() => {
+        fetchOperationEvents(`${endYear}_${endMonthFormatted}`, operation_id, true).then(() => {
           this.setState({ collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id') });
         });
       }else{

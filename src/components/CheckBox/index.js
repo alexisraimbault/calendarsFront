@@ -21,11 +21,11 @@ export default class CheckBox extends Component {
 	};
 
 	render() {
-	  const { isToggled } = this.state;
+    const { isToggled } = this.state;
 
 	  const white = '#ffffff';
 	  const black = '#000000';
-	  const blue = '#43d8c9';
+	  const blue = _.isEmpty(this.props.color) ? '#43d8c9' : this.props.color;
 
 	  const sidebarClass = classNames({
 	    'sidebar-container': true,

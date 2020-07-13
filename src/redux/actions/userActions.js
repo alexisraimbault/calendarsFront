@@ -92,12 +92,12 @@ export const createUserFailure = () => ({
   type: INVITE_USER_FAILURE,
 });
 
-export function requestcreateUser(name, mail, password, status) {
+export function requestcreateUser(name, mail, password, status, phone) {
   return async (dispatch) => {
     dispatch(createUser());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?mail=${name}&name=${mail}&password=${password}&status=${status}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?mail=${name}&name=${mail}&password=${password}&status=${status}&phone=${phone}`, {
         method: 'PUT',
       });
       const data = await response.json();

@@ -12,7 +12,7 @@ class UserSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedUsers: props.defaultSelected || [],
+      selectedUsers: [],
       value: '',
       isFocused: false,
       isHovered: false,
@@ -20,9 +20,11 @@ class UserSelector extends Component {
   }
 
   componentDidMount() {
-    const { fetchUsers, sessionToken, userInfos } = this.props;
+    const { fetchUsers, sessionToken, userInfos, users, defaultSelected } = this.props;
 
-    fetchUsers(_.get(userInfos, 'corpId'), sessionToken);
+    fetchUsers(_.get(userInfos, 'corpId'), sessionToken).then(() => {
+      this.setState({selectedUsers: _.filter(users, user => _.includes(defaultSelected, user.id))})
+    });;
   }
 
     onValueChange = (e) => this.setState({ value: e.target.value });

@@ -9,6 +9,7 @@ import React, {
   import classNames from 'classnames';
   import { connect } from 'react-redux';
   import { bindActionCreators } from 'redux';
+  import NewEventPopup from './NewEventPopup';
   import NewEventPopupAmo from './NewEventPopupAmo';
   import InvitationPopup from './invitationPopup';
   import OperationsPopup from './OperationsPopup';
@@ -105,12 +106,35 @@ import React, {
     };
 
     openNewEventPopup = () => {
-        const newEventPopup = <NewEventPopupAmo closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} />;
-        this.setState({
-            popupContent: newEventPopup,
-            isPopupDisplayed: true,
-        });
+      const newEventPopup = <NewEventPopup closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} />;
+      this.setState({
+        popupContent: newEventPopup,
+        isPopupDisplayed: true,
+      });
     };
+
+  openNewEventPopupDay = defaultDate => () => {
+    const newEventPopup = <NewEventPopupAmo closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} date={defaultDate} />;
+    this.setState({
+        popupContent: newEventPopup,
+        isPopupDisplayed: true,
+    });
+  };
+
+  openAMOPopup = (defaultDate, selectedUsers, selectedOperation) => {
+    const newEventPopup = (
+      <NewEventPopupAmo 
+        closePopup={() => { this.setPopupState(false); }} 
+        fetchEventsData={this.fetchEventsData} 
+        date={defaultDate}
+        selectedUsers={selectedUsers}
+        selectedOperation={selectedOperation}
+      />);
+    this.setState({
+        popupContent: newEventPopup,
+        isPopupDisplayed: true,
+    });
+  }
 
     openInvitationPopup = () => {
         const invitationPopup = <InvitationPopup closePopup={() => { this.setPopupState(false); }} />;
@@ -332,7 +356,7 @@ import React, {
             </div>
           </div>
           <div className="add-action-btn-container">
-            <ActionButton clickAction={this.openNewEventPopup} label="Add event" />
+            <ActionButton clickAction={this.openNewEventPopup} label="Nouveau RDV" />
           </div>
           <div className="calendar-center-container months-container">
             {_.map(daysOfMonth, (dayObject, index) => {
@@ -352,6 +376,9 @@ import React, {
                     index={index}
                     events={_.get(groupedEvents, `[${getDayOfYear(dayObject)}]`, [])}
                     fetchEventsData={this.fetchEventsData}
+                    openAddEvent={this.openNewEventPopupDay}
+                    openAMOPopup={this.openAMOPopup}
+                    operations={operations}
                 />
             );})}
           </div>

@@ -10,6 +10,7 @@ import DatePicker from 'react-datepicker';
 import TimePicker from 'react-time-picker';
 import EditableLabel from '../../../components/EditableLabel';
 import UserSelector from '../../../components/UserSelector';
+import OperationSelector from '../../../components/OperationSelector';
 
 import ActionButton from '../../../components/ActionButton';
 import { createEvent } from '../../../redux/actions/eventActions';
@@ -30,6 +31,7 @@ class NewEventPopup extends Component {
       start_time: '10:00',
       end_time: '12:00',
       selectedUsersIds: [],
+      selectedOperationsIds: [],
     };
   }
 
@@ -47,6 +49,8 @@ class NewEventPopup extends Component {
 
     setSelectedUsersIds = (array) => this.setState({ selectedUsersIds: array });
 
+    setSelectedOperationsIds = (array) => this.setState({ selectedOperationsIds: array });
+
     onChangeStartTime = (time) => this.setState({ start_time: time });
 
     onChangeEndTime = (time) => this.setState({ end_time: time });
@@ -63,6 +67,7 @@ class NewEventPopup extends Component {
         start_time,
         end_time,
         selectedUsersIds,
+        selectedOperationsIds
       } = this.state;
       const {
         createEvent, fetchEventsData, closePopup, sessionToken, userInfos,
@@ -72,7 +77,7 @@ class NewEventPopup extends Component {
 
       const selectedUserIds = _.join(selectedUsersIds, ',');
 
-      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'rdv', 1).then(() => {//TODO unmock
+      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'rdv', selectedOperationsIds[0]).then(() => {//TODO unmock
         fetchEventsData();
         closePopup();
       });
@@ -117,6 +122,7 @@ class NewEventPopup extends Component {
               </div>
             </div>
             <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} />
+            <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} />
           </div>
           <div className="save-btn">
             <ActionButton clickAction={this.sendCreateEventRequest} label="Save" isLoading={isLoading} />
