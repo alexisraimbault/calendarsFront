@@ -2,6 +2,8 @@ import React, {
   Component,
 } from 'react';
 import * as moment from 'moment';
+import * as html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import {
   startOfWeek, addDays, isToday, format, getDayOfYear,
 } from 'date-fns';
@@ -175,6 +177,20 @@ class CalendarCompanyExport extends Component {
     );
   }
 
+  exportToPdf = () => {
+    const input = document.getElementById('divIdToPrint');
+    var width = input.clientWidth;
+    input.style.width = '1017px';
+    html2canvas(input)
+    .then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('l', 'pt', 'a4');
+      pdf.addImage(imgData, 'PNG', 0, 0);
+      pdf.save("export.pdf");
+      input.style.width = width+'px'; 
+    });
+  }
+
   render() {
     const { weekStart, isPopupDisplayed, popupContent } = this.state;
     const { events } = this.props;
@@ -214,6 +230,7 @@ class CalendarCompanyExport extends Component {
       !_.isNil(weekStart)
       && (
       <div className="calendar-export-container">
+        <div onClick={this.exportToPdf}>{"EXPORT TO PDF"}</div>
         <div className="week-navigation-container">
           <div className="week-navigation-holder">
             <div className="top">
@@ -228,7 +245,7 @@ class CalendarCompanyExport extends Component {
             </div>
           </div>
         </div>
-        <div className="calendar-center-container">
+        <div className="calendar-center-container"  id="divIdToPrint">
           <CalendarHeader daysOfWeek={daysOfWeek} />
           <HoursDisplay />
           <HoursLines />
