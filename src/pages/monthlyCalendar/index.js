@@ -287,6 +287,39 @@ import React, {
       }
     }
 
+    renderDoubleTotals = () => {
+      const { operations } = this.props;
+      const { fetchDate } = this.state;
+      
+      return (
+        <div className="totals-container">
+          {_.map(operations, operation => {
+            const totals = _.get(operation, "totals", {
+              fetchDate: {
+                total1: 0,
+                total2: 0,
+              } 
+            });
+
+            console.log("ALEXIS", totals);
+            
+            const monthTotal = _.get(totals, `${fetchDate}`, {
+              total1: 0,
+              total2: 0,
+            });
+
+            console.log("ALEXIS", monthTotal, `${operation.name} : ${_.get(monthTotal, 'total1', 0)}€  -   ${_.get(monthTotal, 'total2', 0)}€`);
+
+            return (
+              <div>
+                {`${operation.name} : ${_.get(monthTotal, 'total1', 0)}€  -   ${_.get(monthTotal, 'total2', 0)}€`}
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
     render() {
       const { isPopupDisplayed, popupContent, month, year, fetchDate, operationsToDisplay } = this.state;
       const { userInfos, operations } = this.props;
@@ -381,6 +414,7 @@ import React, {
                     operations={operations}
                 />
             );})}
+            {this.renderDoubleTotals()}
           </div>
           {isPopupDisplayed && (
           <div>
