@@ -1,0 +1,18 @@
+@import "src/utils/variables";
+
+.operation-totals-container{
+    display: flex;
+    align-items: center;
+
+    .total-container {
+        width: 100px;
+        margin-right: 20px;
+        overflow: hidden;
+    }
+
+    .name-container {
+        width: 300px;
+        margin-right: 20px;
+        overflow: hidden;
+    }
+}

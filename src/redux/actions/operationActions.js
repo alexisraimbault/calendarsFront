@@ -13,6 +13,10 @@ export const DELETE_OPERATION = 'DELETE_OPERATION';
 export const DELETE_OPERATION_SUCCESS = 'DELETE_OPERATION_SUCCESS';
 export const DELETE_OPERATION_FAILURE = 'DELETE_OPERATION_FAILURE';
 
+export const UPDATE_OPERATION_TOTAL = 'UPDATE_OPERATION_TOTAL';
+export const UPDATE_OPERATION_TOTAL_SUCCESS = 'UPDATE_OPERATION_TOTAL_SUCCESS';
+export const UPDATE_OPERATION_TOTAL_FAILURE = 'UPDATE_OPERATION_TOTAL_FAILURE';
+
 
 export const getOperations = () => ({
   type: GET_OPERATIONS,
@@ -39,6 +43,37 @@ export function fetchOperations(sessionToken) {
       dispatch(getOperationsSuccess(JSON.parse(data.body)));
     } catch (error) {
       dispatch(getOperationsFailure());
+    }
+  };
+}
+
+export const updateOperationTotal = () => ({
+  type: UPDATE_OPERATION_TOTAL,
+});
+
+export const updateOperationTotalSuccess =  () => ({
+    type: UPDATE_OPERATION_TOTAL_SUCCESS,
+  });
+
+export const updateOperationTotalFailure = () => ({
+  type: UPDATE_OPERATION_TOTAL_FAILURE,
+});
+
+export function fetchUpdateOperationTotal(sessionToken, total_name, date, operation_id, total_value) {
+  return async (dispatch) => {
+    dispatch(updateOperationTotal());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/totals?total_name=${total_name}&date=${date}&operation_id=${operation_id}&total_value=${total_value}`,{ 
+        headers: { authorization: sessionToken },
+        method: 'POST',
+      });
+
+      NotificationManager.success('Total successfully updated!', 'Successful!', 1500);
+
+      dispatch(updateOperationTotalSuccess(id));
+    } catch (error) {
+      console.log(error)
     }
   };
 }

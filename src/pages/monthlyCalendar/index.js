@@ -15,6 +15,7 @@ import React, {
   import OperationsPopup from './OperationsPopup';
   import CreateOperationPopup from './CreateOperationPopup';
   import DayCalendarDisplay from './DayCalendarDisplay';
+  import OperationTotalsDisplay from './OperationTotalsDisplay'
   
   import ActionButton from '../../components/ActionButton';
   import SidebarMonth from '../../components/SidebarMonth';
@@ -288,31 +289,29 @@ import React, {
     }
 
     renderDoubleTotals = () => {
-      const { operations } = this.props;
+      const { operations, sessionToken } = this.props;
       const { fetchDate } = this.state;
       
       return (
         <div className="totals-container">
-          {_.map(operations, operation => {
-            const totals = _.get(operation, "totals", {
-              fetchDate: {
-                total1: 0,
-                total2: 0,
-              } 
-            });
-
-            console.log("ALEXIS", totals);
+          {_.map(_.orderBy(operations, 'id'), operation => {
+            const totals = JSON.parse(_.get(operation, "totals","fetchDate: {total1: 0, total2: 0,}" ));
             
             const monthTotal = _.get(totals, `${fetchDate}`, {
               total1: 0,
               total2: 0,
             });
 
-            console.log("ALEXIS", monthTotal, `${operation.name} : ${_.get(monthTotal, 'total1', 0)}€  -   ${_.get(monthTotal, 'total2', 0)}€`);
-
             return (
               <div>
-                {`${operation.name} : ${_.get(monthTotal, 'total1', 0)}€  -   ${_.get(monthTotal, 'total2', 0)}€`}
+                <OperationTotalsDisplay 
+                  name={operation.name} 
+                  id={operation.id} 
+                  total1={_.get(monthTotal, 'total1', 0)}
+                  total2={_.get(monthTotal, 'total2', 0)}
+                  fetchDate={fetchDate}
+                  sessionToken={sessionToken}
+                />
               </div>
             );
           })}

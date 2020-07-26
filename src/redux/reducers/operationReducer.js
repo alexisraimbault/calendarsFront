@@ -21,11 +21,12 @@ export default function operationReducer(state = initialState, action) {
         case actions.PUT_OPERATION:
         case actions.UPDATE_OPERATION:
         case actions.DELETE_OPERATION:
+        case actions.UPDATE_OPERATION_TOTAL:
             return { ...state, loading: true };
 
         case actions.GET_OPERATIONS_SUCCESS:
             const operationList = action.payload;
-            _.each(operationList, (operation, index) => {
+            _.each(_.orderBy(operationList, 'id'), (operation, index) => {
                 operation.color = colors[index % colors.length];
             })
             return { operations: action.payload, loading: false, hasErrors: false };
@@ -34,6 +35,7 @@ export default function operationReducer(state = initialState, action) {
             newEventsPostDelete = _.remove(state.operations, (item) => item.id !== action.payload);
             return { operations: newEventsPostDelete, loading: false, hasErrors: false };
 
+        case actions.UPDATE_OPERATION_TOTAL_SUCCESS:
         case actions.UPDATE_OPERATION_SUCCESS:
         case actions.PUT_OPERATION_SUCCESS:
             return { ...state, loading: false, hasErrors: false };
@@ -42,6 +44,7 @@ export default function operationReducer(state = initialState, action) {
         case actions.UPDATE_OPERATION_FAILURE:
         case actions.PUT_OPERATION_FAILURE:
         case actions.DELETE_OPERATION_FAILURE:
+        case actions.UPDATE_OPERATION_TOTAL_FAILURE:
             return { ...state, loading: false, hasErrors: true };
 
         default:
