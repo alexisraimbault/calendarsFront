@@ -18,9 +18,9 @@ class DayCalendarDisplay extends Component {
         } = this.props;
 
         return (
-        <div className="day-off-container" onClick={createOrDeleteOffDay(offDays, day)}>
-            <span>{index + 1}</span>
-            {!_.isEmpty(offDays) && <span>{"OFF"}</span>}
+        <div className="day-off-perso-container" onClick={createOrDeleteOffDay(offDays, day)}>
+            <div className="day-number">{index + 1}</div>
+            {!_.isEmpty(offDays) && <div className="close"/>}
             {/* <div className="col-holder">
             {_.map(events, (event) => {
                 const coords = this.calculateCoords(event);

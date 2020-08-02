@@ -1,4 +1,47 @@
-.day-off-container {
-    width: 140px;
+@import "src/utils/variables";
+
+.day-off-perso-container {
+    position: relative;
+    width: 180px;
     height: 140px;
+    border-left: solid 1px $blue;
+    padding-left: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+
+    .day-number {
+        position: relative;
+        left: 60px;
+        top: 40px;
+        width: 60px;
+        height: 60px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .close {
+        position: absolute;
+        left: 60px;
+        top: 40px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .close:before, .close:after {
+        position: absolute;
+        left: 38px;
+        content: ' ';
+        height: 60px;
+        width: 2px;
+        background-color: $red;
+        opacity: 0.5;
+    }
+    .close:before {
+        transform: rotate(45deg);
+    }
+
+    .close:after {
+        transform: rotate(-45deg);
+    }
 }

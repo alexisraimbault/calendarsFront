@@ -1,6 +1,12 @@
-.day-container {
-    width: 140px;
-    height: 140px;
+@import "src/utils/variables";
+
+.day-month-master-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-left: solid 1px $beige;
+    padding: 0px 8px;
+    margin-bottom: 8px;
 
     .event-day-container {
         cursor: pointer;
@@ -9,5 +15,7 @@
         align-items: flex-start;
         justify-content: space-between;
         border-radius: 8px;
+        padding: 4px 8px;
+        margin-bottom: 4px;
     }
 }

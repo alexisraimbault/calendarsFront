@@ -135,7 +135,15 @@ class CalendarGridColumn extends Component {
 
     return (
       <div className="event-recipients">
-        {_.map(uniqAMOs, (amo) => <div className="event-recipient">{amo.name}</div>)}
+        <Scrollbars
+          autoHeight
+          autoHeightMin={0}
+          autoHeightMax={70}
+        >
+          <div className="container-inside-scroll">
+            {_.map(uniqAMOs, (amo) => <div className="amo-name right-margin">{amo.name}</div>)}
+          </div>
+        </Scrollbars>
       </div>
     );
   }
@@ -156,7 +164,7 @@ class CalendarGridColumn extends Component {
     });
 
     return (
-      <div className={columnClass} style={{ left: `${index * 20}%` }}>
+      <div className={columnClass} style={{ left: `calc(${index * 20}% + 40px)` }}>
         <div className="col-holder">
           {_.map(externalEvents, (event) => {
             const coords = this.calculateCoords(event);

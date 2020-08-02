@@ -1,4 +1,5 @@
 import { NotificationManager } from 'react-notifications';
+import { formatApostrophe } from '../../utils/formatVarUtils'
 
 export const GET_USERS = 'GET_USERS';
 export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
@@ -34,7 +35,7 @@ export function fetchUsers(corpId, sessionToken) {
     dispatch(getUsers());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?corpId=${corpId}`,
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?corpId=${formatApostrophe(corpId)}`,
         { headers: { authorization: sessionToken } });
       const data = await response.json();
 
@@ -62,7 +63,7 @@ export function requestInviteUser(mail, corpId, sessionToken) {
     dispatch(inviteUser());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users/invite?mail=${mail}&corp_id=${corpId}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users/invite?mail=${formatApostrophe(mail)}&corp_id=${formatApostrophe(corpId)}`, {
         headers: { authorization: sessionToken },
         method: 'PUT',
       });
@@ -70,7 +71,7 @@ export function requestInviteUser(mail, corpId, sessionToken) {
       if (data.statusCode === 200) {
         NotificationManager.success('Invitation successfullt sent!', 'Successful!', 1500);
       } else {
-        NotificationManager.error(`Error while Inviting user: ${data.body}!`, 'Error!');
+        NotificationManager.error(`Error while Inviting user: ${formatApostrophe(data).body}!`, 'Error!');
       }
 
       dispatch(inviteUserSuccess());
@@ -97,7 +98,7 @@ export function requestcreateUser(name, mail, password, status, phone) {
     dispatch(createUser());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?mail=${name}&name=${mail}&password=${password}&status=${status}&phone=${phone}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users?mail=${formatApostrophe(name)}&name=${formatApostrophe(mail)}&password=${formatApostrophe(password)}&status=${formatApostrophe(status)}&phone=${formatApostrophe(phone)}`, {
         method: 'PUT',
       });
       const data = await response.json();
@@ -105,7 +106,7 @@ export function requestcreateUser(name, mail, password, status, phone) {
       if (data.statusCode === 200) {
         NotificationManager.success('Account successfully created!', 'Successful!', 1500);
       } else {
-        NotificationManager.error(`Error while creating account: ${data.body}!`, 'Error!');
+        NotificationManager.error(`Error while creating account: ${formatApostrophe(data).body}!`, 'Error!');
         dispatch(authenticateFailure());
       }
 
@@ -134,7 +135,7 @@ export function requestUpdateUserStatus(id, status, sessionToken) {
     dispatch(updateUserStatus());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users/status?id=${id}&status=${status}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/users/status?id=${formatApostrophe(id)}&status=${formatApostrophe(status)}`, {
         method: 'POST',
         headers: { authorization: sessionToken },
       });

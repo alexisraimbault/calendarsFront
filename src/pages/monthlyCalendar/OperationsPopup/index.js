@@ -48,17 +48,19 @@ class OperationsPopup extends Component {
         <Scrollbars
           autoHeight
           autoHeightMin={0}
-          autoHeightMax={200}
+          autoHeightMax={400}
         >
           {_.map(operations, operation => (
             <div className="operation-container">
-              <div className="operation-title">{operation.name}</div>
+              <div className="operation-top">
+                <div className="operation-title">{operation.name}</div>
+                {isAdmin && <ActionButton clickAction={this.callDeleteOperation(operation.id)} label="supprimer" isLoading={isLoading} isDanger/>}
+              </div>
               <div className="operation-data">{operation.data}</div>
-              <ActionButton clickAction={this.callDeleteOperation(operation.id)} label="supprimer" isLoading={isLoading} isDanger/>
             </div>
           ))}
         </Scrollbars>
-        <ActionButton clickAction={towardsCreateOperationPopup} label="Ajouter une opération" isLoading={false} />
+        {isAdmin && <ActionButton clickAction={towardsCreateOperationPopup} label="Ajouter une opération" isLoading={false} />}
         {/* {isAdmin && (
           <div className="bottom-space">
             <EditableLabel value={mail} onChange={this.updateMail} placeholder="Mail" isDescription={false} />

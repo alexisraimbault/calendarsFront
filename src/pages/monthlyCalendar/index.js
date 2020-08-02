@@ -20,7 +20,7 @@ import React, {
   import ActionButton from '../../components/ActionButton';
   import SidebarMonth from '../../components/SidebarMonth';
   import './styles.scss';
-  import { fetchEvents } from '../../redux/actions/eventActions';
+  import { fetchEvents, fetchAmoEvents } from '../../redux/actions/eventActions';
   import { fetchOperations } from '../../redux/actions/operationActions';
   import { logout } from '../../redux/actions/meActions';
   import DatePicker from 'react-datepicker';
@@ -72,12 +72,7 @@ import React, {
 
         const monthFormatted = month < 10 ? `0${month}` : month;
         this.setState({ fetchDate: `${year}_${monthFormatted}` }, () => {
-            fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId')).then(() => {
-                this.setState({ 
-                    collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id'),
-                    operationsToDisplay: this.getOperations(this.props.events)
-                });
-            });
+          this.fetchEventsData();
         });
     }
 
@@ -85,12 +80,7 @@ import React, {
         const { sessionToken, fetchEvents, userInfos } = this.props;
     
         if (prevState.fetchDate !== this.state.fetchDate) {
-            fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId')).then(() => {
-                this.setState({ 
-                    collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id'),
-                    operationsToDisplay: this.getOperations(this.props.events) 
-                });
-            });
+            this.fetchEventsData();
         }
     }
 
@@ -162,14 +152,24 @@ import React, {
   };
 
     fetchEventsData = () => {
-        const { sessionToken, fetchEvents, userInfos } = this.props;
-    
-        fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId')).then(() => {
+        const { sessionToken, fetchEvents, userInfos, fetchAmoEvents } = this.props;
+        
+        const isAdmin = userInfos.status === "admin";
+        if (isAdmin) {
+          fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId')).then(() => {
+              this.setState({ 
+                  collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id'),
+                  operationsToDisplay: this.getOperations(this.props.events) 
+              });
+          });
+        } else {
+          fetchAmoEvents(sessionToken, this.state.fetchDate, _.get(userInfos, 'id'), _.get(userInfos, 'corpId')).then(() => {
             this.setState({ 
-                collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id'),
-                operationsToDisplay: this.getOperations(this.props.events) 
+              collabsToDisplay: _.map(this.getRecipients(this.props.events), 'id'),
+              operationsToDisplay: this.getOperations(this.props.events) 
             });
         });
+        }
     };
 
     navigateToNextMonth = () => {
@@ -289,7 +289,7 @@ import React, {
     }
 
     renderDoubleTotals = () => {
-      const { operations, sessionToken } = this.props;
+      const { operations, sessionToken, isOperationsLoading } = this.props;
       const { fetchDate } = this.state;
       
       return (
@@ -311,6 +311,7 @@ import React, {
                   total2={_.get(monthTotal, 'total2', 0)}
                   fetchDate={fetchDate}
                   sessionToken={sessionToken}
+                  isLoading={isOperationsLoading}
                 />
               </div>
             );
@@ -333,6 +334,8 @@ import React, {
       // const groupedEvents = _.groupBy(this.props.events, event => getDayOfYear(moment(event.date)._d));
   
       const daysOfMonth = this.getDaysInMonth(month - 1, year);
+
+      const isAdmin = userInfos.status === "admin";
   
       const popupHaloClass = classNames({
         'popup-halo': true,
@@ -413,7 +416,7 @@ import React, {
                     operations={operations}
                 />
             );})}
-            {this.renderDoubleTotals()}
+            {isAdmin && this.renderDoubleTotals()}
           </div>
           {isPopupDisplayed && (
           <div>
@@ -437,11 +440,13 @@ import React, {
     sessionToken: state.me.sessionToken,
     userInfos: state.me.infos,
     operations: state.operations.operations,
+    isOperationsLoading: state.operations.loading,
   });
   
   const mapDispatchToProps = (dispatch) => bindActionCreators({
     fetchOperations,
     fetchEvents,
+    fetchAmoEvents,
     logout,
   }, dispatch);
   // Connect Redux to React

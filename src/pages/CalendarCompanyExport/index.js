@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CalendarHeader from '../calendar/calendarHeader';
 import CalendarGridColumn from './calendarGridColumn';
-import HoursDisplay from '../calendar/hoursDisplay';
+import HoursDisplay from './hoursDisplay';
 import HoursLines from '../calendar/HoursLines';
 
 import './styles.scss';
@@ -171,24 +171,34 @@ class CalendarCompanyExport extends Component {
     const uniqAMOs = _.uniqBy(amos, 'id');
 
     return (
-      <div>
-        {_.map(uniqAMOs, amo => <div>{JSON.stringify(amo)}</div>)}
+      <div className="amo-infos-container" id="divId2ToPrint">
+        {_.map(uniqAMOs, amo => <div className="amo-infos"><div className="amo-name">{amo.name}</div><div className="amo-contact">{amo.phone || amo.mail}</div></div>)}
       </div>
     );
   }
 
-  exportToPdf = () => {
+  exportToPdf = async() => {
+    const { fetchDate } = this.state;
+    const toScale = 3;
+    
     const input = document.getElementById('divIdToPrint');
+    const input2 = document.getElementById('divId2ToPrint');
     var width = input.clientWidth;
-    input.style.width = '1017px';
-    html2canvas(input)
-    .then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('l', 'pt', 'a4');
-      pdf.addImage(imgData, 'PNG', 0, 0);
-      pdf.save("export.pdf");
-      input.style.width = width+'px'; 
-    });
+    var width2 = input2.clientWidth;
+    input.style.width = `1170px`;
+    input2.style.width = `500px`;
+    const [imgPage1, imgPage2] = await Promise.all([html2canvas(input, {scale: toScale}), html2canvas(input2, {scale: toScale})]);
+
+    const imgData1 = imgPage1.toDataURL('image/png');
+    const imgData2 = imgPage2.toDataURL('image/png');
+    
+    const pdf = new jsPDF('l', 'pt', 'a4');
+    pdf.addImage(imgData1, 'PNG', 20, 10, 800 , 566);
+    pdf.addPage();
+    pdf.addImage(imgData2, 'PNG', 210, 180, 400, 180);
+    pdf.save(`export_orchestra_${fetchDate}.pdf`);
+    input.style.width = width + 'px'; 
+    input2.style.width = width2 + 'px'; 
   }
 
   render() {
@@ -231,21 +241,21 @@ class CalendarCompanyExport extends Component {
       && (
       <div className="calendar-export-container">
         <div onClick={this.exportToPdf}>{"EXPORT TO PDF"}</div>
-        <div className="week-navigation-container">
-          <div className="week-navigation-holder">
-            <div className="top">
-              <div className="calendar-navigation-container">
+        <div className="calendar-center-container-export" id="divIdToPrint">
+          <div className="week-navigation-container-export">
+            <div className="week-navigation-holder">
+              <div className="top">
+                <div className="calendar-navigation-container">
+                </div>
+                <div >{`${moment(weekStart).format('D MMM')} - ${moment(weekStart).add(4, 'd').format('D MMM')}`}</div>
+                <div className="calendar-navigation-container">
+                </div>
               </div>
-              <div >{`${moment(weekStart).format('D MMM')} - ${moment(weekStart).add(4, 'd').format('D MMM')}`}</div>
-              <div className="calendar-navigation-container">
+              <div className="bottom">
+                {`${moment(weekStart).format('YYYY')}`}
               </div>
-            </div>
-            <div className="bottom">
-              {`${moment(weekStart).format('YYYY')}`}
             </div>
           </div>
-        </div>
-        <div className="calendar-center-container"  id="divIdToPrint">
           <CalendarHeader daysOfWeek={daysOfWeek} />
           <HoursDisplay />
           <HoursLines />

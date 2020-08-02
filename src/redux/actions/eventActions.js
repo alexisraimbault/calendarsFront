@@ -1,5 +1,6 @@
 // React Notification
 import { NotificationManager } from 'react-notifications';
+import { formatApostrophe } from '../../utils/formatVarUtils'
 
 export const GET_EVENTS = 'GET_EVENTS';
 export const GET_EVENTS_SUCCESS = 'GET_EVENTS_SUCCESS';
@@ -46,7 +47,7 @@ export function fetchEvents(date, sessionToken, corp_id, mergeData = false) {
     dispatch(getEvents());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?date=${date}&corp_id=${corp_id}`,
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?date=${formatApostrophe(date)}&corp_id=${formatApostrophe(corp_id)}`,
         { headers: { authorization: sessionToken } });
       const data = await response.json();
 
@@ -98,12 +99,13 @@ export const getAmoEventsFailure = () => ({
   type: GET_AMO_EVENTS_FAILURE,
 });
 
-export function fetchAmoEvents(date, user_id, corp_id ) {
+export function fetchAmoEvents(sessionToken, date, user_id, corp_id ) {
   return async (dispatch) => {
     dispatch(getAmoEvents());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/events?date=${date}&user_id=${user_id}&corp_id=${corp_id}`);
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/amoevents?date=${formatApostrophe(date)}&user_id=${formatApostrophe(user_id)}&corp_id=${formatApostrophe(corp_id)}`,
+      { headers: { authorization: sessionToken } });
       const data = await response.json();
 
       dispatch(getAmoEventsSuccess(JSON.parse(data.body)));
@@ -131,7 +133,7 @@ export function createEvent(name, description, date, time_from, time_to, users, 
     dispatch(putEvents());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${name}&description=${description}&date=${date}&time_from=${time_from}&time_to=${time_to}&users=${users}&corp_id=${corp_id}&type=${type}&operation_id=${operation_id}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}`, {
         headers: { authorization: sessionToken },
         method: 'PUT',
       });
@@ -163,7 +165,7 @@ export function postUpdateEvent(event_id, name, description, time_from, time_to,
     dispatch(updateEvent());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?event_id=${event_id}&name=${name}&description=${description}&time_from=${time_from}&time_to=${time_to}&users=${users}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?event_id=${formatApostrophe(event_id)}&name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}`, {
         headers: { authorization: sessionToken },
         method: 'POST',
       });
@@ -195,7 +197,7 @@ export function postDeleteEvent(id, sessionToken) {
     dispatch(deleteEvent());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?id=${id}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?id=${formatApostrophe(id)}`, {
         headers: { authorization: sessionToken },
         method: 'DELETE',
       });

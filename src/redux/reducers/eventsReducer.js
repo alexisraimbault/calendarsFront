@@ -30,7 +30,7 @@ export default function eventsReducer(state = initialState, action) {
       return { events: newEvents, loading: false, hasErrors: false };
       
     case actions.GET_AMO_EVENTS_SUCCESS:
-      return { ...state, amoEvents: action.payload, loading: false, hasErrors: false };
+      return { ...state, events: action.payload, loading: false, hasErrors: false };
 
     case actions.GET_EVENTS_SUCCESS:
       return { ...state, events: action.payload, loading: false, hasErrors: false };

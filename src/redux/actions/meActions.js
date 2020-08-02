@@ -1,4 +1,5 @@
 import { NotificationManager } from 'react-notifications';
+import { formatApostrophe } from '../../utils/formatVarUtils'
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const AUTHENTICATE_SUCCESS = 'AUTHENTICATE_SUCCESS';
@@ -30,13 +31,13 @@ export function requestAuthentication(mail, password) {
     dispatch(authenticate());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/authentication?mail=${mail}&password=${password}`);
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/authentication?mail=${formatApostrophe(mail)}&password=${formatApostrophe(password)}`);
       const data = await response.json();
 
       if (data.statusCode === 200) {
         dispatch(authenticateSuccess(data.body));
       } else {
-        NotificationManager.error(`Authentication error: ${data.body}!`, 'Error!');
+        NotificationManager.error(`Authentication error: ${formatApostrophe(data).body}!`, 'Error!');
         dispatch(authenticateFailure());
       }
     } catch (error) {
@@ -64,7 +65,7 @@ export function requestGetOffDays(user_id, sessionToken) {
     dispatch(getOffDays());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/offdays?user_id=${user_id}`,
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/offdays?user_id=${formatApostrophe(user_id)}`,
         { headers: { authorization: sessionToken } });
 
       const data = await response.json();
@@ -122,7 +123,7 @@ export function addOffDay(user_id, day, sessionToken) {
   return async (dispatch) => {
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/offdays?user_id=${user_id}&date=${day}`,
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/offdays?user_id=${formatApostrophe(user_id)}&date=${formatApostrophe(day)}`,
         { headers: { authorization: sessionToken },
         method: 'PUT', });
     } catch (error) {
@@ -136,7 +137,7 @@ export function deleteOffDay(id, sessionToken) {
   return async (dispatch) => {
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/offdays?id=${id}`,
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/offdays?id=${formatApostrophe(id)}`,
         { headers: { authorization: sessionToken } ,
         method: 'DELETE',});
     } catch (error) {

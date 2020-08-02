@@ -19,8 +19,8 @@ class DayCalendarDisplay extends Component {
 
         return (
         <div className="day-off-container">
-            <span>{index + 1}</span>
-            {_.map(offDays, offDay => <span>{_.find(users, {'id': offDay.user_id}).name}</span>)}
+            <div className="index-container">{index + 1}</div>
+            {_.map(offDays, offDay => <div className="name-container">{_.find(users, {'id': offDay.user_id}).name}</div>)}
             {/* <div className="col-holder">
             {_.map(events, (event) => {
                 const coords = this.calculateCoords(event);

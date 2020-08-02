@@ -3,7 +3,7 @@
 .col-container {
     position: absolute;
     width: 20%;
-    height: 90%;
+    height: 80%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -72,22 +72,22 @@
                         flex-shrink: 1;
                         overflow-wrap: break-word;
                     }
-                    .event-recipients{
-                        @include small-content;
-                        margin-top: 4px;
-                        flex: 0 1 auto;
-                        font-size: 0.8em;
-                        overflow-wrap: break-word;
-                        display: flex;
-                        flex-wrap: wrap;
+                    // .event-recipients{
+                    //     @include small-content;
+                    //     margin-top: 8px;
+                    //     flex: 0 1 auto;
+                    //     font-size: 0.8em;
+                    //     overflow-wrap: break-word;
+                    //     display: flex;
+                    //     flex-wrap: wrap;
 
-                        .event-recipient{
-                            padding: 2px 4px;
-                            margin: 2px 2px;
-                            border-radius: 8px;
-                            background-color: rgba(255, 255, 255, 0.5);
-                        }
-                    }
+                    //     .event-recipient{
+                    //         padding: 2px 4px;
+                    //         margin: 2px 2px;
+                    //         border-radius: 8px;
+                    //         background-color: rgba(255, 255, 255, 0.5);
+                    //     }
+                    // }
                 }
             }
         }
@@ -103,13 +103,26 @@
         overflow-wrap: break-word;
         display: flex;
         flex-wrap: wrap;
+        width: 100%;
 
-        .event-recipient{
-            padding: 2px 4px;
-            margin: 2px 2px;
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.5);
+        .container-inside-scroll {
+            @include content;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
+
+        .amo-name {
+            background-color: $orchestra-yellow;
+            border-radius: 12px;
+            padding: 4px 8px;
+            margin-bottom: 4px;
+            width: fit-content;
+        }
+    }
+
+    .right-margin {
+        margin-right: 4px;
     }
 }
 

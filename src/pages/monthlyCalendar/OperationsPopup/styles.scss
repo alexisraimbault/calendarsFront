@@ -22,4 +22,19 @@
     .bottom-space{
         margin-bottom: 12px;
     }
+
+    .operation-container {
+        margin-bottom: 24px;
+
+        .operation-top{
+            display: flex;
+            justify-content: space-between;
+
+            .operation-title {
+                font-size: 16px;
+                font-weight: 600;
+                margin-bottom: 12px;
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ import './styles.scss';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import EditableLabel from '../../../components/EditableLabel';
+import ActionButton from '../../../components/ActionButton';
 
 import { fetchUpdateOperationTotal, fetchOperations } from '../../../redux/actions/operationActions';
 
@@ -59,21 +60,19 @@ class OperationTotalsDisplay extends Component {
 
   updateTotals = () => {
     const { total1, total2 } = this.state;
-    console.log("ALEXIS 1")
+
     if( this.props.total1 !== total1) {
-      console.log("ALEXIS 2")
       this.onUpdateTotal1();
     }
     
     if( this.props.total2 !== total2) {
-      console.log("ALEXIS 3")
       this.onUpdateTotal2();
     }
   }
 
   render() {
     const { total1, total2 } = this.state;
-    const { name } = this.props;
+    const { name, isLoading } = this.props;
 
     const hasBeenEdited = this.props.total1 !== total1 || this.props.total2 !== total2;
 
@@ -87,7 +86,9 @@ class OperationTotalsDisplay extends Component {
           <EditableLabel value={total2} onChange={this.setTotal2} placeholder="Total 2" isDescription={false} />
         </div>
         {hasBeenEdited && (
-          <div className="save-btn" onClick={this.updateTotals}>Save</div>
+          <div className="btn-container">
+            <ActionButton clickAction={this.updateTotals} label={"Save"} isLoading={isLoading}/>
+          </div>
         )}
       </div>
     );

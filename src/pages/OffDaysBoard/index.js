@@ -76,7 +76,7 @@ import React, {
         const newYear = isDecember ? year + 1 : year;
         const newMonth = isDecember ? 1 : month +1 ;
 
-        this.props.history.push(`/calendaroffdays/${newMonth}/${newYear}`);
+        this.props.history.push(`/calendaroffdaysboard/${newMonth}/${newYear}`);
 
         this.setState({
             year: newYear,
@@ -90,7 +90,7 @@ import React, {
         const newYear = isJanuary ? year - 1 : year;
         const newMonth = isJanuary ? 12 : month - 1 ;
 
-        this.props.history.push(`/calendaroffdays/${newMonth}/${newYear}`);
+        this.props.history.push(`/calendaroffdaysboard/${newMonth}/${newYear}`);
 
         this.setState({
             year: newYear,
@@ -102,7 +102,7 @@ import React, {
         const newMonth = moment(date).month() + 1;
         const newYear = moment(date).year();
 
-        this.props.history.push(`/calendaroffdays/${newMonth}/${newYear}`);
+        this.props.history.push(`/calendaroffdaysboard/${newMonth}/${newYear}`);
 
         this.setState({
             year: newYear,
@@ -200,7 +200,7 @@ import React, {
               />
             </div>
           </div>
-          <div className="calendar-center-container months-container">
+          <div className="calendar-center-offDays-container months-container">
             {_.map(daysOfMonth, (dayObject, index) => {
                 return(
                 <DayCalendarOffDisplay

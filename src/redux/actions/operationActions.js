@@ -1,5 +1,6 @@
 // React Notification
 import { NotificationManager } from 'react-notifications';
+import { formatApostrophe } from '../../utils/formatVarUtils'
 
 export const GET_OPERATIONS = 'GET_OPERATIONS';
 export const GET_OPERATIONS_SUCCESS = 'GET_OPERATIONS_SUCCESS';
@@ -64,7 +65,7 @@ export function fetchUpdateOperationTotal(sessionToken, total_name, date, operat
     dispatch(updateOperationTotal());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/totals?total_name=${total_name}&date=${date}&operation_id=${operation_id}&total_value=${total_value}`,{ 
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/totals?total_name=${formatApostrophe(total_name)}&date=${formatApostrophe(date)}&operation_id=${formatApostrophe(operation_id)}&total_value=${formatApostrophe(total_value)}`,{ 
         headers: { authorization: sessionToken },
         method: 'POST',
       });
@@ -96,7 +97,7 @@ export function createOperation(name, infos, sessionToken) {
     dispatch(putOperations());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${name}&data=${infos}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${formatApostrophe(name)}&data=${formatApostrophe(infos)}`, {
         headers: { authorization: sessionToken },
         method: 'PUT',
       });
@@ -129,7 +130,7 @@ export function postDeleteOperation(id, sessionToken) {
     dispatch(deleteOperation());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?id=${id}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?id=${formatApostrophe(id)}`, {
         headers: { authorization: sessionToken },
         method: 'DELETE',
       });
