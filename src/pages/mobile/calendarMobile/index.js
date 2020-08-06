@@ -57,7 +57,7 @@ class CalendarMobile extends Component {
         const year = moment(this.state.day).year();
         const monthFormatted = month < 10 ? `0${month}` : month;
         this.setState({ fetchDate: `${year}_${monthFormatted}` }, () => {
-          fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId'));
+          this.fetchEventsData();
         });
       });
     } else {
@@ -67,7 +67,7 @@ class CalendarMobile extends Component {
         const year = moment(this.state.day).year();
         const monthFormatted = month < 10 ? `0${month}` : month;
         this.setState({ fetchDate: `${year}_${monthFormatted}` }, () => {
-          fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId'));
+          this.fetchEventsData();
         });
       });
     }

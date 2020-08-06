@@ -16,6 +16,9 @@ import React, {
   import CreateOperationPopup from './CreateOperationPopup';
   import DayCalendarDisplay from './DayCalendarDisplay';
   import OperationTotalsDisplay from './OperationTotalsDisplay'
+  import CalendarGridColumn from './calendarGridColumn';
+  import HoursDisplay from './hoursDisplay';
+  import HoursLines from './HoursLines';
   
   import ActionButton from '../../components/ActionButton';
   import SidebarMonth from '../../components/SidebarMonth';
@@ -34,15 +37,16 @@ import React, {
   
   InvitationPopup;
   
-  class MonthlyCalendar extends Component {
+  class DailyCalendar extends Component {
     constructor(props) {
       super(props);
   
       this.datePickerRef = React.createRef();
   
       this.state = {
+        day: null,
         year: _.parseInt(props.match.params.year) || moment().year(),
-        month: _.parseInt(props.match.params.week) || moment().month() + 1,
+        dayCount: _.parseInt(props.match.params.day) || moment().dayOfYear(),
         sidebarOpen: false,
         collabsToDisplay: [],
         operationsToDisplay: [],
@@ -53,10 +57,10 @@ import React, {
     }
   
     componentDidMount() {
-        const { month, year } = this.state;
         const {
             sessionToken, fetchEvents, history, userInfos,fetchOperations,
         } = this.props;
+        const { day, year } = this.props.match.params;
     
         moment.locale('fr');
     
@@ -70,10 +74,26 @@ import React, {
 
         fetchOperations(sessionToken);
 
-        const monthFormatted = month < 10 ? `0${month}` : month;
-        this.setState({ fetchDate: `${year}_${monthFormatted}` }, () => {
-          this.fetchEventsData();
-        });
+        if (_.isNil(day) || _.isNil(year)) {
+          this.setState({ day: new Date()}, () => {
+            const month = moment(this.state.day).month() + 1;
+            const year = moment(this.state.day).year();
+            const monthFormatted = month < 10 ? `0${month}` : month;
+            this.setState({ fetchDate: `${year}_${monthFormatted}` }, () => {
+              fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId'));
+            });
+          });
+        } else {
+          const dayPage = moment().dayOfYear(day);
+          this.setState({ day: dayPage }, () => {
+            const month = moment(this.state.day).month() + 1;
+            const year = moment(this.state.day).year();
+            const monthFormatted = month < 10 ? `0${month}` : month;
+            this.setState({ fetchDate: `${year}_${monthFormatted}` }, () => {
+              fetchEvents(this.state.fetchDate, sessionToken, _.get(userInfos, 'corpId'));
+            });
+          });
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -186,50 +206,56 @@ import React, {
         }
     };
 
-    navigateToNextMonth = () => {
-        const { month, year } = this.state;
-        const isDecember = month === 12;
-        const newYear = isDecember ? year + 1 : year;
-        const newMonth = isDecember ? 1 : month +1 ;
-        const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
-
-        this.props.history.push(`/calendarmonth/${newMonth}/${newYear}`);
-
-        this.setState({
-            fetchDate: `${newYear}_${newMonthFormatted}`,
-            year: newYear,
-            month: newMonth,
-        });
+    navigateToNextWeek = () => {
+      const { day } = this.state;
+      const newDay = moment(day).add(1, 'd');
+      const newDayCount = moment(newDay).dayOfYear();
+      const newYear = moment(newDay).year();
+      const newMonth = moment(newDay).month() + 1;
+      const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
+  
+      this.props.history.push(`/calendarday/${newDayCount}/${newYear}`);
+  
+      this.setState({
+        fetchDate: `${newYear}_${newMonthFormatted}`,
+        day: newDay,
+        year: newYear,
+        dayCount: newDayCount,
+      });
     };
 
-    navigateToPreviousMonth = () => {
-        const { month, year } = this.state;
-        const isJanuary = month === 1;
-        const newYear = isJanuary ? year - 1 : year;
-        const newMonth = isJanuary ? 12 : month - 1 ;
-        const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
-
-        this.props.history.push(`/calendarmonth/${newMonth}/${newYear}`);
-
-        this.setState({
-            fetchDate: `${newYear}_${newMonthFormatted}`,
-            year: newYear,
-            month: newMonth,
-        });
+    navigateToPreviousWeek = () => {
+      const { day } = this.state;
+      const newDay = moment(day).add(-1, 'd');
+      const newDayCount = moment(newDay).dayOfYear();
+      const newYear = moment(newDay).year();
+      const newMonth = moment(newDay).month() + 1;
+      const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
+  
+      this.props.history.push(`/calendarday/${newDayCount}/${newYear}`);
+  
+      this.setState({
+        fetchDate: `${newYear}_${newMonthFormatted}`,
+        day: newDay,
+        year: newYear,
+        dayCount: newDayCount,
+      });
     };
 
     navigateToDate = (date) => {
-        const newMonth = moment(date).month() + 1;
-        const newYear = moment(date).year();
-        const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
-
-        this.props.history.push(`/calendarmonth/${newMonth}/${newYear}`);
-
-        this.setState({
-            fetchDate: `${newYear}_${newMonthFormatted}`,
-            year: newYear,
-            month: newMonth,
-        });
+      const newDayCount = moment(date).dayOfYear();
+      const newYear = moment(date).year();
+      const newMonth = moment(date).month() + 1;
+      const newMonthFormatted = newMonth < 10 ? `0${newMonth}` : newMonth;
+  
+      this.props.history.push(`/calendarday/${newDayCount}/${newYear}`);
+  
+      this.setState({
+        fetchDate: `${newYear}_${newMonthFormatted}`,
+        day: date,
+        year: newYear,
+        dayCount: newDayCount,
+      });
     };
 
     getRecipients = (events) => {
@@ -335,19 +361,15 @@ import React, {
     }
 
     render() {
-      const { isPopupDisplayed, popupContent, month, year, fetchDate, operationsToDisplay } = this.state;
+      const { isPopupDisplayed, popupContent, day, fetchDate, operationsToDisplay } = this.state;
       const { userInfos, operations } = this.props;
   
-      const filteredEvents = _.filter(this.props.events, (event) => event.type !== 'amo' || !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.invitations, 'id'))));
+      const filteredEvents = _.filter(this.props.events, (event) => moment(event.date).dayOfYear() === moment(day).dayOfYear() && (event.type !== 'amo' || !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.invitations, 'id')))));
   
       const operationsFilteredEvents = _.filter(filteredEvents, event => _.includes(operationsToDisplay, event.operation_id) );
-
-      const groupedEvents = _.groupBy(operationsFilteredEvents, (event) => getDayOfYear(moment(event.date)._d));
       
       const operationIdsToDisplay = this.getOperations(this.props.events);
       // const groupedEvents = _.groupBy(this.props.events, event => getDayOfYear(moment(event.date)._d));
-  
-      const daysOfMonth = this.getDaysInMonth(month - 1, year);
 
       const isAdmin = userInfos.status === "admin";
   
@@ -374,7 +396,7 @@ import React, {
           <div className="week-navigation-container">
             <div className="week-navigation-holder">
               <div className="top">
-                <div className="calendar-navigation-container" onClick={this.navigateToPreviousMonth}>
+                <div className="calendar-navigation-container" onClick={this.navigateToPreviousWeek}>
                   <svg viewBox="0 0 512 512" width="20" height="20">
                     <path d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12
                       C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084
@@ -383,8 +405,8 @@ import React, {
                     />
                   </svg>
                 </div>
-                <div onClick={this.openDatePicker}>{`${moment(new Date(year, month - 1, 1)).format('MMM')}`}</div>
-                <div className="calendar-navigation-container" onClick={this.navigateToNextMonth}>
+                <div onClick={this.openDatePicker}>{`${moment(day).format('D MMM')}`}</div>
+                <div className="calendar-navigation-container" onClick={this.navigateToNextWeek}>
                   <svg viewBox="0 0 512 512" width="20" height="20">
                     <path d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12
                       c-10.492,10.504-10.492,27.576,0,38.064L293.398,245.9l-184.06,184.06c-5.064,5.068-7.86,11.824-7.86,19.028
@@ -395,11 +417,11 @@ import React, {
                 </div>
               </div>
               <div className="bottom" onClick={this.openDatePicker}>
-                {`${moment(new Date(year, month - 1, 1)).format('YYYY')}`}
+                {`${moment(day).format('YYYY')}`}
               </div>
               <DatePicker
                 ref={this.datePickerRef}
-                selected={new Date(year, month - 1, 1)}
+                selected={day._d}
                 onChange={this.navigateToDate}
               />
             </div>
@@ -409,29 +431,15 @@ import React, {
             <ActionButton clickAction={this.openNewEventPopup} label="Nouveau RDV" />
           </div>)}
           <div className="calendar-center-container months-container">
-            {_.map(daysOfMonth, (dayObject, index) => {
-                return(
-            //   <CalendarGridColumn
-            //     setPopupState={this.setPopupState}
-            //     setPopupContent={this.setPopupContent}
-            //     day={dayObject.day}
-            //     index={index}
-            //     events={_.get(groupedEvents, `[${getDayOfYear(dayObject.day)}]`, [])}
-            //     fetchEventsData={this.fetchEventsData}
-            //   />
-                <DayCalendarDisplay
-                    setPopupState={this.setPopupState}
-                    setPopupContent={this.setPopupContent}
-                    day={dayObject}
-                    index={index}
-                    events={_.get(groupedEvents, `[${getDayOfYear(dayObject)}]`, [])}
-                    fetchEventsData={this.fetchEventsData}
-                    openAddEvent={this.openNewEventPopupDay}
-                    openAMOPopup={this.openAMOPopup}
-                    operations={operations}
-                />
-            );})}
-            {isAdmin && this.renderDoubleTotals()}
+            <HoursDisplay />
+            <HoursLines />
+            <CalendarGridColumn
+              day={day}
+              index={0}
+              events={operationsFilteredEvents}
+              fetchEventsData={this.fetchEventsData}
+              operations={operations}
+            />
           </div>
           {isPopupDisplayed && (
           <div>
@@ -465,5 +473,5 @@ import React, {
     logout,
   }, dispatch);
   // Connect Redux to React
-  export default connect(mapStateToProps, mapDispatchToProps)(MonthlyCalendar);
+  export default connect(mapStateToProps, mapDispatchToProps)(DailyCalendar);
   

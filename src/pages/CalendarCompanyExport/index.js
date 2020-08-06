@@ -15,6 +15,7 @@ import CalendarHeader from '../calendar/calendarHeader';
 import CalendarGridColumn from './calendarGridColumn';
 import HoursDisplay from './hoursDisplay';
 import HoursLines from '../calendar/HoursLines';
+import ActionButton from '../../components/ActionButton'
 
 import './styles.scss';
 import { fetchOperationEvents } from '../../redux/actions/eventActions';
@@ -42,6 +43,7 @@ class CalendarCompanyExport extends Component {
       isPopupDisplayed: false,
       popupContent: null,
       fetchDate: '',
+      isLoading: false,
     };
   }
 
@@ -179,6 +181,8 @@ class CalendarCompanyExport extends Component {
 
   exportToPdf = async() => {
     const { fetchDate } = this.state;
+
+    this.setState({isLoading: true});
     const toScale = 3;
     
     const input = document.getElementById('divIdToPrint');
@@ -198,11 +202,12 @@ class CalendarCompanyExport extends Component {
     pdf.addImage(imgData2, 'PNG', 210, 180, 400, 180);
     pdf.save(`export_orchestra_${fetchDate}.pdf`);
     input.style.width = width + 'px'; 
-    input2.style.width = width2 + 'px'; 
+    input2.style.width = width2 + 'px';
+    this.setState({isLoading: false});
   }
 
   render() {
-    const { weekStart, isPopupDisplayed, popupContent } = this.state;
+    const { weekStart, isPopupDisplayed, popupContent, isLoading } = this.state;
     const { events } = this.props;
 
     const groupedEvents = _.groupBy(events, (event) => getDayOfYear(moment(event.date)._d));
@@ -240,7 +245,9 @@ class CalendarCompanyExport extends Component {
       !_.isNil(weekStart)
       && (
       <div className="calendar-export-container">
-        <div onClick={this.exportToPdf}>{"EXPORT TO PDF"}</div>
+        <div className="export-btn">
+          <ActionButton clickAction={this.exportToPdf} label="EXPORT PDF" isLoading={isLoading} />
+        </div>
         <div className="calendar-center-container-export" id="divIdToPrint">
           <div className="week-navigation-container-export">
             <div className="week-navigation-holder">
