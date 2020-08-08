@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import './styles.scss';
 import * as moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
+import OperationCard from '../OperationCard';
 
 class CalendarGridColumn extends Component {
   constructor(props) {
@@ -138,25 +139,34 @@ class CalendarGridColumn extends Component {
 
     return (
       _.size(amos) > 0 && (
+        
         <div className="event-day-recipients">
-            {_.map(_.orderBy(amos, 'operation_id'), (amo) => (
-                <>
-                <div 
-                  className="amo-name right-margin"
-                  style={{backgroundColor: `${_.find(operations, {id: amo.operation_id}).color}`}}
-                >
-                  {amo.name}
-                </div>
-                <div className="amo-tel">{_.get(amo, 'phone', 'pas de téléphone renseigné') || 'Pas de téléphone renseigné'}</div>
-                </>
+            {_.map(_.groupBy(amos, 'operation_id'), (amoGroup) => (
+                <OperationCard
+                  operation={_.find(operations, {id: amoGroup[0].operation_id})}
+                  amos={amoGroup}
+                />
+                // <>
+                // <div 
+                //   className="amo-name right-margin"
+                //   style={{backgroundColor: `${_.find(operations, {id: amo.operation_id}).color}`}}
+                // >
+                //   {amo.name}
+                // </div>
+                // <div className="amo-tel">{_.get(amo, 'phone', 'pas de téléphone renseigné') || 'Pas de téléphone renseigné'}</div>
+                // </>
               ))}
         </div>)
     );
   }
 
+  generateRGBAFromHex = (hex, a) => {
+    return 'rgba('+parseInt(hex.substring(1,3),16)+','+parseInt(hex.substring(3,5),16)+','+parseInt(hex.substring(5,7),16)+','+a+')';
+  }
+
   render() {
     const {
-      events, index, day, setPopupState, setPopupContent,
+      events, index, day, setPopupState, setPopupContent, operations
     } = this.props;
 
     const AMOEvents = _.filter(events, event => event.type === 'amo');
@@ -179,10 +189,16 @@ class CalendarGridColumn extends Component {
               <div
                 className="event-container"
                 style={{
-                  top: `${coords.from}%`, height: `${coords.to - coords.from}%`, left: `${widthMap[event.id].position * widthMap[event.id].width}%`, width: `${widthMap[event.id].width}%`,
+                  top: `${coords.from}%`, height: `${coords.to - coords.from}%`, 
+                  left: `${widthMap[event.id].position * widthMap[event.id].width}%`, 
+                  width: `${widthMap[event.id].width}%`,
                 }}
               >
-                <div className="event-holder">
+                <div className="event-holder"
+                  style={{
+                    backgroundColor: this.generateRGBAFromHex(_.find(operations, {id: event.operation_id}).color, 0.3), 
+                  }}
+                >
                   <div className="event-holder-2">
                     <Scrollbars className="custom-scrollbars" renderTrackHorizontal={(props) => <div {...props} style={{ display: 'none' }} className="track-horizontal" />}>
                       <div className="event-author">{event.name}</div>

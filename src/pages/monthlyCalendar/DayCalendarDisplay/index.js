@@ -16,10 +16,8 @@ class DayCalendarDisplay extends Component {
 
     openAMOPopup = (day, selectedUsers, selectedOperation) => event => {
         const { openAMOPopup } = this.props;
-        console.log('ALEXIS test 1', selectedUsers, selectedOperation);
         event.stopPropagation();
 
-        console.log('ALEXIS test 2');
         openAMOPopup(day, selectedUsers, selectedOperation);
     }
 
@@ -28,11 +26,16 @@ class DayCalendarDisplay extends Component {
         events, index, day, setPopupState, setPopupContent, openAddEvent, operations
         } = this.props;
 
+        const dayClass = classNames({
+            'day-month-master-container': true,
+            'day-month-master-container--today': isToday(day),
+            'day-month-master-container--weekend': !isToday(day) && _.includes([6, 5], moment(day).day()),
+        });
+
         const eventsByOperations = _.groupBy(events, "operation_id");
 
         return (
-        <div className="day-month-master-container" onClick={openAddEvent(day)}>
-            
+        <div className={dayClass} onClick={openAddEvent(day)}>
             <span>{index + 1}</span>
             <Scrollbars
                 autoHeight

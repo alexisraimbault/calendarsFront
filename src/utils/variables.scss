@@ -12,6 +12,7 @@ $darker-grey: #342b38;
 $grey: #bbbbbb;
 $orchestra-blue: #0f4c75;
 $orchestra-yellow: #f3c623;
+$disabled: #e4e3e3;
 
 $font: 'Nunito', sans-serif;
 
@@ -51,7 +52,7 @@ $font: 'Nunito', sans-serif;
 @mixin content {
     font-family: $font;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 16px;
     color: $darker-grey;
     line-height: 15px;
 }

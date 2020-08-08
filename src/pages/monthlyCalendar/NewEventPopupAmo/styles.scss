@@ -13,6 +13,12 @@
     align-items: center;
     justify-content: space-between;
 
+    .off-amos-display {
+        margin-top: 12px;
+        @include small_content;
+        color: #ff4301;
+    }
+
     .top-popup-container{
         width: 100%;
         display: flex;

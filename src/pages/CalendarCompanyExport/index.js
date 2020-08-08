@@ -11,8 +11,8 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import CalendarHeader from '../calendar/calendarHeader';
-import CalendarGridColumn from './calendarGridColumn';
+import CalendarHeader from '../calendar/CalendarHeader';
+import CalendarGridColumn from './CalendarGridColumn';
 import HoursDisplay from './hoursDisplay';
 import HoursLines from '../calendar/HoursLines';
 import ActionButton from '../../components/ActionButton'

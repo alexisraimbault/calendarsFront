@@ -16,12 +16,12 @@ import React, {
   import CreateOperationPopup from './CreateOperationPopup';
   import DayCalendarDisplay from './DayCalendarDisplay';
   import OperationTotalsDisplay from './OperationTotalsDisplay'
-  import CalendarGridColumn from './calendarGridColumn';
+  import CalendarGridColumn from './CalendarGridColumn';
   import HoursDisplay from './hoursDisplay';
   import HoursLines from './HoursLines';
   
   import ActionButton from '../../components/ActionButton';
-  import SidebarMonth from '../../components/SidebarMonth';
+  import SidebarMonth from '../../components/sideBarMonth';
   import './styles.scss';
   import { fetchEvents, fetchAmoEvents } from '../../redux/actions/eventActions';
   import { fetchOperations } from '../../redux/actions/operationActions';
@@ -117,6 +117,8 @@ import React, {
     };
 
     openNewEventPopup = () => {
+      const { userInfos } = this.props;
+
       const isAdmin = userInfos.status === "admin";
       if (!isAdmin) {
         return;
@@ -130,6 +132,8 @@ import React, {
     };
 
   openNewEventPopupDay = defaultDate => () => {
+      const { userInfos } = this.props;
+
     const isAdmin = userInfos.status === "admin";
     if (!isAdmin) {
       return;
@@ -142,6 +146,8 @@ import React, {
   };
 
   openAMOPopup = (defaultDate, selectedUsers, selectedOperation) => {
+      const { userInfos } = this.props;
+      
     const isAdmin = userInfos.status === "admin";
     if (!isAdmin) {
       return;
@@ -328,36 +334,10 @@ import React, {
       }
     }
 
-    renderDoubleTotals = () => {
-      const { operations, sessionToken, isOperationsLoading } = this.props;
-      const { fetchDate } = this.state;
+    towardsMonthlyCalendar = () => {
+      const { history } = this.props;
       
-      return (
-        <div className="totals-container">
-          {_.map(_.orderBy(operations, 'id'), operation => {
-            const totals = JSON.parse(_.get(operation, "totals","fetchDate: {total1: 0, total2: 0,}" ));
-            
-            const monthTotal = _.get(totals, `${fetchDate}`, {
-              total1: 0,
-              total2: 0,
-            });
-
-            return (
-              <div>
-                <OperationTotalsDisplay 
-                  name={operation.name} 
-                  id={operation.id} 
-                  total1={_.get(monthTotal, 'total1', 0)}
-                  total2={_.get(monthTotal, 'total2', 0)}
-                  fetchDate={fetchDate}
-                  sessionToken={sessionToken}
-                  isLoading={isOperationsLoading}
-                />
-              </div>
-            );
-          })}
-        </div>
-      );
+      history.push('/calendarmonth');
     }
 
     render() {
@@ -430,6 +410,9 @@ import React, {
           <div className="add-action-btn-container">
             <ActionButton clickAction={this.openNewEventPopup} label="Nouveau RDV" />
           </div>)}
+          <div className="switch-action-btn-container">
+            <ActionButton clickAction={this.towardsMonthlyCalendar} label="Planning mensuel" />
+          </div>
           <div className="calendar-center-container months-container">
             <HoursDisplay />
             <HoursLines />

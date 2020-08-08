@@ -14,11 +14,12 @@ import React, {
   import InvitationPopup from './invitationPopup';
   import OperationsPopup from './OperationsPopup';
   import CreateOperationPopup from './CreateOperationPopup';
+  import EditOperationPopup from './EditOperationPopup'
   import DayCalendarDisplay from './DayCalendarDisplay';
   import OperationTotalsDisplay from './OperationTotalsDisplay'
   
   import ActionButton from '../../components/ActionButton';
-  import SidebarMonth from '../../components/SidebarMonth';
+  import SidebarMonth from '../../components/sideBarMonth';
   import './styles.scss';
   import { fetchEvents, fetchAmoEvents } from '../../redux/actions/eventActions';
   import { fetchOperations } from '../../redux/actions/operationActions';
@@ -97,6 +98,8 @@ import React, {
     };
 
     openNewEventPopup = () => {
+      const { userInfos } = this.props;
+      
       const isAdmin = userInfos.status === "admin";
       if (!isAdmin) {
         return;
@@ -110,6 +113,8 @@ import React, {
     };
 
   openNewEventPopupDay = defaultDate => () => {
+    const { userInfos } = this.props;
+
     const isAdmin = userInfos.status === "admin";
     if (!isAdmin) {
       return;
@@ -122,6 +127,8 @@ import React, {
   };
 
   openAMOPopup = (defaultDate, selectedUsers, selectedOperation) => {
+      const { userInfos } = this.props;
+      
     const isAdmin = userInfos.status === "admin";
     if (!isAdmin) {
       return;
@@ -150,7 +157,7 @@ import React, {
     };
 
     openOperationsPopup = () => {
-      const operationPopup = <OperationsPopup closePopup={() => { this.setPopupState(false); }} towardsCreateOperationPopup={this.openCreateOperationPopup} />;
+      const operationPopup = <OperationsPopup closePopup={() => { this.setPopupState(false); }} towardsCreateOperationPopup={this.openCreateOperationPopup} towardsEditOperationPopup={this.openEditOperationPopup} />;
       this.setState({
         popupContent: operationPopup,
         isPopupDisplayed: true,
@@ -164,6 +171,14 @@ import React, {
           isPopupDisplayed: true,
       });
   };
+
+  openEditOperationPopup = (id, name, data) => () => {
+    const EditOperationPopupContent = <EditOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} id={id} name={name} data={data} />;
+    this.setState({
+        popupContent: EditOperationPopupContent,
+        isPopupDisplayed: true,
+    });
+};
 
     fetchEventsData = () => {
         const { sessionToken, fetchEvents, userInfos, fetchAmoEvents } = this.props;
@@ -334,6 +349,12 @@ import React, {
       );
     }
 
+    towardsDailyCalendar = () => {
+      const { history } = this.props;
+      
+      history.push('/calendarday');
+    }
+
     render() {
       const { isPopupDisplayed, popupContent, month, year, fetchDate, operationsToDisplay } = this.state;
       const { userInfos, operations } = this.props;
@@ -408,6 +429,9 @@ import React, {
           <div className="add-action-btn-container">
             <ActionButton clickAction={this.openNewEventPopup} label="Nouveau RDV" />
           </div>)}
+          <div className="switch-action-btn-container">
+            <ActionButton clickAction={this.towardsDailyCalendar} label="Planning quotidien" />
+          </div>
           <div className="calendar-center-container months-container">
             {_.map(daysOfMonth, (dayObject, index) => {
                 return(

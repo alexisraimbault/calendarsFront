@@ -15,6 +15,7 @@ import OperationSelector from '../../../components/OperationSelector';
 import ActionButton from '../../../components/ActionButton';
 import { createEvent } from '../../../redux/actions/eventActions';
 import { fetchUsers } from '../../../redux/actions/userActions';
+import { requestGetCompanyOffDays } from '../../../redux/actions/meActions';
 
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -36,9 +37,28 @@ class NewEventPopupAmo extends Component {
   }
 
   componentDidMount() {
-    const { fetchUsers, sessionToken, userInfos } = this.props;
+    const { fetchUsers, sessionToken, userInfos, requestGetCompanyOffDays } = this.props;
 
     fetchUsers(_.get(userInfos, 'corpId'), sessionToken);
+    requestGetCompanyOffDays(sessionToken);
+  }
+
+  getOffAmos = () => {
+    const { eventDate } = this.state;
+    const { users, offDays } = this.props;
+
+    const todayOff = _.filter(offDays, offDay => moment(eventDate).year() === moment(offDay.day).year() && moment(eventDate).dayOfYear() === moment(offDay.day).dayOfYear());
+    
+    if(_.isEmpty(todayOff)) {
+      return '';
+    }
+
+    const offAmos = _.map(todayOff, off => _.find(users, {id: off.user_id}));
+    let res = "AMO(s) off ce jour : "
+    _.each(offAmos,  offAmo => {
+      res += `${offAmo.name}, `
+    });
+    return res;
   }
 
     handleChangeDate = (date) => {
@@ -87,6 +107,8 @@ class NewEventPopupAmo extends Component {
       const { title, description } = this.state;
       const { isLoading } = this.props;
 
+      const offAmos = this.getOffAmos();
+
       return (
         <div className="new-event-popup-container">
           <div className="top-popup-container">
@@ -101,6 +123,7 @@ class NewEventPopupAmo extends Component {
                 </div>
               </div>
             </div>
+            {!_.isEmpty(offAmos) && <div className="off-amos-display">{offAmos}</div>}
             <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={this.props.selectedUsers}/>
             <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} defaultSelected={this.props.selectedOperation}/>
           </div>
@@ -121,11 +144,13 @@ const mapStateToProps = (state) => ({
   sessionToken: state.me.sessionToken,
   userInfos: state.me.infos,
   isLoading: state.events.loading,
+  offDays: state.me.allOffDays,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   createEvent,
   fetchUsers,
+  requestGetCompanyOffDays,
 }, dispatch);
 // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(NewEventPopupAmo);

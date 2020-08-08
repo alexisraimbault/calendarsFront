@@ -10,6 +10,10 @@ export const PUT_OPERATION = 'PUT_OPERATION';
 export const PUT_OPERATION_SUCCESS = 'PUT_OPERATION_SUCCESS';
 export const PUT_OPERATION_FAILURE = 'PUT_OPERATION_FAILURE';
 
+export const UPDATE_OPERATION = 'UPDATE_OPERATION';
+export const UPDATE_OPERATION_SUCCESS = 'UPDATE_OPERATION_SUCCESS';
+export const UPDATE_OPERATION_FAILURE = 'UPDATE_OPERATION_FAILURE';
+
 export const DELETE_OPERATION = 'DELETE_OPERATION';
 export const DELETE_OPERATION_SUCCESS = 'DELETE_OPERATION_SUCCESS';
 export const DELETE_OPERATION_FAILURE = 'DELETE_OPERATION_FAILURE';
@@ -108,6 +112,38 @@ export function createOperation(name, infos, sessionToken) {
     } catch (error) {
       NotificationManager.error('Error while Creating Operation!', 'Error!');
       dispatch(putOperationsFailure());
+    }
+  };
+}
+
+export const updateOperation = () => ({
+  type: UPDATE_OPERATION,
+});
+
+export const updateOperationSuccess = (events) => ({
+  type: UPDATE_OPERATION_SUCCESS,
+  payload: events,
+});
+
+export const updateOperationFailure = () => ({
+  type: UPDATE_OPERATION_FAILURE,
+});
+
+export function callUpdateOperation(id, data, sessionToken) {
+  return async (dispatch) => {
+    dispatch(updateOperation());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?id=${formatApostrophe(id)}&data=${formatApostrophe(data)}`, {
+        headers: { authorization: sessionToken },
+        method: 'POST',
+      });
+      NotificationManager.success('You have edited an Operation!', 'Successful!', 1500);
+
+      dispatch(updateOperationSuccess());
+    } catch (error) {
+      NotificationManager.error('Error while editing Operation!', 'Error!');
+      dispatch(updateOperationFailure());
     }
   };
 }

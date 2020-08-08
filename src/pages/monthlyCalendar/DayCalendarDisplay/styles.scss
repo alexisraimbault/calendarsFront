@@ -7,6 +7,15 @@
     border-left: solid 1px $beige;
     padding: 0px 8px;
     margin-bottom: 8px;
+    margin-right: 8px;
+    
+    &--today {
+        background-color: $rose;
+    }
+
+    &--weekend {
+        background-color: $disabled;
+    }
 
     .event-day-container {
         cursor: pointer;

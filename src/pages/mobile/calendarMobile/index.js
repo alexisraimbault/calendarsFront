@@ -9,7 +9,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import CalendarGridColumnMobile from '..//calendarGridColumnMobile';
+import CalendarGridColumnMobile from '../calendarGridColumnMobile';
 import HoursDisplay from '../../calendar/hoursDisplay';
 import HoursLines from '../../calendar/HoursLines';
 

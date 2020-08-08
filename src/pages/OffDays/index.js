@@ -11,7 +11,7 @@ import React, {
   import { bindActionCreators } from 'redux';
   import DayCalendarOffDisplay from './DayCalendarOffDisplay';
   
-  import SidebarMonth from '../../components/SidebarMonth';
+  // import SidebarMonth from '../../components/sideBarMonth';
   import './styles.scss';
   import { logout } from '../../redux/actions/meActions';
   import { requestGetOffDays, addOffDay, deleteOffDay } from '../../redux/actions/meActions';
