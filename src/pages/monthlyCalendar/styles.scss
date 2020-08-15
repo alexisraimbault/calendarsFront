@@ -8,6 +8,10 @@
     width: 100%;
 }
 
+.week-of-month {
+    display: flex;
+}
+
 .switch-action-btn-container {
     position: absolute;
     height: 38px;
@@ -15,4 +19,10 @@
     right: 60px;
     display: flex;
     align-items: center;
+}
+
+.months-groups-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
 }

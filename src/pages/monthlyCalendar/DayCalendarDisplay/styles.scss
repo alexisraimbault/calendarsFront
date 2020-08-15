@@ -1,8 +1,8 @@
 @import "src/utils/variables";
 
-.day-month-master-container {
+.day-month-master-1-container {
     position: relative;
-    width: 180px;
+    width: calc(100%/8);
     height: 180px;
     border-left: solid 1px $beige;
     padding: 0px 8px;

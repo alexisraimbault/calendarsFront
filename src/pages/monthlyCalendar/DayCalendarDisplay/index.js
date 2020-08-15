@@ -27,9 +27,9 @@ class DayCalendarDisplay extends Component {
         } = this.props;
 
         const dayClass = classNames({
-            'day-month-master-container': true,
-            'day-month-master-container--today': isToday(day),
-            'day-month-master-container--weekend': !isToday(day) && _.includes([6, 5], moment(day).day()),
+            'day-month-master-1-container': true,
+            'day-month-master-1-container--today': isToday(day),
+            'day-month-master-1-container--weekend': !isToday(day) && _.includes([6, 5], moment(day).day()),
         });
 
         const eventsByOperations = _.groupBy(events, "operation_id");

@@ -113,10 +113,12 @@ import React, {
     };
 
   openNewEventPopupDay = defaultDate => () => {
-    const { userInfos } = this.props;
+    const { userInfos, history } = this.props;
 
     const isAdmin = userInfos.status === "admin";
     if (!isAdmin) {
+      //Go to daily calendar for that day
+      history.push(`/calendarday/${moment(defaultDate).dayOfYear()}/${moment(defaultDate).year()}`);
       return;
     }
     const newEventPopup = <NewEventPopupAmo closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} date={defaultDate} />;
@@ -370,6 +372,18 @@ import React, {
   
       const daysOfMonth = this.getDaysInMonth(month - 1, year);
 
+      const daysOfMonthGrouped = [];
+
+      _.each(daysOfMonth, (item, index) => {
+        if(index % 7 === 0){
+          daysOfMonthGrouped.push([item]);
+        } else {
+          daysOfMonthGrouped[Math.trunc(index/7)].push(item)
+        }
+      });
+
+      console.log("ALEXIS ", daysOfMonthGrouped, daysOfMonth)
+
       const isAdmin = userInfos.status === "admin";
   
       const popupHaloClass = classNames({
@@ -432,8 +446,10 @@ import React, {
           <div className="switch-action-btn-container">
             <ActionButton clickAction={this.towardsDailyCalendar} label="Planning quotidien" />
           </div>
-          <div className="calendar-center-container months-container">
-            {_.map(daysOfMonth, (dayObject, index) => {
+          <div className="calendar-center-container months-groups-container">
+            {_.map(daysOfMonthGrouped, (daysOfMonthGroup, index1) => (
+              <div className="week-of-month">
+                { _.map(daysOfMonthGroup, (dayObject, index) => {
                 return(
             //   <CalendarGridColumn
             //     setPopupState={this.setPopupState}
@@ -447,7 +463,7 @@ import React, {
                     setPopupState={this.setPopupState}
                     setPopupContent={this.setPopupContent}
                     day={dayObject}
-                    index={index}
+                    index={7*index1 + index}
                     events={_.get(groupedEvents, `[${getDayOfYear(dayObject)}]`, [])}
                     fetchEventsData={this.fetchEventsData}
                     openAddEvent={this.openNewEventPopupDay}
@@ -455,6 +471,7 @@ import React, {
                     operations={operations}
                 />
             );})}
+            </div>))}
             {isAdmin && this.renderDoubleTotals()}
           </div>
           {isPopupDisplayed && (
