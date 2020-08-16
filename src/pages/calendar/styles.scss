@@ -19,14 +19,17 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 18px;
-            padding-top: 12px;
-            border-radius: 12px;
+            /* padding: 8px 18px;
+            padding-top: 12px; */
+            padding: 4px 8px;
+            padding-top: 8px;
+            border-radius: 4px;
             background-color: $rose;
             width: 180px;
             z-index: 3;
             font-family: $font;
             font-weight: 600;
+            font-size: 18px;
     
             .top {
                 width: 100%;

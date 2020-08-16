@@ -27,4 +27,14 @@
         padding: 4px 8px;
         margin-bottom: 4px;
     }
+
+    .top-day {
+        display: flex;
+        padding-top: 4px;
+        justify-content: space-between;
+
+        .add-icon {
+            cursor: pointer;
+        }
+    }
 }

@@ -1,3 +1,5 @@
+@import "src/utils/variables";
+
 .months-container {
     display: flex;
     flex-wrap: wrap;
@@ -25,4 +27,60 @@
     display: flex;
     flex-direction: column;
     margin-top: 40px;
+}
+
+.week-navigation-container-month {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    width: 80%;
+    margin-left: 300px;
+
+    @media screen and (max-width: 1400px) {
+        width: 70%;
+    }
+    
+    .week-navigation-holder-month{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* padding: 8px 18px;
+        padding-top: 12px; */
+        padding: 4px 8px;
+        padding-top: 8px;
+        border-radius: 4px;
+        background-color: $rose;
+        width: 180px;
+        z-index: 3;
+        font-family: $font;
+        font-weight: 600;
+        font-size: 18px;
+
+        .top {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center ;
+            align-items: center;
+            line-height: 16px;
+
+            .calendar-navigation-container{
+                cursor: pointer;
+                height: 22px;
+                display: flex;
+                align-items: flex-end;
+            }
+        }
+
+        .bottom{
+            font-weight: 600;
+            font-size: 0.7em;
+            color: grey;
+        }
+        
+        .react-datepicker__input-container{
+            display: none;
+        }
+    }
 }

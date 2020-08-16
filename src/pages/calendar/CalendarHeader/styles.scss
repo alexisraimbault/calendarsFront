@@ -2,7 +2,7 @@
 
 .calendar-header-container {
     display: flex;
-    width: 100%;
+    width: calc(100% + 30px);
     padding-bottom: 74px;
     font-size: 0.9em;
 

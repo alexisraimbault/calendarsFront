@@ -14,7 +14,7 @@
     text-align: center;
 }
 
-.sidebar-container{
+.sidebar-container-month{
     position: fixed;
     height: calc(100% - 60px);
     background-color: $rose;
@@ -57,12 +57,16 @@
 
     .sidebar-item-container{
         display: flex;
+        justify-content: flex-end;
+        align-items: center;
         margin-top: 16px;
         margin-bottom: 16px;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
+        margin-right: 16px;
         cursor: pointer;
+
+        .label {
+            margin-right: 16px;
+        }
 
         .sidebar-item-label{
             transition: all 0.4s ease-out;
