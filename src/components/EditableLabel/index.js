@@ -15,7 +15,7 @@ export default class EditableLabel extends Component {
   render() {
     const { isToggled } = this.state;
     const {
-      onChange, value, placeholder, isDescription, isPassword,
+      onChange, value, placeholder, isDescription, isPassword, isNumber,
     } = this.props;
 
     return (
@@ -41,12 +41,21 @@ export default class EditableLabel extends Component {
                 />
               )
               : (
-                <input
-                  className="editable-label-input"
-                  value={value}
-                  onChange={onChange}
-                  placeholder={placeholder}
-                />
+                isNumber ? 
+                  <input
+                    className="editable-label-input"
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                    type="number"
+                  />
+                  :
+                  <input
+                    className="editable-label-input"
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                  />
               )
           )}
       </div>

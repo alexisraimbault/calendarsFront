@@ -1,0 +1,167 @@
+@import "src/utils/variables";
+
+.rdv-acq-config {
+    width: 100%;
+    padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .formats, .duration, .time, .half-days {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .format-container {
+        display: flex;
+        width: 300px;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+
+        .format-duration {
+            display: flex;
+            align-items: center;
+
+            .remove {
+                cursor: pointer;
+                margin-left: 12px;
+                margin-bottom: px;
+                color: $red;
+            }
+        }
+    }
+
+    .format-new-container {
+        width: 300px;
+        
+        .inputs {
+            display: flex;
+
+            input {
+                border: solid 1px $rose;
+                background-color: #ffffff;
+                border-radius: 5px;
+                line-height: 32px;
+                padding: 0 12px;
+                margin-top: 12px;
+            }
+        }
+
+        .input1 {
+            width: 210px;
+            margin-right: 10px;
+        }
+
+        .input2 {
+            width: 70px;
+        }
+    }
+
+    .date-pickers-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .date-pickers {
+        display: flex;
+    }
+
+    .date-picker {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 8px;
+
+        .pronoun {
+            margin-right: 8px;
+        }
+
+        input {
+            border: solid 1px $rose;
+            border-radius: 5px;
+            line-height: 32px;
+            padding: 0 12px;
+        }
+    }
+    
+    .react-time-picker__wrapper {
+        border: solid 1px $rose;
+        border-radius: 5px;
+        line-height: 32px;
+        padding: 0 12px;
+
+        input {
+            border: none;
+        }
+    }
+
+    .cta {
+        margin-top: 12px;;
+        display: flex;
+        justify-content: center;
+    }
+
+    .day-boxes {
+        padding: 24px 100px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .day-box {
+        width: 200px;
+        border: solid 1px $rose;
+        border-radius: 5px;
+        line-height: 32px;
+        padding: 0 12px;
+        margin: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: rgba($rose, 0.2);
+
+        &--disabled {
+            background-color: rgba($red, 0.2);
+        }
+
+        &__count-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &__count-title {
+            margin-right: auto;
+        }
+
+        &__count-add {
+            width: 20px;
+            text-align: center;
+            cursor: pointer;
+            color: $orchestra-yellow;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        &__count-remove {
+            width: 20px;
+            text-align: center;
+            cursor: pointer;
+            color: $red;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    }
+}
