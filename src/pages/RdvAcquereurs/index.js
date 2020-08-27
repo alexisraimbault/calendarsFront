@@ -238,7 +238,6 @@ class RdvAcquereurs extends Component {
 
             <div className={formatClassName} onClick={_.partial(this.chooseFormatIdx, idx)}>
               <div className="format-title">{format.name}</div>
-              <div className="format-duration">{`${format.duration}h`}</div>
             </div>
             );
           })}
