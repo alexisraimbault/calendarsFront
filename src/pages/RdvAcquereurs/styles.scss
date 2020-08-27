@@ -1,0 +1,77 @@
+@import "src/utils/variables";
+
+.rdv-acq {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+
+    .title {
+        margin-top: 28px;
+        margin-bottom: 12px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .client-inputs {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    .formats-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        .format-container {
+            display: flex;
+            border-radius: 5px;
+            line-height: 32px;
+            padding: 0 12px;
+            cursor: pointer;
+
+            &--selected {
+                border: solid 1px $rose;
+                background-color: $color-4;
+            }
+        }
+    }
+
+    .boxes-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .day-boxes {
+            padding: 24px 100px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    
+        .day-box {
+            cursor: pointer;
+            width: 200px;
+            border: solid 1px $rose;
+            border-radius: 5px;
+            line-height: 32px;
+            padding: 0 12px;
+            margin: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba($rose, 0.2);
+    
+            &--selected {
+                background-color: $color-4;
+            }
+
+            &--disabled {
+                //background-color: rgba($darker-grey, 0.2);
+            }
+        }
+    }
+}

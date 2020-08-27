@@ -17,6 +17,7 @@ import Calendar from './pages/calendar';
 import CalendarMobile from './pages/mobile/calendarMobile';
 import MonthlyCalendar from './pages/monthlyCalendar';
 import RdvAcquereursConfig from './pages/RdvAcquereursConfig';
+import RdvAcquereurs from './pages/RdvAcquereurs';
 import OffDays from './pages/OffDays';
 import OffDaysBoard from './pages/OffDaysBoard';
 import CalendarCompanyExport from './pages/CalendarCompanyExport';
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/calendaroffdaysBoard/:month?/:year?" component={OffDaysBoard} />
           <Route path="/calendarexport/:operation_id" component={CalendarCompanyExport} />
           <Route path="/rdvconfig" component={RdvAcquereursConfig} />
+          <Route path="/rdv/:operation_id" component={RdvAcquereurs} />
           <Route path="/login" component={LoginPage} />
           <Route path="/"  component={LoginPage} />
         </Switch>

@@ -63,7 +63,7 @@ class OperationSelector extends Component {
     const {
       selectedUsers, value, isFocused, isHovered,
     } = this.state;
-    const { operations } = this.props;
+    const { operations, hideOperation } = this.props;
 
     const selectedIds = this.getSelectedUsersIds();
 
@@ -87,9 +87,10 @@ class OperationSelector extends Component {
         )}
         {!(isFocused || isHovered) && (
         <div className="selection-placebo" />)}
+        {!hideOperation && (
         <div className="selected-container">
           {_.map(selectedUsers, (user) => <div className="selected-item" onClick={this.removeUser(user)}>{user.name}</div>)}
-        </div>
+        </div>)}
       </div>
     );
   }

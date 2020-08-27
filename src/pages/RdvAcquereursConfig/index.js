@@ -11,6 +11,7 @@ import { bindActionCreators } from "redux";
 import "./styles.scss";
 import { fetchEvents, fetchAmoEvents } from "../../redux/actions/eventActions";
 import { fetchOperations } from "../../redux/actions/operationActions";
+import OperationSelector from '../../components/OperationSelector';
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -19,10 +20,12 @@ class RdvAcquereursConfig extends Component {
   constructor(props) {
     super(props);
 
+    //TODO link
     this.state = {
       rdvFormats: [],
       hours: [],
       timeSpans: [],
+      selectedOperationsIds: [],
       from: moment().toDate(),
       to: moment().add(1, 'w').toDate(),
       fromTime: '08:00',
@@ -33,7 +36,11 @@ class RdvAcquereursConfig extends Component {
   }
 
   componentDidMount() {
+    //TODO check if connected and if isAdmin, else redirect to login page
     moment.locale('fr');
+    const { fetchOperations, sessionToken } = this.props;
+
+    fetchOperations(sessionToken);
   }
   
 
@@ -104,6 +111,8 @@ class RdvAcquereursConfig extends Component {
     });
   }
 
+  setSelectedOperationsIds = (array) => this.setState({ selectedOperationsIds: array });
+
   generateTimeSpans = () => {
     const { from, to, hours, timeSpans } = this.state;
 
@@ -143,10 +152,14 @@ class RdvAcquereursConfig extends Component {
 
   render() {
     const { operations } = this.props;
-    const { rdvFormats, editingName, editingTime, hours, timeSpans } = this.state;
+    const { rdvFormats, editingName, editingTime, hours, timeSpans, selectedOperationsIds } = this.state;
 
     return (
       <div className="rdv-acq-config">
+        <div className="operation">
+          <div className="title">{`Opération : ${_.isEmpty(selectedOperationsIds) ? 'choisir' : _.find(operations, {id: selectedOperationsIds[0]}).name }`}</div>
+          <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} hideOperation />
+        </div>
         <div className="formats">
           <div className="title">{"Insérer les formats possibles"}</div>
           {_.map(rdvFormats, (format, idx) => (
@@ -180,7 +193,7 @@ class RdvAcquereursConfig extends Component {
           </div>
         </div>
         <div className="duration">
-          <div className="title">{"Choisissez les dates d'ouverture"}</div>
+          <div className="title">{"Choisir les dates d'ouverture"}</div>
           <div className="date-pickers">
             <div className="date-picker">
               <span className="pronoun">De</span>
@@ -199,7 +212,7 @@ class RdvAcquereursConfig extends Component {
           </div>
         </div>
         <div className="time">
-          <div className="title">{"Choisissez les plages horaires"}</div>
+          <div className="title">{"Choisir les plages horaires"}</div>
           {_.map(hours, (format, idx) => (
             <div className="format-container">
               <div className="format-name">{format.from}</div>
@@ -232,7 +245,7 @@ class RdvAcquereursConfig extends Component {
           </div>
         </div>
         <div className="half-days">
-          <div className="title">{"Ajustez les demi-journées"}</div>
+          <div className="title">{"Ajuster les créneaux"}</div>
             <div className="day-boxes">
             {_.map(timeSpans, timeSpan => {
               const boxClassName = classNames({
