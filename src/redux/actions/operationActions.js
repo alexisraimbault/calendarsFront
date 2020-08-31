@@ -22,6 +22,14 @@ export const UPDATE_OPERATION_TOTAL = 'UPDATE_OPERATION_TOTAL';
 export const UPDATE_OPERATION_TOTAL_SUCCESS = 'UPDATE_OPERATION_TOTAL_SUCCESS';
 export const UPDATE_OPERATION_TOTAL_FAILURE = 'UPDATE_OPERATION_TOTAL_FAILURE';
 
+export const UPDATE_OPERATION_SETTINGS = 'UPDATE_OPERATION_SETTINGS';
+export const UPDATE_OPERATION_SETTINGS_SUCCESS = 'UPDATE_OPERATION_SETTINGS_SUCCESS';
+export const UPDATE_OPERATION_SETTINGS_FAILURE = 'UPDATE_OPERATION_SETTINGS_FAILURE';
+
+export const GET_OPERATION_SETTINGS = 'GET_OPERATION_SETTINGS';
+export const GET_OPERATION_SETTINGS_SUCCESS = 'GET_OPERATION_SETTINGS_SUCCESS';
+export const GET_OPERATION_SETTINGS_FAILURE = 'GET_OPERATION_SETTINGS_FAILURE';
+
 
 export const getOperations = () => ({
   type: GET_OPERATIONS,
@@ -48,6 +56,66 @@ export function fetchOperations(sessionToken) {
       dispatch(getOperationsSuccess(JSON.parse(data.body)));
     } catch (error) {
       dispatch(getOperationsFailure());
+    }
+  };
+}
+
+export const getOperationSettings = () => ({
+  type: GET_OPERATION_SETTINGS,
+});
+
+export const getOperationSettingsSuccess =  (events) => ({
+    type: GET_OPERATION_SETTINGS_SUCCESS,
+    payload: events,
+  });
+
+export const getOperationSettingsFailure = () => ({
+  type: GET_OPERATION_SETTINGS_FAILURE,
+});
+
+export function fetchOperationSettings(sessionToken, id) {
+  return async (dispatch) => {
+    dispatch(getOperationSettings());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/rdvsettings?id=${formatApostrophe(id)}`,
+        { headers: { authorization: sessionToken } });
+      const data = await response.json();
+
+      dispatch(getOperationSettingsSuccess(JSON.parse(data.body)));
+    } catch (error) {
+      dispatch(getOperationSettingsFailure());
+    }
+  };
+}
+
+export const updateOperationSettings = () => ({
+  type: UPDATE_OPERATION_SETTINGS,
+});
+
+export const updateOperationSettingsSuccess =  (events) => ({
+    type: UPDATE_OPERATION_SETTINGS_SUCCESS,
+    payload: events,
+  });
+
+export const updateOperationSettingsFailure = () => ({
+  type: UPDATE_OPERATION_SETTINGS_FAILURE,
+});
+
+export function fetchUpdateOperationSettings(sessionToken, id, settings) {
+  return async (dispatch) => {
+    dispatch(updateOperationSettings());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/rdvsettings?id=${formatApostrophe(id)}`,
+        { headers: {authorization: sessionToken,},
+        method: 'POST',
+        body: formatApostrophe(settings) });
+      const data = await response.json();
+
+      dispatch(updateOperationSettingsSuccess(JSON.parse(data.body)));
+    } catch (error) {
+      dispatch(updateOperationSettingsFailure());
     }
   };
 }

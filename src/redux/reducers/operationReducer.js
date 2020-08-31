@@ -5,6 +5,7 @@ export const initialState = {
     operations: [],
     loading: false,
     hasErrors: false,
+    settings: {},
 };
 
 export default function operationReducer(state = initialState, action) {
@@ -18,6 +19,8 @@ export default function operationReducer(state = initialState, action) {
 
     switch (action.type) {
         case actions.GET_OPERATIONS:
+        case actions.UPDATE_OPERATION_SETTINGS:
+        case actions.GET_OPERATION_SETTINGS:
         case actions.PUT_OPERATION:
         case actions.UPDATE_OPERATION:
         case actions.DELETE_OPERATION:
@@ -29,18 +32,24 @@ export default function operationReducer(state = initialState, action) {
             _.each(_.orderBy(operationList, 'id'), (operation, index) => {
                 operation.color = colors[index % colors.length];
             })
-            return { operations: action.payload, loading: false, hasErrors: false };
+            return { ...state, operations: action.payload, loading: false, hasErrors: false };
+        
+        case actions.GET_OPERATION_SETTINGS_SUCCESS:
+            return { ...state, settings: action.payload, loading: false, hasErrors: false };
 
         case actions.DELETE_OPERATION_SUCCESS:
             newEventsPostDelete = _.remove(state.operations, (item) => item.id !== action.payload);
-            return { operations: newEventsPostDelete, loading: false, hasErrors: false };
+            return { ...state, operations: newEventsPostDelete, loading: false, hasErrors: false };
 
+        case actions.UPDATE_OPERATION_SETTINGS_SUCCESS:
         case actions.UPDATE_OPERATION_TOTAL_SUCCESS:
         case actions.UPDATE_OPERATION_SUCCESS:
         case actions.PUT_OPERATION_SUCCESS:
             return { ...state, loading: false, hasErrors: false };
 
         case actions.GET_OPERATIONS_FAILURE:
+        case actions.UPDATE_OPERATION_SETTINGS_FAILURE:
+        case actions.GET_OPERATION_SETTINGS_FAILURE:
         case actions.UPDATE_OPERATION_FAILURE:
         case actions.PUT_OPERATION_FAILURE:
         case actions.DELETE_OPERATION_FAILURE:

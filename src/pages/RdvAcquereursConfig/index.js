@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import "./styles.scss";
 import { fetchEvents, fetchAmoEvents } from "../../redux/actions/eventActions";
-import { fetchOperations } from "../../redux/actions/operationActions";
+import { fetchOperations, fetchOperationSettings, fetchUpdateOperationSettings } from "../../redux/actions/operationActions";
 import OperationSelector from '../../components/OperationSelector';
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
@@ -25,7 +25,7 @@ class RdvAcquereursConfig extends Component {
       rdvFormats: [],
       hours: [],
       timeSpans: [],
-      selectedOperationsIds: [],
+      selectedOperationsIds: [_.parseInt(props.match.params.operation_id)],
       from: moment().toDate(),
       to: moment().add(1, 'w').toDate(),
       fromTime: '08:00',
@@ -39,9 +39,12 @@ class RdvAcquereursConfig extends Component {
   componentDidMount() {
     //TODO check if connected and if isAdmin, else redirect to login page
     moment.locale('fr');
-    const { fetchOperations, sessionToken } = this.props;
+    const { fetchOperations, sessionToken, fetchOperationSettings } = this.props;
+    const { selectedOperationsIds } = this.state;
 
     fetchOperations(sessionToken);
+    fetchOperationSettings(sessionToken, _.first(selectedOperationsIds));
+    
   }
   
 
@@ -58,7 +61,7 @@ class RdvAcquereursConfig extends Component {
 
     let tmpSpanIdx = _.findIndex(timeSpans, span => span.date === date && span.from === from && span.to === to);
     let tmpSpans = _.cloneDeep(timeSpans);
-    tmpSpans[tmpSpanIdx].count = Math.max(tmpSpans[tmpSpanIdx].count + value, 0);
+    tmpSpans[tmpSpanIdx].count = Math.max(_.parseInt(tmpSpans[tmpSpanIdx].count) + value, 0);
     
     this.setState({timeSpans: tmpSpans});
   }
@@ -155,6 +158,27 @@ class RdvAcquereursConfig extends Component {
     return false;
   }
 
+  showValidation = () => {
+    const { rdvFormats, timeSpans } = this.state;
+    return !_.isEmpty(rdvFormats) && !_.isEmpty(timeSpans);
+  }
+
+  submit = () => {
+    const { fetchUpdateOperationSettings, sessionToken } = this.props;
+    const { selectedOperationsIds, rdvFormats, from, to, hours, timeSpans, defaultNb } = this.state;
+
+    const settings = {settings: {
+      formats: rdvFormats,
+      spans: timeSpans,
+      from,
+      to,
+      defaultamo: defaultNb,
+      hours,
+    }}
+
+    fetchUpdateOperationSettings(sessionToken, _.head(selectedOperationsIds), JSON.stringify(settings));
+  }
+
   render() {
     const { operations } = this.props;
     const { rdvFormats, editingName, editingTime, hours, timeSpans, selectedOperationsIds, defaultNb } = this.state;
@@ -163,7 +187,7 @@ class RdvAcquereursConfig extends Component {
       <div className="rdv-acq-config">
         <div className="operation">
           <div className="title">{`Opération : ${_.isEmpty(selectedOperationsIds) ? 'choisir' : _.find(operations, {id: selectedOperationsIds[0]}).name }`}</div>
-          <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} hideOperation />
+          {/* <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} hideOperation /> */}
         </div>
         <div className="formats">
           <div className="title">{"Insérer les formats possibles"}</div>
@@ -301,6 +325,7 @@ class RdvAcquereursConfig extends Component {
             })}
           </div>
         </div>
+        {this.showValidation() && <ActionButton clickAction={this.submit} label="Appliquer" />}
       </div>
     );
   }
@@ -312,6 +337,7 @@ const mapStateToProps = (state) => ({
   userInfos: state.me.infos,
   operations: state.operations.operations,
   isOperationsLoading: state.operations.loading,
+  operationSettings: state.operations.settings,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -320,6 +346,8 @@ const mapDispatchToProps = (dispatch) =>
       fetchOperations,
       fetchEvents,
       fetchAmoEvents,
+      fetchOperationSettings, 
+      fetchUpdateOperationSettings
     },
     dispatch
   );
