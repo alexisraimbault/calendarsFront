@@ -20,12 +20,15 @@ export default function operationReducer(state = initialState, action) {
     switch (action.type) {
         case actions.GET_OPERATIONS:
         case actions.UPDATE_OPERATION_SETTINGS:
-        case actions.GET_OPERATION_SETTINGS:
         case actions.PUT_OPERATION:
         case actions.UPDATE_OPERATION:
         case actions.DELETE_OPERATION:
         case actions.UPDATE_OPERATION_TOTAL:
             return { ...state, loading: true };
+
+            
+        case actions.GET_OPERATION_SETTINGS:
+            return { ...state, loading: true, settings: {} };
 
         case actions.GET_OPERATIONS_SUCCESS:
             const operationList = action.payload;
@@ -35,7 +38,7 @@ export default function operationReducer(state = initialState, action) {
             return { ...state, operations: action.payload, loading: false, hasErrors: false };
         
         case actions.GET_OPERATION_SETTINGS_SUCCESS:
-            return { ...state, settings: action.payload, loading: false, hasErrors: false };
+            return { ...state, settings: JSON.parse(action.payload.rdvs_settings), loading: false, hasErrors: false };
 
         case actions.DELETE_OPERATION_SUCCESS:
             newEventsPostDelete = _.remove(state.operations, (item) => item.id !== action.payload);

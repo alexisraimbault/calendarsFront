@@ -13,8 +13,9 @@ import NewEventPopup from './NewEventPopup';
 import NewEventPopupAmo from './NewEventPopupAmo';
 import InvitationPopup from './invitationPopup';
 import OperationsPopup from './OperationsPopup';
-import CreateOperationPopup from './CreateOperationPopup';
+import CreateOperationPopup from './CreateOperationPopup';RdvSettingsPopup
 import EditOperationPopup from './EditOperationPopup'
+import RdvSettingsPopup from './RdvSettingsPopup'
 import DayCalendarDisplay from './DayCalendarDisplay';
 import OperationTotalsDisplay from './OperationTotalsDisplay'
 
@@ -189,6 +190,18 @@ class MonthlyCalendar extends Component {
       isPopupDisplayed: true,
     });
   };
+
+  openRdvSettingsPopup = () => {
+    const RdvSettingsPopupContent = <RdvSettingsPopup closePopup={() => { this.setPopupState(false); }} towardsRdvSettingsPage={this.towardsRdvSettingsPage} />;
+    this.setState({
+      popupContent: RdvSettingsPopupContent,
+      isPopupDisplayed: true,
+    });
+  }
+
+  towardsRdvSettingsPage = operationId => {
+    this.props.history.push(`/rdvconfig/${operationId}`);
+  }
 
   fetchEventsData = () => {
     const { sessionToken, fetchEvents, userInfos, fetchAmoEvents } = this.props;
@@ -411,6 +424,8 @@ class MonthlyCalendar extends Component {
             logout={this.logout}
             userName={_.get(userInfos, 'name')}
             towardsOffDaysBoard={this.towardsOffDaysBoard}
+            openRdvSettingsPopup={this.openRdvSettingsPopup}
+            isAdmin={isAdmin}
           />
           <div className="week-navigation-container-month">
             <div className="week-navigation-holder-month">

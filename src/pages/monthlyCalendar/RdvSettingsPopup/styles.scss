@@ -1,0 +1,55 @@
+@import "src/utils/variables";
+
+.rdv-settings-popup-container{
+    width: 600px;
+    z-index: 3;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    opacity: 1;
+    font-family: $font;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .bottom-space{
+        margin-bottom: 12px;
+    }
+
+    .operation-container {
+        margin-bottom: 24px;
+
+        .operation-top{
+            display: flex;
+            justify-content: space-between;
+
+            .left-container {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+
+                .operation-title {
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-right: 12px;
+                    margin-top: 8px;
+                }
+
+                .edit-operation-btn {
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .operation-data {
+            margin-top: 12px;
+        }
+    }
+}

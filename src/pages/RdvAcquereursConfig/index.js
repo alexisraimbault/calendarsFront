@@ -20,31 +20,52 @@ class RdvAcquereursConfig extends Component {
   constructor(props) {
     super(props);
 
-    //TODO link
     this.state = {
-      rdvFormats: [],
-      hours: [],
-      timeSpans: [],
+      savedOperationSettings: props.operationSettings,
+      rdvFormats: _.get(props.operationSettings, 'formats', []),
+      hours: _.get(props.operationSettings, 'hours', []),
+      timeSpans: _.get(props.operationSettings, 'spans', []),
       selectedOperationsIds: [_.parseInt(props.match.params.operation_id)],
-      from: moment().toDate(),
-      to: moment().add(1, 'w').toDate(),
+      from: moment(_.get(props.operationSettings, 'from', moment())).toDate(),
+      to: moment(_.get(props.operationSettings, 'to', moment().add(1, 'w'))).toDate(),
       fromTime: '08:00',
       toTime: '18:00',
       editingName: '',
       editingTime: '',
-      defaultNb: '',
+      defaultNb: _.get(props.operationSettings, 'defaultamo', ''),
     };
   }
 
   componentDidMount() {
-    //TODO check if connected and if isAdmin, else redirect to login page
-    moment.locale('fr');
-    const { fetchOperations, sessionToken, fetchOperationSettings } = this.props;
+    const { fetchOperations, sessionToken, fetchOperationSettings, userInfos } = this.props;
     const { selectedOperationsIds } = this.state;
+    
+    const isAdmin = userInfos.status === "admin";
+    if (!isAdmin) {
+      history.push('/calendarmonth')
+    }
+
+    moment.locale('fr');
 
     fetchOperations(sessionToken);
     fetchOperationSettings(sessionToken, _.first(selectedOperationsIds));
     
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    if(!_.isEqual(nextProps.operationSettings, prevState.savedOperationSettings)){
+      return { 
+        savedOperationSettings: nextProps.operationSettings,
+        rdvFormats: _.get(nextProps.operationSettings, 'formats', []),
+        hours: _.get(nextProps.operationSettings, 'hours', []),
+        timeSpans: _.get(nextProps.operationSettings, 'spans', []),
+        selectedOperationsIds: [_.parseInt(nextProps.match.params.operation_id)],
+        from: moment(_.get(nextProps.operationSettings, 'from', moment())).toDate(),
+        to: moment(_.get(nextProps.operationSettings, 'to', moment().add(1, 'w'))).toDate(),
+        defaultNb: _.get(nextProps.operationSettings, 'defaultamo', ''),
+      };
+    }
+    return null;
   }
   
 
@@ -163,6 +184,14 @@ class RdvAcquereursConfig extends Component {
     return !_.isEmpty(rdvFormats) && !_.isEmpty(timeSpans);
   }
 
+  navigateToCalendar = () => {
+    const {
+      history,
+    } = this.props;
+
+    history.push('/calendarmonth');
+  }
+
   submit = () => {
     const { fetchUpdateOperationSettings, sessionToken } = this.props;
     const { selectedOperationsIds, rdvFormats, from, to, hours, timeSpans, defaultNb } = this.state;
@@ -185,6 +214,9 @@ class RdvAcquereursConfig extends Component {
 
     return (
       <div className="rdv-acq-config">
+        <div className="back-action-btn-container">
+          <ActionButton clickAction={this.navigateToCalendar} label="Retour au planning" />
+        </div>
         <div className="operation">
           <div className="title">{`Opération : ${_.isEmpty(selectedOperationsIds) ? 'choisir' : _.find(operations, {id: selectedOperationsIds[0]}).name }`}</div>
           {/* <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} hideOperation /> */}

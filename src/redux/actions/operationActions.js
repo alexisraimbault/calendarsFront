@@ -108,7 +108,8 @@ export function fetchUpdateOperationSettings(sessionToken, id, settings) {
 
     try {
       const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/rdvsettings?id=${formatApostrophe(id)}`,
-        { headers: {authorization: sessionToken,},
+        { headers: {authorization: sessionToken,
+        'Content-Type': 'application/json'},
         method: 'POST',
         body: formatApostrophe(settings) });
       const data = await response.json();
@@ -247,3 +248,24 @@ export function postDeleteOperation(id, sessionToken) {
     }
   };
 }
+
+
+// {
+// 	"settings": {
+// 		"defaultamo": "1",
+// 		"formats": [{"name": "duplex", "duration": "1"}],
+// 		"from": "2020-08-31T10:34:42.641Z",
+// 		"hours": [{"from": "08:00", "to": "18:00"}],
+// 		"spans": [
+// 			{"from": "08:00", "to": "18:00", "date": "2020-08-31T10:34:42.641Z", "count": "1"},
+// 			{"from": "08:00", "to": "18:00", "date": "2020-09-01T10:34:42.641Z", "count": "1"},
+// 			{"from": "08:00", "to": "18:00", "date": "2020-09-02T10:34:42.641Z", "count": "1"},
+// 			{"from": "08:00", "to": "18:00", "date": "2020-09-03T10:34:42.641Z", "count": "1"},
+// 			{"from": "08:00", "to": "18:00", "date": "2020-09-04T10:34:42.641Z", "count": "1"},
+// 			{"from": "08:00", "to": "18:00", "date": "2020-09-05T10:34:42.641Z", "count": "0"},
+// 			{"from": "08:00", "to": "18:00", "date": "2020-09-06T10:34:42.641Z", "count": "0"},
+// 			{"from": "08:00", "to": "18:00", "date": "2020-09-07T10:34:42.641Z", "count": "1"}
+// 		],
+// 		"to": "2020-09-07T10:34:42.642Z"
+// 	}
+// }

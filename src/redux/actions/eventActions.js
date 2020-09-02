@@ -20,6 +20,10 @@ export const PUT_EVENTS = 'PUT_EVENTS';
 export const PUT_EVENTS_SUCCESS = 'PUT_EVENTS_SUCCESS';
 export const PUT_EVENTS_FAILURE = 'PUT_EVENTS_FAILURE';
 
+export const PUT_NOAUTH_EVENT = 'PUT_NOAUTH_EVENT';
+export const PUT_NOAUTH_EVENT_SUCCESS = 'PUT_NOAUTH_EVENT_SUCCESS';
+export const PUT_NOAUTH_EVENT_FAILURE = 'PUT_NOAUTH_EVENT_FAILURE';
+
 export const UPDATE_EVENT = 'UPDATE_EVENT';
 export const UPDATE_EVENT_SUCCESS = 'UPDATE_EVENT_SUCCESS';
 export const UPDATE_EVENT_FAILURE = 'UPDATE_EVENT_FAILURE';
@@ -27,6 +31,10 @@ export const UPDATE_EVENT_FAILURE = 'UPDATE_EVENT_FAILURE';
 export const DELETE_EVENT = 'DELETE_EVENT';
 export const DELETE_EVENT_SUCCESS = 'DELETE_EVENT_SUCCESS';
 export const DELETE_EVENT_FAILURE = 'DELETE_EVENT_FAILURE';
+
+export const GET_NOAUTH_INFOS = 'GET_NOAUTH_INFOS';
+export const GET_NOAUTH_INFOS_SUCCESS = 'GET_NOAUTH_INFOS_SUCCESS';
+export const GET_NOAUTH_INFOS_FAILURE = 'GET_NOAUTH_INFOS_FAILURE';
 
 
 export const getEvents = () => ({
@@ -144,6 +152,71 @@ export function createEvent(name, description, date, time_from, time_to, users, 
     } catch (error) {
       NotificationManager.error('Error while Creating Event!', 'Error!');
       dispatch(putEventsFailure());
+    }
+  };
+}
+
+export const createNoAuthEvent = () => ({
+  type: PUT_NOAUTH_EVENT,
+});
+
+export const createNoAuthEventSuccess = (events) => ({
+  type: PUT_NOAUTH_EVENT_SUCCESS,
+  payload: events,
+});
+
+export const createNoAuthEventFailure = () => ({
+  type: PUT_NOAUTH_EVENT_FAILURE,
+});
+
+export function fetchCreateNoauthEvent(name, description, date, time_from, time_to, users, corp_id, type, operation_id) {
+  return async (dispatch) => {
+    dispatch(createNoAuthEvent());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/noauth/event?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}`, {
+        headers: { },
+        method: 'POST',
+      });
+      const data = await response.json();
+      NotificationManager.success('Rendez-vous sauvegardé avec succès!', 'Successful!', 1500);
+
+      dispatch(createNoAuthEventSuccess());
+    } catch (error) {
+      NotificationManager.error('Erreur lors de la sauvegarde du rendez-vous!', 'Error!');
+      dispatch(createNoAuthEventFailure());
+    }
+  };
+}
+
+
+
+export const getNoAuthRdvInfos = () => ({
+  type: GET_NOAUTH_INFOS,
+});
+
+export const getNoAuthRdvInfosSuccess = (events) => ({
+  type: GET_NOAUTH_INFOS_SUCCESS,
+  payload: events,
+});
+
+export const getNoAuthRdvInfosFailure = () => ({
+  type: GET_NOAUTH_INFOS_FAILURE,
+});
+
+export function fetchGetNoAuthRdvInfos(id) {
+  return async (dispatch) => {
+    dispatch(getNoAuthRdvInfos());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/noauth/rdvpage?id=${formatApostrophe(id)}`, {
+        headers: { },
+        method: 'GET',
+      });
+      const data = await response.json();
+      dispatch(getNoAuthRdvInfosSuccess(JSON.parse(data.body)));
+    } catch (error) {
+      dispatch(getNoAuthRdvInfosFailure());
     }
   };
 }

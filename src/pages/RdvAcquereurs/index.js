@@ -9,7 +9,7 @@ import EditableLabel from '../../components/EditableLabel';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import "./styles.scss";
-import { fetchEvents, fetchAmoEvents } from "../../redux/actions/eventActions";
+import { fetchEvents, fetchAmoEvents, fetchCreateNoauthEvent, fetchGetNoAuthRdvInfos } from "../../redux/actions/eventActions";
 import { fetchOperations } from "../../redux/actions/operationActions";
 import OperationSelector from '../../components/OperationSelector';
 import DatePicker from "react-datepicker";
@@ -22,54 +22,77 @@ class RdvAcquereurs extends Component {
 
     //TODO link (+mock en attendant)
     this.state = {
+      savedPageInfos: props.pageInfos,
       operationId: _.parseInt(props.match.params.operation_id),
-      rdvFormats: [
-        {
-        name: "1 pièce",
-        duration: 1,
-        },
-        {
-        name: "2 pièces",
-        duration: 2,
-        }
-      ],
-      timeSpans: [
-        {
-        date: moment().add(1, 'd'),
-        from: "08:00",
-        to: "12:00",
-        count: 2,
-        },
-        {
-        date: moment().add(1, 'd'),
-        from: "14:00",
-        to: "18:00",
-        count: 1,
-        }
-      ],
-      takenRdvs: [
-        {
-          date: moment().add(1, 'd'),
-          from: "08:00",
-          to: "09:00",
-        }
-      ],
+      rdvFormats: _.get(props.pageInfos, 'settings.formats', []),
+      timeSpans: _.get(props.pageInfos, 'settings.spans', []),
+      takenRdvs: _.map(_.get(props.pageInfos, 'rdvs', []), span => {
+        return {
+          date: span.date,
+          from: span.time_from,
+          to: span.time_to,
+        };
+      }),
       editingName: '',
       editingMail: '',
       editingPhone: '',
       chosenFormatIdx: -1,
       selectedDay: -1,
+      hasValidated: false,
     };
   }
 
   componentDidMount() {
     moment.locale('fr');
-    /* const { operationId } = this.state;
-    const {  } = this.props; */
+    const { operationId } = this.state;
+    const { fetchGetNoAuthRdvInfos } = this.props;
 
-    //TODO fetch rdv infos for operation
+    fetchGetNoAuthRdvInfos(operationId);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    if(!_.isEqual(nextProps.pageInfos, prevState.savedPageInfos)){
+      return { 
+        savedPageInfos: nextProps.pageInfos,
+        rdvFormats: _.get(nextProps.pageInfos, 'settings.formats', []),
+        timeSpans: _.get(nextProps.pageInfos, 'settings.spans', []),
+        takenRdvs: _.map(_.get(nextProps.pageInfos, 'rdvs', []), span => {
+          return {
+            date: span.date,
+            from: span.time_from,
+            to: span.time_to,
+          };
+        }),
+      };
+    }
+    return null;
   }
   
+  submit = () => {
+    const { fetchCreateNoauthEvent } = this.props;
+    const { editingName, editingMail, editingPhone, chosenFormatIdx, selectedDay, rdvFormats, timeSpans, operationId } = this.state;
+
+    const availableTimes = this.generateAvailableTimes();
+
+    const timeSpan = availableTimes[selectedDay];
+    const eventDate = timeSpan.date;
+    const formattedDate = `${moment(eventDate).year()}-${moment(eventDate).month() + 1}-${moment(eventDate).date()}`;
+
+    fetchCreateNoauthEvent(
+      `Rdv ${editingName}`, 
+      `mail: ${editingMail}, tel: ${editingPhone}, visite: ${rdvFormats[chosenFormatIdx].name}`, 
+      formattedDate, 
+      timeSpan.from,
+      timeSpan.to, 
+      '-', 
+      3, //TODO CORPID
+      'rdv', 
+      operationId).then(() => {
+        this.setState({hasValidated: true});
+      }).catch(err => {
+        console.log(err);
+      });
+  }
 
   updateEditName = e => this.setState({editingName: e.target.value});
 
@@ -144,7 +167,7 @@ class RdvAcquereurs extends Component {
   }
 
   generateAvailableTimes = () => {
-    const { rdvFormats, chosenFormatIdx, timeSpans, takenRdvs } = this.state;
+    const { rdvFormats, chosenFormatIdx, timeSpans, takenRdvs, hasValidated } = this.state;
 
     if(chosenFormatIdx === -1 ) {return [];}
 
@@ -202,11 +225,13 @@ class RdvAcquereurs extends Component {
 
   render() {
     /* const {  } = this.props; */
-    const { operationId, selectedDay, rdvFormats, chosenFormatIdx, editingName, editingMail, editingPhone } = this.state;
+    const { operationId, selectedDay, rdvFormats, chosenFormatIdx, editingName, editingMail, editingPhone, hasValidated } = this.state;
     const availableTimes = this.generateAvailableTimes();
 
     return (
       <div className="rdv-acq">
+        {!hasValidated && (
+        <>
         <div className="client-inputs">
           <div className="title">{"Entrer vos coordonnées"}</div>
           <div className="inputs">
@@ -260,7 +285,16 @@ class RdvAcquereurs extends Component {
             })}
           </div>
         </div>
-        {this.isFormValid() && <ActionButton /*clickAction={TODO}*/ label="Envoyer" />}
+        {this.isFormValid() && <ActionButton clickAction={this.submit} label="Envoyer" />}
+        </>
+        )}
+        {hasValidated && (
+          <div className="validation-container">
+            <div className="title">{"Votre rendez vous a bien été enregistré :"}</div>
+            <div className="date">{moment(availableTimes[selectedDay].date).format('dddd Do MMM YYYY')}</div>
+            <div className="time">{`${availableTimes[selectedDay].from} - ${availableTimes[selectedDay].to}`}</div>
+          </div>
+        )}
       </div>
     );
   }
@@ -272,6 +306,7 @@ const mapStateToProps = (state) => ({
   userInfos: state.me.infos,
   operations: state.operations.operations,
   isOperationsLoading: state.operations.loading,
+  pageInfos: state.events.rdvPageInfos,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -280,6 +315,8 @@ const mapDispatchToProps = (dispatch) =>
       fetchOperations,
       fetchEvents,
       fetchAmoEvents,
+      fetchCreateNoauthEvent,
+      fetchGetNoAuthRdvInfos
     },
     dispatch
   );
