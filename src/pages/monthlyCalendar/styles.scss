@@ -57,13 +57,20 @@
         font-weight: 600;
         font-size: 18px;
 
+        svg {
+            fill: $grey;
+            cursor: pointer;
+        }
+
         .top {
+            cursor: pointer;
             width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center ;
             align-items: center;
             line-height: 16px;
+            color: $grey;
 
             .calendar-navigation-container{
                 cursor: pointer;

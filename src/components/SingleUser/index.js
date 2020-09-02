@@ -14,12 +14,12 @@ import { fetchUsers, requestUpdateUserStatus } from '../../redux/actions/userAct
 class SingleUser extends Component {
 
     render() {
-      const { user:{name}, inverted } = this.props;
+      const { user:{name}, inverted, isBright } = this.props;
 
       return (
         <div className="single-user-container">
           {!inverted && (
-            <div className="picto-container">
+            <div className={`picto-container ${isBright ? 'picto-bright' : ''}`}>
               <svg viewBox="-42 0 512 512.002" width="18">
               <path 
                 d="m210.351562 246.632812c33.882813 0 63.222657-12.152343 87.195313-36.128906 23.972656-23.972656 36.125-53.304687 
@@ -37,11 +37,11 @@ class SingleUser extends Component {
                 25.253906-64.324219-.003906-10.316406-.351562-20.492187-1.035156-30.242187zm0 0"/>
               </svg>
             </div>)}
-          <div className="infos-container">
+          <div className={`infos-container ${isBright ? 'bright' : ''}`}>
             {name}
           </div>
           {inverted && (
-            <div className="picto-container-inverted">
+            <div className={`picto-container-inverted ${isBright ? 'picto-bright' : ''}`}>
               <svg viewBox="-42 0 512 512.002" width="18">
               <path 
                 d="m210.351562 246.632812c33.882813 0 63.222657-12.152343 87.195313-36.128906 23.972656-23.972656 36.125-53.304687 

@@ -233,7 +233,7 @@ class RdvAcquereurs extends Component {
         {!hasValidated && (
         <>
         <div className="client-inputs">
-          <div className="title">{"Entrer vos coordonnées"}</div>
+          <div className="title">{"Coordonnées"}</div>
           <div className="inputs">
             <EditableLabel
               value={editingName}
@@ -253,7 +253,7 @@ class RdvAcquereurs extends Component {
           </div>
         </div>
         <div className="formats-container">
-          <div className="title">{"Choisir le type de visite"}</div>
+          <div className="title">{"Type de visite"}</div>
           {_.map(rdvFormats, (format, idx) => {
             const formatClassName = classNames({
               "format-container": true,
@@ -268,7 +268,7 @@ class RdvAcquereurs extends Component {
           })}
         </div>
         <div className="boxes-container">
-          <div className="title">{"Choisir un créneau"}</div>
+          <div className="title">{"Créneau"}</div>
           <div className="day-boxes">
             {_.map(availableTimes, (time, idx) => {
               const boxClassName = classNames({

@@ -30,7 +30,7 @@ class UserDisplay extends Component {
     };
 
     render() {
-      const { users, userInfos } = this.props;
+      const { users, userInfos, isBright } = this.props;
       const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
       const userId = _.get(userInfos, 'id');
 
@@ -40,7 +40,7 @@ class UserDisplay extends Component {
           autoHeightMin={0}
           autoHeightMax={200}
         >
-          <div className="users-container">
+          <div className={`users-container${isBright ? '' : '--bright'}`}>
             {_.map(_.orderBy(users, 'name'), (user) => {
               const adminClass = classNames({
                 'status-container': true,
@@ -55,12 +55,12 @@ class UserDisplay extends Component {
               return (
                 <div className="user-item">
                   <SingleUser user={user} />
-                  {isAdmin && user.id !== userId && (
+                  {/* {isAdmin && user.id !== userId && (
                   <div className="status-selector-container">
                     <div className={adminClass} onClick={this.updateStatus(user.id, 'admin')}>ADMIN</div>
                     <div className={userClass} onClick={this.updateStatus(user.id, 'user')}>USER</div>
                   </div>
-                  )}
+                  )} */}
                 </div>
               );
             })}

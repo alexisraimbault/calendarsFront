@@ -14,6 +14,10 @@
     text-align: center;
 }
 
+.sidebar-big-container {
+    color: $grey;
+}
+
 .sidebar-container-month{
     position: fixed;
     height: calc(100% - 60px);
@@ -28,10 +32,6 @@
 
     &--toggled{
         width: 200px;
-    }
-
-    .sidebar-bottom-menu{
-        border-top: 1px solid black;
     }
 
     .recipients-container{
@@ -56,13 +56,16 @@
     }
 
     .sidebar-item-container{
+        border-top: 1px solid rgba($real-rose, 0.4);
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        margin-top: 16px;
-        margin-bottom: 16px;
-        margin-right: 16px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        padding-right: 24px;
+        font-weight: bold;
         cursor: pointer;
+        transition: all 0.3s;
 
         .label {
             margin-right: 16px;
@@ -76,6 +79,19 @@
                 opacity: 1;
             }
         }
+    }
+
+    svg {
+        fill: $grey;
+    }
+
+    .sidebar-item-container:hover > svg {
+        fill: $darker-grey;
+    }
+
+    .sidebar-item-container:hover {
+        background-color: $real-rose;
+        color: $darker-grey;
     }
 }
 .submenu-container{

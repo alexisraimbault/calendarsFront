@@ -30,4 +30,14 @@
     .infos-container{
         @include title;
     }
+
+    .bright {
+        color: $grey;
+    }
+
+    .picto-bright {
+        svg {
+            fill: $grey;
+        }
+    }
 }

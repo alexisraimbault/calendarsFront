@@ -14,7 +14,9 @@ export default function operationReducer(state = initialState, action) {
         '#8fcfd1',
         '#df5e88',
         '#f6ab6c',
-        '#f6efa6'
+        '#f6efa6',
+        "#91d18b",
+        "#f09ae9"
     ]
 
     switch (action.type) {
