@@ -2,6 +2,7 @@ import React, {
   Component,
 } from 'react';
 import './styles.scss';
+import classNames from 'classnames';
 import _ from 'lodash';
 
 import { connect } from 'react-redux';
@@ -63,7 +64,7 @@ class UserSelector extends Component {
       const {
         selectedUsers, value, isFocused, isHovered,
       } = this.state;
-      const { users } = this.props;
+      const { users , offIds } = this.props;
 
       const selectedIds = this.getSelectedUsersIds();
 
@@ -82,7 +83,18 @@ class UserSelector extends Component {
           />
           {(isFocused || isHovered) && (
           <div className="selection-container" onMouseEnter={this.setHover(true)} onMouseLeave={this.setHover(false)}>
-            {_.map(filteredUsers, (user) => <div className="selection-item" onClick={this.addUser(user)}>{user.name}</div>)}
+            {_.map(filteredUsers, (user) => {
+              const itemClass = classNames({
+                'selection-item': true,
+                'selection-item--off': _.includes(offIds, user.id),
+              });
+              
+              return (
+              <div 
+              className={itemClass} 
+              onClick={this.addUser(user)}>
+                {user.name}
+              </div>);})}
           </div>
           )}
           {!(isFocused || isHovered) && (

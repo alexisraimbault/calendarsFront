@@ -11,6 +11,7 @@ import TimePicker from 'react-time-picker';
 import EditableLabel from '../../../components/EditableLabel';
 import UserSelector from '../../../components/UserSelector';
 import OperationSelector from '../../../components/OperationSelector';
+import SingleSelection from '../../../components/SingleSelection';
 
 import ActionButton from '../../../components/ActionButton';
 import { createEvent } from '../../../redux/actions/eventActions';
@@ -33,6 +34,8 @@ class NewEventPopupAmo extends Component {
       end_time: '12:00',
       selectedUsersIds: props.selectedUsers || [],
       selectedOperationsIds: props.selectedOperation || [],
+      //TODO link
+      hoursKeys: {}
     };
   }
 
@@ -43,6 +46,13 @@ class NewEventPopupAmo extends Component {
     requestGetCompanyOffDays(sessionToken);
   }
 
+  applyUserHoursKey = (id, key) => {
+    const { hoursKeys } = this.state;
+    const tmpHoursKeys = _.cloneDeep(hoursKeys);
+    tmpHoursKeys[id] = key;
+    this.setState({hoursKeys: tmpHoursKeys});
+  }
+
   getOffAmos = () => {
     const { eventDate } = this.state;
     const { users, offDays } = this.props;
@@ -50,7 +60,10 @@ class NewEventPopupAmo extends Component {
     const todayOff = _.filter(offDays, offDay => moment(eventDate).year() === moment(offDay.day).year() && moment(eventDate).dayOfYear() === moment(offDay.day).dayOfYear());
     
     if(_.isEmpty(todayOff)) {
-      return '';
+      return {
+        label: '',
+        ids: [],
+      };
     }
 
     const offAmos = _.map(todayOff, off => _.find(users, {id: off.user_id}));
@@ -58,7 +71,10 @@ class NewEventPopupAmo extends Component {
     _.each(offAmos,  offAmo => {
       res += `${offAmo.name}, `
     });
-    return res;
+    return {
+      label: res,
+      ids: _.map(todayOff, off => off.user_id),
+    };
   }
 
     handleChangeDate = (date) => {
@@ -104,8 +120,8 @@ class NewEventPopupAmo extends Component {
     };
 
     render() {
-      const { title, description } = this.state;
-      const { isLoading } = this.props;
+      const { title, description, selectedUsersIds } = this.state;
+      const { isLoading, users } = this.props;
 
       const offAmos = this.getOffAmos();
 
@@ -123,9 +139,37 @@ class NewEventPopupAmo extends Component {
                 </div>
               </div>
             </div>
-            {!_.isEmpty(offAmos) && <div className="off-amos-display">{offAmos}</div>}
-            <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={this.props.selectedUsers}/>
+            {!_.isEmpty(offAmos.label) && <div className="off-amos-display">{offAmos.label}</div>}
+            <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} defaultSelected={this.props.selectedUsers} offIds={offAmos.ids}/>
             <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} defaultSelected={this.props.selectedOperation}/>
+          </div>
+          <div className="day-time-selection">
+          {_.map(selectedUsersIds, (selectedUserId, index) => {
+            const user = _.find(users, {id: selectedUserId});
+            return (
+              <SingleSelection
+                defaultToggledKey='all-day'
+                keyValues={[
+                  {
+                    key: 'am',
+                    value: 'AM'
+                  },
+                  {
+                    key: 'pm',
+                    value: 'PM'
+                  },
+                  {
+                    key: 'all-day',
+                    value: 'ALL DAY'
+                  },
+                ]}
+                showLabels={index === 0}
+                id={user.id}
+                name={user.name}
+                applyKey={this.applyUserHoursKey}
+              />
+              );
+            })}
           </div>
           <div className="save-btn">
             <ActionButton clickAction={this.sendCreateEventRequest} label="Save" isLoading={isLoading} />

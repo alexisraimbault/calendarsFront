@@ -1,0 +1,29 @@
+.single-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    .checkbox{
+        cursor: pointer;
+        margin-right: 16px;
+        margin-left: 16px;
+    }
+
+    .labels, .boxes {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .labels {
+        width: calc(100% - 200px);
+    }
+
+    .boxes {
+        padding-right: 12px;
+        width: 100%;
+    }
+
+    .name {
+        width: 200px;
+    }
+}

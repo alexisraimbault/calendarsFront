@@ -43,7 +43,7 @@ const App = () => (
     <PersistGate loading={null} persistor={persistor}>
       <Router>
         <Switch>
-          <Route path="/calendar/:week?/:year?" component={Calendar} />
+          {/* <Route path="/calendar/:week?/:year?" component={Calendar} /> */}
           <Route path="/mcalendar/:day?/:year?" component={CalendarMobile} />
           <Route path="/calendarmonth/:month?/:year?" component={MonthlyCalendar} />
           <Route path="/calendarday/:day?/:year?" component={DailyCalendar} />
