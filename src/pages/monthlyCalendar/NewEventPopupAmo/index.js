@@ -35,7 +35,7 @@ class NewEventPopupAmo extends Component {
       selectedUsersIds: props.selectedUsers || [],
       selectedOperationsIds: props.selectedOperation || [],
       //TODO link
-      hoursKeys: {}
+      hoursKeys: props.hoursKeyObject || {}
     };
   }
 
@@ -103,7 +103,8 @@ class NewEventPopupAmo extends Component {
         start_time,
         end_time,
         selectedUsersIds,
-        selectedOperationsIds
+        selectedOperationsIds,
+        hoursKeys,
       } = this.state;
       const {
         createEvent, fetchEventsData, closePopup, sessionToken, userInfos,
@@ -113,14 +114,16 @@ class NewEventPopupAmo extends Component {
 
       const selectedUserIds = _.join(selectedUsersIds, ',');
 
-      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'amo', selectedOperationsIds[0]).then(() => {//TODO unmock
+      const tmpHoursKeys = _.join(_.map(selectedUsersIds, id => _.get(hoursKeys, `${id}`, 'all-day/nca')), ',');
+
+      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'amo', selectedOperationsIds[0], tmpHoursKeys).then(() => {//TODO unmock
         fetchEventsData();
         closePopup();
       });
     };
 
     render() {
-      const { title, description, selectedUsersIds } = this.state;
+      const { title, description, selectedUsersIds, hoursKeys } = this.state;
       const { isLoading, users } = this.props;
 
       const offAmos = this.getOffAmos();
@@ -148,7 +151,7 @@ class NewEventPopupAmo extends Component {
             const user = _.find(users, {id: selectedUserId});
             return (
               <SingleSelection
-                defaultToggledKey='all-day'
+                defaultToggledKey={_.get(hoursKeys, `${selectedUserId}` , 'all-day/nca')}
                 keyValues={[
                   {
                     key: 'am',
@@ -160,7 +163,7 @@ class NewEventPopupAmo extends Component {
                   },
                   {
                     key: 'all-day',
-                    value: 'ALL DAY'
+                    value: 'journée'
                   },
                 ]}
                 showLabels={index === 0}

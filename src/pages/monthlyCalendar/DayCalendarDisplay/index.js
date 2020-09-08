@@ -14,11 +14,12 @@ class DayCalendarDisplay extends Component {
     this.state = {};
   }
 
-  openAMOPopup = (day, selectedUsers, selectedOperation) => event => {
+  openAMOPopup = (day, selectedUsers, selectedOperation, hoursKeyObject) => event => {
     const { openAMOPopup } = this.props;
     event.stopPropagation();
+    console.log("ALEXIS test from day", hoursKeyObject)
 
-    openAMOPopup(day, selectedUsers, selectedOperation);
+    openAMOPopup(day, selectedUsers, selectedOperation, hoursKeyObject);
   }
 
   render() {
@@ -76,9 +77,13 @@ class DayCalendarDisplay extends Component {
             }, []);
 
             const currentOperation = _.find(operations, ['id', _.parseInt(operationId)]);
+            let hoursKeyObject = {};
+            _.each(workingAMO, amo => {
+              hoursKeyObject[amo.id] = amo.hours;
+            })
 
             return (
-              <div onClick={this.openAMOPopup(day, _.map(workingAMO, amo => amo.id), [_.parseInt(operationId)])} className="event-day-container" style={{ /*height: `calc(${100 / _.size(eventsByOperations)}% - ${20 / _.size(eventsByOperations)}px)`,*/ backgroundColor: `${currentOperation.color}` }}>
+              <div onClick={this.openAMOPopup(day, _.map(workingAMO, amo => amo.id), [_.parseInt(operationId)], hoursKeyObject)} className="event-day-container" style={{ /*height: `calc(${100 / _.size(eventsByOperations)}% - ${20 / _.size(eventsByOperations)}px)`,*/ backgroundColor: `${currentOperation.color}` }}>
                 <div>{_.map(workingAMO, amo => <div>{amo.name}</div>)}</div>
                 {_.size(externalEvents) > 0 && <div>{`${_.size(externalEvents)} rdv acquéreur`}</div>}
               </div>

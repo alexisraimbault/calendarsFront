@@ -171,7 +171,7 @@ class RdvAcquereurs extends Component {
 
     if(chosenFormatIdx === -1 ) {return [];}
 
-    const formatDuration = rdvFormats[chosenFormatIdx].duration * 60;
+    const formatDuration = _.parseInt(rdvFormats[chosenFormatIdx].duration) * 60 + _.parseInt(_.get(rdvFormats[chosenFormatIdx], 'mins', '0'));
     let res = [];
 
     _.each(timeSpans, timeSpan => {

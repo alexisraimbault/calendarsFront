@@ -49,7 +49,7 @@ const App = () => (
           <Route path="/calendarday/:day?/:year?" component={DailyCalendar} />
           <Route path="/calendaroffdays/:month?/:year?" component={OffDays} />
           <Route path="/calendaroffdaysBoard/:month?/:year?" component={OffDaysBoard} />
-          <Route path="/calendarexport/:operation_id" component={CalendarCompanyExport} />
+          <Route path="/calendarexport/:operation_id/:week?/:year?" component={CalendarCompanyExport} />
           <Route path="/rdvconfig/:operation_id" component={RdvAcquereursConfig} />
           <Route path="/rdv/:operation_id" component={RdvAcquereurs} />
           <Route path="/login" component={LoginPage} />

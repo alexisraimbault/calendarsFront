@@ -1,6 +1,6 @@
 @import "src/utils/variables";
 
-.operation-totals-container{
+.operation-totals-display-container{
     display: flex;
     align-items: center;
     margin-bottom: 24px;
@@ -8,19 +8,30 @@
     .total-container {
         display: flex;
         align-items: center;
-        width: 100px;
         margin-right: 20px;
-        overflow: hidden;
     }
 
     .name-container {
-        width: 300px;
         margin-right: 20px;
-        overflow: hidden;
         margin-top: 12px;
+        width: 300px;
     }
 
     .btn-container {
         margin-top: 12px;
+    }
+    
+    .editable-label-input {
+        width: 30px;
+    }
+
+    .auto-total {
+        margin-right: 8px;
+        padding-top: 10px;
+    }
+
+    .ca-info {
+        margin-left: 8px;
+        padding-top: 10px;
     }
 }

@@ -72,18 +72,20 @@ class OperationTotalsDisplay extends Component {
 
   render() {
     const { total1, total2 } = this.state;
-    const { name, isLoading } = this.props;
+    const { name, isLoading, recessionValue, nbCa } = this.props;
 
     const hasBeenEdited = this.props.total1 !== total1 || this.props.total2 !== total2;
 
     return (
-      <div className="operation-totals-container">
+      <div className="operation-totals-display-container">
         <div className="name-container">{name}</div>
         <div className="total-container">
           <EditableLabel value={total1} onChange={this.setTotal1} placeholder="Total 1" isDescription={false} />
         </div>
         <div className="total-container">
+          <div className="auto-total">{`${recessionValue} + `}</div>
           <EditableLabel value={total2} onChange={this.setTotal2} placeholder="Total 2" isDescription={false} />
+          <div className="ca-info">{`(${nbCa} conciergerie/accueil) = ${_.parseInt(total2) + _.parseInt(recessionValue)}`}</div>
         </div>
         {hasBeenEdited && (
           <div className="btn-container">

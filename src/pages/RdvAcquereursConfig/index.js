@@ -30,8 +30,10 @@ class RdvAcquereursConfig extends Component {
       to: moment(_.get(props.operationSettings, 'to', moment().add(1, 'w'))).toDate(),
       fromTime: '08:00',
       toTime: '18:00',
-      editingName: '',
+      editingName: '1 pièce',
       editingTime: '',
+      editDuplex: false,
+      editingMins: '',
       defaultNb: _.get(props.operationSettings, 'defaultamo', ''),
     };
   }
@@ -72,6 +74,10 @@ class RdvAcquereursConfig extends Component {
   updateEditName = e => this.setState({editingName: e.target.value});
 
   updateEditTime = e => this.setState({editingTime: e.target.value});
+
+  updateEditMins = e => this.setState({editingMins: e.target.value});
+
+  updateEditDuplex = e => this.setState({editDuplex: e.target.checked});
 
   updateDefaultNb = e => this.setState({defaultNb: e.target.value}, () => {
     this.generateTimeSpans();
@@ -128,14 +134,15 @@ class RdvAcquereursConfig extends Component {
 
   updateToTime = time => this.setState({toTime: time});
 
-  addFormat = (name, duration) => () => {
-    const { rdvFormats } = this.state;
+  addFormat = (name, duration, mins) => () => {
+    const { rdvFormats, editDuplex } = this.state;
 
-    const tmpFormats = _.concat(rdvFormats, {name, duration});
+    const tmpFormats = _.concat(rdvFormats, {name: `${name}${editDuplex ? '-duplex' : ''}`, duration, mins});
     this.setState({rdvFormats: tmpFormats}, () => {
       this.setState({
         editingName: '',
         editingTime: '',
+        editingMins: '',
       })
     });
   }
@@ -210,7 +217,9 @@ class RdvAcquereursConfig extends Component {
 
   render() {
     const { operations } = this.props;
-    const { rdvFormats, editingName, editingTime, hours, timeSpans, selectedOperationsIds, defaultNb } = this.state;
+    const { rdvFormats, editingName, editingTime, hours, timeSpans, selectedOperationsIds, defaultNb, editingMins, editDuplex } = this.state;
+
+    const possibleTypes = ['1 pièce', '2 pièces', '3 pièces', '4 pièces', '5 pièces', '6 pièces'];
 
     return (
       <div className="rdv-acq-config">
@@ -227,29 +236,44 @@ class RdvAcquereursConfig extends Component {
             <div className="format-container">
               <div className="format-name">{format.name}</div>
               <div className="format-duration">
-                <div>{`${format.duration}h`}</div>
+                <div>{`${format.duration}h${_.get(format, 'mins', '00')}`}</div>
                 <div className="remove" onClick={_.partial(this.removeFormat, idx)}>{"x"}</div>
               </div>
             </div>
           ))}
           <div className="format-new-container">
             <div className="inputs">
-              <input
-                className="input1"
-                value={editingName}
-                onChange={this.updateEditName}
-                placeholder={"type"}
-                />
+              <select value={editingName} onChange={this.updateEditName} className="input1">
+                <option value="1 pièce">1 pièce</option>
+                <option value="2 pièces">2 pièces</option>
+                <option value="3 pièces">3 pièces</option>
+                <option value="4 pièces">4 pièces</option>
+                <option value="5 pièces">5 pièces</option>
+                <option value="6 pièces">6 pièces</option>
+              </select>
               <input
                 className="input2"
                 value={editingTime}
                 onChange={this.updateEditTime}
-                placeholder={"durée (h)"}
+                placeholder={"heures"}
                 type="number"
                 />
+              <input
+                className="input2"
+                value={editingMins}
+                onChange={this.updateEditMins}
+                placeholder={"mins"}
+                type="number"
+                />
+              <input
+                name="duplex"
+                type="checkbox"
+                checked={editDuplex}
+                onChange={this.updateEditDuplex} />
+                <div className="duplex-label">duplex</div>
             </div>
             <div className="cta">
-              {!_.isEmpty(editingTime) && !_.isEmpty(editingName) && <ActionButton clickAction={this.addFormat(editingName, editingTime)} label="Ajouter" />}
+              {!_.isEmpty(editingTime) && !_.isEmpty(editingName) && <ActionButton clickAction={this.addFormat(editingName, editingTime, editingMins)} label="Ajouter" />}
             </div>
           </div>
         </div>

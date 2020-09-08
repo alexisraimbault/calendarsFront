@@ -47,6 +47,7 @@
         
         .inputs {
             display: flex;
+            align-items: center;
 
             input {
                 border: solid 1px $rose;
@@ -59,12 +60,25 @@
         }
 
         .input1 {
-            width: 210px;
+            width: 130px;
             margin-right: 10px;
+            height: 34px;
+            border: solid 1px $rose;
+            background-color: #ffffff;
+            border-radius: 5px;
+            line-height: 32px;
+            padding: 0 12px;
+            margin-top: 12px;
         }
 
         .input2 {
-            width: 70px;
+            width: 60px;
+            margin-right: 8px;
+        }
+
+        .duplex-label {
+            margin-left: 4px;
+            margin-top: 8px;
         }
     }
 

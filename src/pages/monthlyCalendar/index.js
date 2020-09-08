@@ -44,7 +44,7 @@ class MonthlyCalendar extends Component {
 
     this.state = {
       year: _.parseInt(props.match.params.year) || moment().year(),
-      month: _.parseInt(props.match.params.week) || moment().month() + 1,
+      month: _.parseInt(props.match.params.month) || moment().month() + 1,
       sidebarOpen: false,
       collabsToDisplay: [],
       operationsToDisplay: [],
@@ -137,8 +137,9 @@ class MonthlyCalendar extends Component {
     });
   };
 
-  openAMOPopup = (defaultDate, selectedUsers, selectedOperation) => {
+  openAMOPopup = (defaultDate, selectedUsers, selectedOperation, hoursKeyObject) => {
     const { userInfos } = this.props;
+    console.log("TEST alexis 2", hoursKeyObject)
 
     const isAdmin = userInfos.status === "admin";
     if (!isAdmin) {
@@ -152,6 +153,8 @@ class MonthlyCalendar extends Component {
         date={defaultDate}
         selectedUsers={selectedUsers}
         selectedOperation={selectedOperation}
+        hoursKeyObject={hoursKeyObject}
+
       />);
     this.setState({
       popupContent: newEventPopup,
@@ -340,6 +343,28 @@ class MonthlyCalendar extends Component {
     }
   }
 
+  calculateRecession = operationId => {
+    const { events } = this.props;
+    const { month, year } = this.state;
+    let calculatedTotal = 0;
+    let caEvents = 0;
+
+    const filteredEvents = _.filter(this.props.events, (event) => moment(event.date).month() + 1 === month && moment(event.date).year() === year && event.type === 'amo' && event.operation_id === operationId);
+    _.each(filteredEvents, event => {
+      _.each(event.invitations, invitation => {
+        const isCa = _.get(_.split(_.get(invitation, 'hours', 'all-day/nca'), '/'), '[1]', 'nca') === 'ca';
+        const isFullDay = _.get(_.split(_.get(invitation, 'hours', 'all-day/nca'), '/'), '[0]', 'all-day') === 'all-day';
+
+        if(isCa) {
+          caEvents ++;
+        } else {
+          calculatedTotal += isFullDay ? 400 : 200;
+        }
+      })
+    })
+    return {calculatedTotal, caEvents};
+  }
+
   renderDoubleTotals = () => {
     const { operations, sessionToken, isOperationsLoading } = this.props;
     const { fetchDate } = this.state;
@@ -354,6 +379,8 @@ class MonthlyCalendar extends Component {
             total2: 0,
           });
 
+          const recessionCounts = this.calculateRecession(operation.id);
+
           return (
             <div>
               <OperationTotalsDisplay
@@ -363,6 +390,8 @@ class MonthlyCalendar extends Component {
                 total2={_.get(monthTotal, 'total2', 0)}
                 fetchDate={fetchDate}
                 sessionToken={sessionToken}
+                recessionValue={recessionCounts.calculatedTotal}
+                nbCa={recessionCounts.caEvents}
                 isLoading={isOperationsLoading}
               />
             </div>
