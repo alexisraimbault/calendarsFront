@@ -34,7 +34,7 @@ import {
   useParams,
 } from 'react-router-dom';
 
-InvitationPopup;
+import img from '../../images/orchestra_logo_blanc.png';
 
 class MonthlyCalendar extends Component {
   constructor(props) {
@@ -443,6 +443,7 @@ class MonthlyCalendar extends Component {
       !_.isEmpty(fetchDate)
       && (
         <div className="calendar-container">
+          <img src={img} className="orchestra-logo-monthly" />
           <SidebarMonth
             recipients={this.getRecipients(this.props.events)}
             operations={_.filter(operations, operation => _.includes(operationIdsToDisplay, operation.id))}

@@ -86,9 +86,11 @@ export function fetchOperationEvents(date, operation_id, mergeData = false) {
     try {
       const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/events?date=${date}&operation_id=${operation_id}`);
       const data = await response.json();
+      console.log("ALEXIS", data);
 
-      dispatch(getOperationEventsSuccess(JSON.parse(data.body), mergeData));
+      dispatch(getOperationEventsSuccess({events: JSON.parse(data.body.events), name: data.body.name}, mergeData));
     } catch (error) {
+      console.log("ALEXIS", error);
       dispatch(getOperationEventsFailure());
     }
   };

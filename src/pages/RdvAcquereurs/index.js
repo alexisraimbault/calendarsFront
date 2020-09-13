@@ -16,6 +16,8 @@ import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import img from '../../images/orchestra_logo.jpeg';
+
 class RdvAcquereurs extends Component {
   constructor(props) {
     super(props);
@@ -230,6 +232,7 @@ class RdvAcquereurs extends Component {
 
     return (
       <div className="rdv-acq">
+        <img src={img} className="orchestra-logo" />
         {!hasValidated && (
         <>
         <div className="client-inputs">

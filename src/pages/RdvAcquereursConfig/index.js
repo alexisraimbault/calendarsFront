@@ -16,6 +16,8 @@ import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import img from '../../images/orchestra_logo.jpeg';
+
 class RdvAcquereursConfig extends Component {
   constructor(props) {
     super(props);
@@ -223,6 +225,7 @@ class RdvAcquereursConfig extends Component {
 
     return (
       <div className="rdv-acq-config">
+        <img src={img} className="orchestra-logo" />
         <div className="back-action-btn-container">
           <ActionButton clickAction={this.navigateToCalendar} label="Retour au planning" />
         </div>

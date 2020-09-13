@@ -8,6 +8,7 @@ export const initialState = {
   loading: false,
   hasErrors: false,
   rdvPageInfos: {},
+  exportPageName: '',
 };
 
 export default function eventsReducer(state = initialState, action) {
@@ -39,7 +40,7 @@ export default function eventsReducer(state = initialState, action) {
       return { ...state, events: action.payload, loading: false, hasErrors: false };
 
     case actions.GET_OPERATION_EVENTS_SUCCESS:
-      return { ...state, operationEvents: action.payload, loading: false, hasErrors: false };
+      return { ...state, operationEvents: action.payload.events, exportPageName: action.payload.name, loading: false, hasErrors: false };
       
     case actions.GET_NOAUTH_INFOS_SUCCESS:
       return { ...state, rdvPageInfos: {rdvs: action.payload.rdvs, settings: JSON.parse(action.payload.settings.rdvs_settings)}, loading: false, hasErrors: false };

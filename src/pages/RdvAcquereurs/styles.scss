@@ -5,6 +5,7 @@
     flex-direction: column;
     align-items: center;
     padding: 40px;
+    margin-top: 30px;
 
     .validation-container {
         display: flex;
@@ -79,5 +80,12 @@
                 //background-color: rgba($darker-grey, 0.2);
             }
         }
+    }
+
+    .orchestra-logo {
+        position: absolute;
+        width: 320px;
+        top: 20px;
+        left: calc(100vw/2 - 165px);
     }
 }

@@ -8,6 +8,7 @@
     justify-content: center;
     align-items: center;
     padding-bottom: 40px;
+    margin-top: 40px;
 
     .title {
         font-size: 18px;
@@ -212,5 +213,12 @@
             line-height: 14px;
             font-size: 14px;
         }
+    }
+
+    .orchestra-logo {
+        position: absolute;
+        width: 320px;
+        top: 20px;
+        left: calc(100vw/2 - 165px);
     }
 }

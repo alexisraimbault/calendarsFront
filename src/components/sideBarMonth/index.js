@@ -56,7 +56,6 @@ class SidebarMonth extends Component {
     return (
       <div className="sidebar-big-container">
         <div className="sidebar-user-display">
-          <SingleUser user={{ name: userName }} inverted isBright />
         </div>
         <div className={sidebarClass}>
           {/* <div>

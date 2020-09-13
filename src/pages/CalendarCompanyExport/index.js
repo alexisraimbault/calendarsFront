@@ -29,6 +29,8 @@ import {
   useParams,
 } from 'react-router-dom';
 
+import img from '../../images/orchestra_logo.jpeg';
+
 
 class CalendarCompanyExport extends Component {
   constructor(props) {
@@ -46,6 +48,7 @@ class CalendarCompanyExport extends Component {
       popupContent: null,
       fetchDate: '',
       isLoading: false,
+      nbAmos: -1,
     };
   }
 
@@ -230,6 +233,7 @@ class CalendarCompanyExport extends Component {
 
   renderAmoInfo = displayedEvents => {
     const { events } = this.props;
+    const { nbAmos } = this.state;
 
     let amos = [];
     _.each(displayedEvents, event => {
@@ -237,6 +241,9 @@ class CalendarCompanyExport extends Component {
     })
 
     const uniqAMOs = _.uniqBy(amos, 'id');
+    if(nbAmos === -1) {
+      this.setState({nbAmos: _.size(amos)})
+    }
 
     return (
       <div className="amo-infos-container" id="divId2ToPrint">
@@ -246,7 +253,8 @@ class CalendarCompanyExport extends Component {
   }
 
   exportToPdf = async() => {
-    const { fetchDate } = this.state;
+    const { fetchDate, nbAmos } = this.state;
+    const { operationName } = this.props;
 
     this.setState({isLoading: true});
     const toScale = 3;
@@ -255,17 +263,25 @@ class CalendarCompanyExport extends Component {
     const input2 = document.getElementById('divId2ToPrint');
     var width = input.clientWidth;
     var width2 = input2.clientWidth;
+    
     input.style.width = `1170px`;
     input2.style.width = `500px`;
     const [imgPage1, imgPage2] = await Promise.all([html2canvas(input, {scale: toScale}), html2canvas(input2, {scale: toScale})]);
 
     const imgData1 = imgPage1.toDataURL('image/png');
     const imgData2 = imgPage2.toDataURL('image/png');
+
+    const imgLogoData = new Image();
+    imgLogoData.src = img;
     
     const pdf = new jsPDF('l', 'pt', 'a4');
     pdf.addImage(imgData1, 'PNG', 20, 10, 800 , 566);
+    pdf.addImage(imgLogoData, 'png', 10, 20, 200, 63);
+    pdf.text(600, 20, operationName);
     pdf.addPage();
-    pdf.addImage(imgData2, 'PNG', 210, 180, 400, 180);
+    pdf.addImage(imgData2, 'PNG', 210, 180, 400, 100*nbAmos);
+    pdf.addImage(imgLogoData, 'png', 10, 20, 200, 63);
+    pdf.text(600, 20, operationName);
     pdf.save(`export_orchestra_${fetchDate}.pdf`);
     input.style.width = width + 'px'; 
     input2.style.width = width2 + 'px';
@@ -281,7 +297,7 @@ class CalendarCompanyExport extends Component {
 
   render() {
     const { weekStart, isPopupDisplayed, popupContent, isLoading } = this.state;
-    const { events } = this.props;
+    const { events, operationName } = this.props;
 
     const groupedEvents = _.groupBy(events, (event) => getDayOfYear(moment(event.date)._d));
 
@@ -318,9 +334,11 @@ class CalendarCompanyExport extends Component {
       !_.isNil(weekStart)
       && (
       <div className="calendar-export-container">
+        <img src={img} className="orchestra-logo" />
         <div className="export-btn">
           <ActionButton clickAction={this.exportToPdf} label="EXPORT PDF" isLoading={isLoading} />
         </div>
+        <div className='operation-name'>{operationName}</div>
         <div className="calendar-center-container-export" id="divIdToPrint">
           <div className="week-navigation-container-export">
             <div className="week-navigation-holder-month">
@@ -381,8 +399,7 @@ const mapStateToProps = (state) => ({
   loading: state.events.loading,
   events: state.events.operationEvents,
   hasErrors: state.events.hasErrors,
-  sessionToken: state.me.sessionToken,
-  userInfos: state.me.infos,
+  operationName: state.events.exportPageName,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

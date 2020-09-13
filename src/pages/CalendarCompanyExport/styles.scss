@@ -190,8 +190,25 @@
     }
 
     .export-btn {
-        margin-top: 16px;
-        margin-left: 16px;
+        margin-top: 24px;
+        margin-left: 400px;
         width: fit-content;
+    }
+
+    .orchestra-logo {
+        position: absolute;
+        width: 280px;
+        top: 12px;
+        left: 20px;
+    }
+
+    .operation-name {
+        font-weight: bold;
+        font-size: 20px;
+        position: absolute;
+        width: 500px;
+        top: 25px;
+        left: calc(100vw/2 - 80px);
+        text-align: center;
     }
 }
