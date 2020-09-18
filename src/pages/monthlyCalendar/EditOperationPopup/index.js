@@ -16,22 +16,25 @@ class EditOperationPopup extends Component {
 
     this.state = {
       data: props.data || '',
+      location: props.location || '',
     };
   }
 
   updateOperation = () => {
     const { callUpdateOperation, sessionToken, towardsOperationPopup, id } = this.props;
-    const { data } = this.state;
+    const { data, location } = this.state;
 
-    callUpdateOperation(id, data, sessionToken).then(() => {
+    callUpdateOperation(id, data, location, sessionToken).then(() => {
       towardsOperationPopup();
     });
   }
 
   updateData = (e) => this.setState({ data: e.target.value });
 
+  updateLocation = (e) => this.setState({ location: e.target.value });
+
   render() {
-    const {  data } = this.state;
+    const {  data, location } = this.state;
     const { isLoading, userInfos, name } = this.props;
 
     const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
@@ -42,6 +45,7 @@ class EditOperationPopup extends Component {
         <div className="bottom-space">
           <div className="operation-title">{name}</div>
           <EditableLabel value={data} onChange={this.updateData} placeholder="description (liens drive, codes KALITI, infos d'accès, ...)" isDescription={true} />
+          <EditableLabel value={location} onChange={this.updateLocation} placeholder="Lieu de rdv" />
         </div>
           <ActionButton clickAction={this.updateOperation} label="Sauvegarder" isLoading={isLoading} />
       </div>

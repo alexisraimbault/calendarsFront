@@ -36,6 +36,9 @@ export default function operationReducer(state = initialState, action) {
             const operationList = action.payload;
             _.each(_.orderBy(operationList, 'id'), (operation, index) => {
                 operation.color = colors[index % colors.length];
+                const regex2 = /<br>/gi;
+                const escapedOperationDesc = operation.data.replace(regex2, "\n");
+                operation.data = escapedOperationDesc;
             })
             return { ...state, operations: action.payload, loading: false, hasErrors: false };
         

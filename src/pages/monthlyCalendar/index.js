@@ -139,7 +139,6 @@ class MonthlyCalendar extends Component {
 
   openAMOPopup = (defaultDate, selectedUsers, selectedOperation, hoursKeyObject) => {
     const { userInfos } = this.props;
-    console.log("TEST alexis 2", hoursKeyObject)
 
     const isAdmin = userInfos.status === "admin";
     if (!isAdmin) {
@@ -186,8 +185,8 @@ class MonthlyCalendar extends Component {
     });
   };
 
-  openEditOperationPopup = (id, name, data) => () => {
-    const EditOperationPopupContent = <EditOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} id={id} name={name} data={data} />;
+  openEditOperationPopup = (id, name, data, location) => () => {
+    const EditOperationPopupContent = <EditOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} id={id} name={name} data={data} location={location} />;
     this.setState({
       popupContent: EditOperationPopupContent,
       isPopupDisplayed: true,

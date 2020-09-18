@@ -30,6 +30,7 @@ class NewEventPopup extends Component {
       eventDate: new Date(),
       start_time: '10:00',
       end_time: '12:00',
+      mail: '',
       selectedUsersIds: [],
       selectedOperationsIds: [],
     };
@@ -57,6 +58,8 @@ class NewEventPopup extends Component {
 
     updateTitle = (e) => this.setState({ title: e.target.value });
 
+    updateMail = (e) => this.setState({ mail: e.target.value });
+
     updateDescription = (e) => this.setState({ description: e.target.value });
 
     sendCreateEventRequest = () => {
@@ -66,8 +69,8 @@ class NewEventPopup extends Component {
         eventDate,
         start_time,
         end_time,
-        selectedUsersIds,
-        selectedOperationsIds
+        selectedOperationsIds,
+        mail
       } = this.state;
       const {
         createEvent, fetchEventsData, closePopup, sessionToken, userInfos,
@@ -75,16 +78,14 @@ class NewEventPopup extends Component {
 
       const formattedDate = `${moment(eventDate).year()}-${moment(eventDate).month() + 1}-${moment(eventDate).date()}`;
 
-      const selectedUserIds = _.join(selectedUsersIds, ',');
-
-      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'rdv', selectedOperationsIds[0], '').then(() => {//TODO unmock
+      createEvent(title, description, formattedDate, start_time, end_time, '-', sessionToken, _.get(userInfos, 'corpId'), 'rdv', selectedOperationsIds[0], '-', mail).then(() => {//TODO unmock
         fetchEventsData();
         closePopup();
       });
     };
 
     render() {
-      const { title, description } = this.state;
+      const { title, description, mail } = this.state;
       const { isLoading } = this.props;
 
       return (
@@ -95,6 +96,7 @@ class NewEventPopup extends Component {
               <div className="left">
                 <EditableLabel value={title} onChange={this.updateTitle} placeholder="Title here" isDescription={false} />
                 <EditableLabel value={description} onChange={this.updateDescription} placeholder="Description here" isDescription />
+                <EditableLabel value={mail} onChange={this.updateMail} placeholder="Email here" isDescription={false} />
               </div>
               <div className="right">
                 <div className="date-picker">
@@ -121,7 +123,6 @@ class NewEventPopup extends Component {
                 </div>
               </div>
             </div>
-            <UserSelector setSelectedUsersIds={this.setSelectedUsersIds} />
             <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} />
           </div>
           <div className="save-btn">

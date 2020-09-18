@@ -82,14 +82,15 @@ class RdvAcquereurs extends Component {
 
     fetchCreateNoauthEvent(
       `Rdv ${editingName}`, 
-      `mail: ${editingMail}, tel: ${editingPhone}, visite: ${rdvFormats[chosenFormatIdx].name}`, 
+      `tel: ${editingPhone}, visite: ${rdvFormats[chosenFormatIdx].name}`, 
       formattedDate, 
       timeSpan.from,
       timeSpan.to, 
       '-', 
       3, //TODO CORPID
       'rdv', 
-      operationId).then(() => {
+      operationId,
+      editingMail).then(() => {
         this.setState({hasValidated: true});
       }).catch(err => {
         console.log(err);
@@ -123,7 +124,7 @@ class RdvAcquereurs extends Component {
     return false;
   }
 
-  generatePotentials = (countArray, duration) => {
+  generatePotentials = (countArray, duration, canOnlyBeAtStart) => {
     let proposedSpans = [];
     const correctIntervals = [];
     let tmpFrom = -1;
@@ -153,16 +154,23 @@ class RdvAcquereurs extends Component {
         proposedSpans.push(interval);
       } else if(interval.to - interval.from > duration) {
         //TODO maybe add more intervals (for now only start and end of the span)
-        proposedSpans = _.concat (proposedSpans, [
-          {
-            from: interval.from,
-            to: interval.from + duration,
-          },
-          {
-            from: interval.to - duration,
-            to: interval.to,
-          }
-        ]);
+        if (!canOnlyBeAtStart) {
+          proposedSpans = _.concat (proposedSpans, [
+            {
+              from: interval.from,
+              to: interval.from + duration,
+            },
+            {
+              from: interval.to - duration,
+              to: interval.to,
+            }
+          ]);
+        } else {
+          proposedSpans = _.concat (proposedSpans, {
+              from: interval.from,
+              to: interval.from + duration,
+            });
+        }
       }
     })
     return proposedSpans;
@@ -173,6 +181,11 @@ class RdvAcquereurs extends Component {
 
     if(chosenFormatIdx === -1 ) {return [];}
 
+    const formatName = rdvFormats[chosenFormatIdx].name;
+    const isDuplex = _.includes(formatName, 'duplex');
+    const nbPIeces = _.parseInt(formatName);
+    const canOnlyBeAtStart = nbPIeces >= 4 || isDuplex;
+    
     const formatDuration = _.parseInt(rdvFormats[chosenFormatIdx].duration) * 60 + _.parseInt(_.get(rdvFormats[chosenFormatIdx], 'mins', '0'));
     let res = [];
 
@@ -182,14 +195,15 @@ class RdvAcquereurs extends Component {
       let startHour = saveStartHour;
       let startMin = saveStartMin;
       const { hours: endHour, minutes: endMin } = this.getHoursAndMinutes(timeSpan.to);
-      const countAvailablePerMin = [];
+      let countAvailablePerMin = [];
 
       while( this.compareHoursAndMins(startHour, startMin, endHour, endMin) ) {
         let tmpCount = timeSpan.count;
         //take taken rdvs into consideration
         _.each(rdvsTakenThatDate, rdv => {
           const { hours: rdvStartHour, minutes: rdvStartMin } = this.getHoursAndMinutes(rdv.from);
-          const { hours: rdvEndHour, minutes: rdvEndMin } = this.getHoursAndMinutes(rdv.to);
+          let { hours: rdvEndHour, minutes: rdvEndMin } = this.getHoursAndMinutes(rdv.to);
+          if(rdvEndMin !== 0 ) {rdvEndMin --;} else { rdvEndHour --; rdvEndMin = 59;}
           if(this.compareHoursAndMins(rdvStartHour, rdvStartMin, startHour, startMin) && this.compareHoursAndMins(startHour, startMin, rdvEndHour, rdvEndMin)) {
             tmpCount --;
           }
@@ -203,12 +217,29 @@ class RdvAcquereurs extends Component {
           startHour++;
         }
       }
-      const potentials = this.generatePotentials(countAvailablePerMin, formatDuration);
+      //for completing an AMO before starting another
+      const minAvailable = _.min(countAvailablePerMin);
+      const toFillAmo = _.map(countAvailablePerMin, count => count > minAvailable ? count : 0);
+      if (_.size(_.filter(toFillAmo, nb => nb !==0)) > 60) {
+        countAvailablePerMin = toFillAmo;
+      }
+      
+      //in case we want to make the visit first think in the morning or after noon
+      if(canOnlyBeAtStart) {
+        let tmpIdx = 0;
+        while(tmpIdx < _.size(countAvailablePerMin) && countAvailablePerMin[tmpIdx] > 0 && tmpIdx <= formatDuration ) {
+          tmpIdx ++;
+        }
+        const tmpCountAvailablePerMin = _.map(countAvailablePerMin, (count, idx) => idx > tmpIdx ? 0 : count);
+        countAvailablePerMin = tmpCountAvailablePerMin;
+      }
+
+      const potentials = this.generatePotentials(countAvailablePerMin, formatDuration, canOnlyBeAtStart);
       _.each(potentials, potential => {
         const potentialStartMin = (saveStartMin + potential.from)%60;
         const potentialEndMin = (saveStartMin + potential.to)%60;
         const potentialStartHour = saveStartHour + Math.floor(potential.from/60);
-        const potentialEndHour = saveStartHour + Math.floor(potential.to/60);;
+        const potentialEndHour = saveStartHour + Math.floor(potential.to/60);
         res.push({
           from: `${potentialStartHour}:${potentialStartMin < 10 ? `0${potentialStartMin}` : potentialStartMin}`,
           to: `${potentialEndHour}:${potentialEndMin < 10 ? `0${potentialEndMin}` : potentialEndMin}`,

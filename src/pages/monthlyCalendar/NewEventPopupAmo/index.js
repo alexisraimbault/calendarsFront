@@ -116,7 +116,7 @@ class NewEventPopupAmo extends Component {
 
       const tmpHoursKeys = _.join(_.map(selectedUsersIds, id => _.get(hoursKeys, `${id}`, 'all-day/nca')), ',');
 
-      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'amo', selectedOperationsIds[0], tmpHoursKeys).then(() => {//TODO unmock
+      createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'amo', selectedOperationsIds[0], tmpHoursKeys, '-').then(() => {//TODO unmock
         fetchEventsData();
         closePopup();
       });

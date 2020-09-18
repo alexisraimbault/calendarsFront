@@ -4,5 +4,6 @@ export const formatApostrophe = (s) => {
     }
     
     const regex = /\'/gi;
-    return s.replace(regex, "''")
+    const regex2 = /\n/gi;
+    return s.replace(regex, "''").replace(regex2, "<br>")
 }

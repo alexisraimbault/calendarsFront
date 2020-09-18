@@ -15,9 +15,7 @@ import ActionButton from '../../../components/ActionButton';
 import { postUpdateEvent, postDeleteEvent } from '../../../redux/actions/eventActions';
 import { fetchUsers } from '../../../redux/actions/userActions';
 
-
 import 'react-datepicker/dist/react-datepicker.css';
-
 
 class EventDetailsPopup extends Component {
   constructor(props) {
@@ -135,7 +133,6 @@ class EventDetailsPopup extends Component {
       );
     }
 }
-
 
 // Map Redux state to React component props
 const mapStateToProps = (state) => ({

@@ -113,9 +113,11 @@ export function fetchUpdateOperationSettings(sessionToken, id, settings) {
         method: 'POST',
         body: formatApostrophe(settings) });
       const data = await response.json();
+      NotificationManager.success('You have edited operation settings!', 'Successful!', 1500);
 
       dispatch(updateOperationSettingsSuccess(JSON.parse(data.body)));
     } catch (error) {
+      NotificationManager.error('Error while editing operation settings!', 'Error!');
       dispatch(updateOperationSettingsFailure());
     }
   };
@@ -165,12 +167,12 @@ export const putOperationsFailure = () => ({
   type: PUT_OPERATION_FAILURE,
 });
 
-export function createOperation(name, infos, sessionToken) {
+export function createOperation(name, infos, rdvloc, sessionToken) {
   return async (dispatch) => {
     dispatch(putOperations());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${formatApostrophe(name)}&data=${formatApostrophe(infos)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${formatApostrophe(name)}&data=${formatApostrophe(infos)}&rdvloc=${formatApostrophe(rdvloc)}`, {
         headers: { authorization: sessionToken },
         method: 'PUT',
       });
@@ -198,12 +200,12 @@ export const updateOperationFailure = () => ({
   type: UPDATE_OPERATION_FAILURE,
 });
 
-export function callUpdateOperation(id, data, sessionToken) {
+export function callUpdateOperation(id, data, rdvloc, sessionToken) {
   return async (dispatch) => {
     dispatch(updateOperation());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?id=${formatApostrophe(id)}&data=${formatApostrophe(data)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?id=${formatApostrophe(id)}&data=${formatApostrophe(data)}&rdvloc=${formatApostrophe(rdvloc)}`, {
         headers: { authorization: sessionToken },
         method: 'POST',
       });

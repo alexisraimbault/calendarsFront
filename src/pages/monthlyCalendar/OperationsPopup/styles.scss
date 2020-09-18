@@ -1,6 +1,6 @@
 @import "src/utils/variables";
 
-.invitation-popup-container{
+.operations-popup-container{
     width: 600px;
     z-index: 3;
     background-color: white;
@@ -49,6 +49,28 @@
 
         .operation-data {
             margin-top: 12px;
+            white-space: pre-wrap;
+        }
+    }
+
+    .link-exports {
+        margin-top: 8px;
+        cursor: pointer;
+        border-radius: 8px;
+        border: solid 1px $rose;
+        width: 400px;
+        padding: 4px 8px;
+        white-space: nowrap;
+        overflow: hidden;
+
+        .link-export {
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            border: none;
+            margin-left: 8px;
         }
     }
 }

@@ -138,12 +138,12 @@ export const putEventsFailure = () => ({
   type: PUT_EVENTS_FAILURE,
 });
 
-export function createEvent(name, description, date, time_from, time_to, users, sessionToken, corp_id, type, operation_id, hours) {
+export function createEvent(name, description, date, time_from, time_to, users, sessionToken, corp_id, type, operation_id, hours, mail) {
   return async (dispatch) => {
     dispatch(putEvents());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}&hours=${formatApostrophe(hours)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}&hours=${formatApostrophe(hours)}&mail=${formatApostrophe(mail)}`, {
         headers: { authorization: sessionToken },
         method: 'PUT',
       });
@@ -171,12 +171,12 @@ export const createNoAuthEventFailure = () => ({
   type: PUT_NOAUTH_EVENT_FAILURE,
 });
 
-export function fetchCreateNoauthEvent(name, description, date, time_from, time_to, users, corp_id, type, operation_id) {
+export function fetchCreateNoauthEvent(name, description, date, time_from, time_to, users, corp_id, type, operation_id, mail) {
   return async (dispatch) => {
     dispatch(createNoAuthEvent());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/noauth/event?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/noauth/event?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}&mail=${formatApostrophe(mail)}`, {
         headers: { },
         method: 'POST',
       });

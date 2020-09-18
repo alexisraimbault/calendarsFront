@@ -9,13 +9,12 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import NewEventPopup from './NewEventPopup';
-import NewEventPopupAmo from './NewEventPopupAmo';
-import InvitationPopup from './invitationPopup';
-import OperationsPopup from './OperationsPopup';
-import CreateOperationPopup from './CreateOperationPopup';
-import DayCalendarDisplay from './DayCalendarDisplay';
-import OperationTotalsDisplay from './OperationTotalsDisplay'
+import NewEventPopup from '../monthlyCalendar/NewEventPopup';
+import NewEventPopupAmo from '../monthlyCalendar/NewEventPopupAmo';
+import InvitationPopup from '../monthlyCalendar/invitationPopup';
+import OperationsPopup from '../monthlyCalendar/OperationsPopup';
+import CreateOperationPopup from '../monthlyCalendar/CreateOperationPopup';
+import EditOperationPopup from '../monthlyCalendar/EditOperationPopup';
 import CalendarGridColumn from './CalendarGridColumn';
 import HoursDisplay from './hoursDisplay';
 import HoursLines from './HoursLines';
@@ -176,7 +175,7 @@ class DailyCalendar extends Component {
   };
 
   openOperationsPopup = () => {
-    const operationPopup = <OperationsPopup closePopup={() => { this.setPopupState(false); }} towardsCreateOperationPopup={this.openCreateOperationPopup} />;
+    const operationPopup = <OperationsPopup closePopup={() => { this.setPopupState(false); }} towardsCreateOperationPopup={this.openCreateOperationPopup} towardsEditOperationPopup={this.openEditOperationPopup} />;
     this.setState({
       popupContent: operationPopup,
       isPopupDisplayed: true,
@@ -187,6 +186,14 @@ class DailyCalendar extends Component {
     const createOperationPopup = <CreateOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} />;
     this.setState({
       popupContent: createOperationPopup,
+      isPopupDisplayed: true,
+    });
+  };
+
+  openEditOperationPopup = (id, name, data, location) => () => {
+    const EditOperationPopupContent = <EditOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} id={id} name={name} data={data} location={location} />;
+    this.setState({
+      popupContent: EditOperationPopupContent,
       isPopupDisplayed: true,
     });
   };

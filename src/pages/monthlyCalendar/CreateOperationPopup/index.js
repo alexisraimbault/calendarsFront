@@ -17,23 +17,26 @@ class CreateOperationPopup extends Component {
     this.state = {
       name: '',
       data: '',
+      location: '',
     };
   }
 
   createOperation = () => {
     const { createOperation, sessionToken, towardsOperationPopup } = this.props;
-    const { name, data } = this.state;
+    const { name, data, location } = this.state;
 
-    createOperation(name, data, sessionToken).then(() => {
+    createOperation(name, data, location, sessionToken).then(() => {
       towardsOperationPopup();
     });
   }
 
   updateName = (e) => this.setState({ name: e.target.value });
   updateData = (e) => this.setState({ data: e.target.value });
+  updateLocation = (e) => this.setState({ location: e.target.value });
+
 
   render() {
-    const { name, data } = this.state;
+    const { name, data, location } = this.state;
     const { isLoading, userInfos } = this.props;
 
     const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
@@ -44,6 +47,7 @@ class CreateOperationPopup extends Component {
         <div className="bottom-space">
           <EditableLabel value={name} onChange={this.updateName} placeholder="nom de l'opération" isDescription={false} />
           <EditableLabel value={data} onChange={this.updateData} placeholder="description (liens drive, codes KALITI, infos d'accès, ...)" isDescription={true} />
+          <EditableLabel value={location} onChange={this.updateLocation} placeholder="Lieu de rdv" />
         </div>
           <ActionButton clickAction={this.createOperation} label="Créer l'opération" isLoading={isLoading} />
       </div>
