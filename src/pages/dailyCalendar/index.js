@@ -15,6 +15,7 @@ import InvitationPopup from '../monthlyCalendar/invitationPopup';
 import OperationsPopup from '../monthlyCalendar/OperationsPopup';
 import CreateOperationPopup from '../monthlyCalendar/CreateOperationPopup';
 import EditOperationPopup from '../monthlyCalendar/EditOperationPopup';
+import EditEventPopup from './EditEventPopup';
 import CalendarGridColumn from './CalendarGridColumn';
 import HoursDisplay from './hoursDisplay';
 import HoursLines from './HoursLines';
@@ -34,7 +35,8 @@ import {
   useParams,
 } from 'react-router-dom';
 
-InvitationPopup;
+import img from '../../images/orchestra_logo_blanc.png';
+import EventDetailsPopup from '../monthlyCalendar/EventDetailsPopup';
 
 class DailyCalendar extends Component {
   constructor(props) {
@@ -138,6 +140,20 @@ class DailyCalendar extends Component {
       return;
     }
     const newEventPopup = <NewEventPopupAmo closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} date={defaultDate} />;
+    this.setState({
+      popupContent: newEventPopup,
+      isPopupDisplayed: true,
+    });
+  };
+
+  openEditEventPopup = eventData => () => {
+    const { userInfos } = this.props;
+
+    const isAdmin = userInfos.status === "admin";
+    if (!isAdmin) {
+      return;
+    }
+    const newEventPopup = <EditEventPopup closePopup={() => { this.setPopupState(false); }} fetchEventsData={this.fetchEventsData} eventData={eventData} />;
     this.setState({
       popupContent: newEventPopup,
       isPopupDisplayed: true,
@@ -369,6 +385,7 @@ class DailyCalendar extends Component {
       !_.isEmpty(fetchDate)
       && (
         <div className="calendar-container">
+          <img src={img} className="orchestra-logo-monthly" />
           <SidebarMonth
             recipients={this.getRecipients(this.props.events)}
             operations={_.filter(operations, operation => _.includes(operationIdsToDisplay, operation.id))}
@@ -429,6 +446,7 @@ class DailyCalendar extends Component {
               events={operationsFilteredEvents}
               fetchEventsData={this.fetchEventsData}
               operations={operations}
+              openEditEventPopup={this.openEditEventPopup}
             />
           </div>
           {isPopupDisplayed && (

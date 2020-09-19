@@ -86,11 +86,9 @@ export function fetchOperationEvents(date, operation_id, mergeData = false) {
     try {
       const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation/events?date=${date}&operation_id=${operation_id}`);
       const data = await response.json();
-      console.log("ALEXIS", data);
 
       dispatch(getOperationEventsSuccess({events: JSON.parse(data.body.events), name: data.body.name}, mergeData));
     } catch (error) {
-      console.log("ALEXIS", error);
       dispatch(getOperationEventsFailure());
     }
   };
@@ -176,7 +174,7 @@ export function fetchCreateNoauthEvent(name, description, date, time_from, time_
     dispatch(createNoAuthEvent());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/noauth/event?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}&mail=${formatApostrophe(mail)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/noauth/event?name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&date=${formatApostrophe(date)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}&corp_id=${formatApostrophe(corp_id)}&type=${formatApostrophe(type)}&operation_id=${formatApostrophe(operation_id)}&mail=${formatApostrophe(mail)}&hours=-`, {
         headers: { },
         method: 'POST',
       });
@@ -235,12 +233,12 @@ export const updateEventFailure = () => ({
   type: UPDATE_EVENT_FAILURE,
 });
 
-export function postUpdateEvent(event_id, name, description, time_from, time_to, users, sessionToken) {
+export function postUpdateEvent(event_id, name, description, time_from, time_to, date, sessionToken) {
   return async (dispatch) => {
     dispatch(updateEvent());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?event_id=${formatApostrophe(event_id)}&name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=${formatApostrophe(users)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/events?event_id=${formatApostrophe(event_id)}&name=${formatApostrophe(name)}&description=${formatApostrophe(description)}&time_from=${formatApostrophe(time_from)}&time_to=${formatApostrophe(time_to)}&users=-&date=${date}`, {
         headers: { authorization: sessionToken },
         method: 'POST',
       });

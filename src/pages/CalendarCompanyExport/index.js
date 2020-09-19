@@ -16,6 +16,7 @@ import CalendarGridColumn from './CalendarGridColumn';
 import HoursDisplay from './hoursDisplay';
 import HoursLines from '../calendar/HoursLines';
 import ActionButton from '../../components/ActionButton'
+import DisplayEventPopup from './DisplayEventPopup';
 
 import './styles.scss';
 import { fetchOperationEvents } from '../../redux/actions/eventActions';
@@ -106,6 +107,10 @@ class CalendarCompanyExport extends Component {
       });
     }
   }
+
+  setPopupState = (state) => {
+    this.setState({ isPopupDisplayed: state });
+  };
 
   fetchEventsData = () => {
     const { sessionToken, fetchOperationEvents, userInfos } = this.props;
@@ -288,7 +293,13 @@ class CalendarCompanyExport extends Component {
     this.setState({isLoading: false});
   }
 
-
+  openDisplayEventPopup = eventData => () => {
+    const newEventPopup = <DisplayEventPopup closePopup={() => { this.setPopupState(false); }} eventData={eventData} />;
+    this.setState({
+      popupContent: newEventPopup,
+      isPopupDisplayed: true,
+    });
+  };
 
   openDatePicker = () => {
     this.datePickerRef.current.setOpen(true);
@@ -384,10 +395,19 @@ class CalendarCompanyExport extends Component {
               index={index}
               events={_.get(groupedEvents, `[${getDayOfYear(dayObject.day)}]`, [])}
               fetchEventsData={this.fetchEventsData}
+              openDisplayEventPopup={this.openDisplayEventPopup}
             />
           ))}
         </div>
         {this.renderAmoInfo(displayedEvents)}
+        {isPopupDisplayed && (
+            <div>
+              <div className={popupHaloClass} onClick={() => { this.setPopupState(false); }} />
+              <div className="popup-container">
+                {popupContent}
+              </div>
+            </div>
+          )}
       </div>
       )
     );

@@ -166,7 +166,7 @@ class CalendarGridColumn extends Component {
 
   render() {
     const {
-      events, index, day, setPopupState, setPopupContent, operations
+      events, index, day, setPopupState, setPopupContent, operations, openEditEventPopup
     } = this.props;
 
     const AMOEvents = _.filter(events, event => event.type === 'amo');
@@ -193,6 +193,7 @@ class CalendarGridColumn extends Component {
                   left: `${widthMap[event.id].position * widthMap[event.id].width}%`, 
                   width: `${widthMap[event.id].width}%`,
                 }}
+                onClick={openEditEventPopup(event)}
               >
                 <div className="event-holder"
                   style={{

@@ -35,6 +35,7 @@ class RdvAcquereurs extends Component {
           to: span.time_to,
         };
       }),
+      takenEmails: _.map(_.get(props.pageInfos, 'rdvs', []), span => span.mail),
       editingName: '',
       editingMail: '',
       editingPhone: '',
@@ -42,6 +43,12 @@ class RdvAcquereurs extends Component {
       selectedDay: -1,
       hasValidated: false,
     };
+  }
+
+  isEmailTaken = () => {
+    const { editingMail, takenEmails } = this.state;
+
+    return _.includes(takenEmails, editingMail);
   }
 
   componentDidMount() {
@@ -253,7 +260,7 @@ class RdvAcquereurs extends Component {
   isFormValid = () => {
     const { selectedDay, chosenFormatIdx, editingName, editingMail, editingPhone } = this.state;
 
-    return (selectedDay !== -1 && chosenFormatIdx !== -1 && !_.isEmpty(editingName) && !_.isEmpty(editingMail) && !_.isEmpty(editingPhone));
+    return (!this.isEmailTaken() && selectedDay !== -1 && chosenFormatIdx !== -1 && !_.isEmpty(editingName) && !_.isEmpty(editingMail) && !_.isEmpty(editingPhone));
   }
 
   render() {
@@ -267,6 +274,10 @@ class RdvAcquereurs extends Component {
         {!hasValidated && (
         <>
         <div className="client-inputs">
+          <div className="welcome-text-title">
+          Bienvenue,
+          </div>
+          <div className="welcome-text"> Veuillez remplir ce formulaire afin de prendre rendez-vous avec notre équipe</div>
           <div className="title">{"Coordonnées"}</div>
           <div className="inputs">
             <EditableLabel
@@ -279,6 +290,7 @@ class RdvAcquereurs extends Component {
               onChange={this.updateEditMail}
               placeholder={"email"}
             />
+            {this.isEmailTaken() && <div className="email-taken">Un rendez-vous a déjà été pris avec ce mail ! Vérifiez vos emails</div>}
             <EditableLabel
               value={editingPhone}
               onChange={this.updateEditPhone}
@@ -324,7 +336,7 @@ class RdvAcquereurs extends Component {
         )}
         {hasValidated && (
           <div className="validation-container">
-            <div className="title">{"Votre rendez vous a bien été enregistré :"}</div>
+            <div className="title">{"Votre rendez-vous a bien été enregistré, vous receverez sous peu un mail de confirmation :"}</div>
             <div className="date">{moment(availableTimes[selectedDay].date).format('dddd Do MMM YYYY')}</div>
             <div className="time">{`${availableTimes[selectedDay].from} - ${availableTimes[selectedDay].to}`}</div>
           </div>
