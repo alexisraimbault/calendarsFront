@@ -1,0 +1,26 @@
+@import "src/utils/variables";
+
+.operation-totals-container{
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .total-container {
+        display: flex;
+        align-items: center;
+        width: 100px;
+        margin-right: 20px;
+        overflow: hidden;
+    }
+
+    .name-container {
+        width: 300px;
+        margin-right: 20px;
+        overflow: hidden;
+        margin-top: 12px;
+    }
+
+    .btn-container {
+        margin-top: 12px;
+    }
+}

@@ -9,7 +9,7 @@ module.exports = {
   use: [
     react({
       html: {
-        title: 'Team calendar'
+        title: 'Orchestra'
       },
       style: {
         test: /\.(css|sass|scss)$/,

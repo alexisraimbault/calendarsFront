@@ -24,7 +24,7 @@ import { logout } from '../../redux/actions/meActions';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import {isMobile} from 'react-device-detect';
+import {isMobileOnly} from 'react-device-detect';
 
 import {
   useParams,
@@ -284,7 +284,7 @@ class CalendarCompanyExport extends Component {
     pdf.addImage(imgLogoData, 'png', 10, 20, 200, 63);
     pdf.text(600, 20, operationName);
     pdf.addPage();
-    pdf.addImage(imgData2, 'PNG', 210, 180, 400, 100*nbAmos);
+    pdf.addImage(imgData2, 'PNG', 210, 180, 400, 10*nbAmos);
     pdf.addImage(imgLogoData, 'png', 10, 20, 200, 63);
     pdf.text(600, 20, operationName);
     pdf.save(`export_orchestra_${fetchDate}.pdf`);

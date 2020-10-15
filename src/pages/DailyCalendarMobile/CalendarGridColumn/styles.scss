@@ -1,0 +1,117 @@
+@import "src/utils/variables";
+
+.col-container {
+    position: absolute;
+    width: 20%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .col-holder{
+        position: absolute;
+        width: 90%;
+        height: 100%;
+        background-color: rgba($rose, 0.3);
+        border-radius: 8px;
+
+        &--today{
+            background-color: rgba($light-blue, 0.3);
+        }
+
+        .event-container {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+
+            .event-holder{
+                cursor: pointer;
+                border-radius: 4px;
+                width: 98%;
+                height: 100%;
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                .custom-scrollbars  > div:last-child {
+                    opacity: 0;
+                    transition: opacity 200ms ease;
+                }
+                
+                .custom-scrollbars:hover > div:last-child {
+                    opacity: 1;
+                }
+
+                .event-holder-2{
+                    height: 95%;
+                    width: 85%;
+                    font-family: $font;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    justify-content: flex-start;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    .event-author{
+                        @include title;
+                        flex: 0 1 auto;
+                        overflow-wrap: break-word;
+                        margin: 4px 0px;
+                    }
+                    .event-description{
+                        @include content;
+                        flex: 1 1 auto;
+                        margin: 12px 0px;
+                        flex-shrink: 1;
+                        overflow-wrap: break-word;
+                    }
+                    // .event-recipients{
+                    //     @include small-content;
+                    //     margin-top: 8px;
+                    //     flex: 0 1 auto;
+                    //     font-size: 0.8em;
+                    //     overflow-wrap: break-word;
+                    //     display: flex;
+                    //     flex-wrap: wrap;
+
+                    //     .event-recipient{
+                    //         padding: 2px 4px;
+                    //         margin: 2px 2px;
+                    //         border-radius: 8px;
+                    //         background-color: rgba(255, 255, 255, 0.5);
+                    //     }
+                    // }
+                }
+            }
+        }
+    }
+
+    .event-day-recipients{
+        position: absolute;
+        display: flex;
+        flex-wrap: wrap;
+        width: 800px;
+        top: 60px;
+        left: 150%;
+    }
+
+    .right-margin {
+        margin-right: 4px;
+    }
+}
+
+.event-popup-container{
+    width: 600px;
+    height: 400px;
+    z-index: 3;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    opacity: 1;
+}

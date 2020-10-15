@@ -331,7 +331,11 @@ class RdvAcquereurs extends Component {
             })}
           </div>
         </div>
-        {this.isFormValid() && <ActionButton clickAction={this.submit} label="Envoyer" />}
+        {this.isFormValid() && (
+        <>
+          <div className="privacy-link">En validant, prenez connaissance de notre <a href="/privacypolicy">Politique de confidentialité</a></div>
+          <ActionButton clickAction={this.submit} label="Envoyer" />
+        </>)}
         </>
         )}
         {hasValidated && (

@@ -6,6 +6,8 @@ import './styles.scss';
 import CheckBox from '../CheckBox';
 import SettingsMenu from './components/settingsMenu';
 import TeamMenu from './components/teamMenu';
+
+import { Scrollbars } from 'react-custom-scrollbars';
 import InvitationPopup from '../../pages/calendar/invitationPopup';
 import SingleUser from '../SingleUser'
 
@@ -53,6 +55,9 @@ class SidebarMonth extends Component {
       'submenu-halo-container--toggled': menuToggle !== -1,
     });
 
+    const height = window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+    console.log('ALEXIS ', height)
+
     return (
       <div className="sidebar-big-container">
         <div className="sidebar-user-display">
@@ -67,23 +72,31 @@ class SidebarMonth extends Component {
 								12.097656-17.089844 12.097656-27.5v-49.386719c0-20.585937-16.746094-37.332031-37.332031-37.332031zm0 0"/>
 							</svg>
 						</div> */}
+            <div className="recipients-container">
+          <Scrollbars
+            autoHeight
+            autoHeightMin={0}
+            autoHeightMax={height - 420}
+          >
           <div className="recipients-container">
-            {_.map(recipients, (recipient) => (
-              <div className="recipient-container">
-                {' '}
-                {`${recipient.name}`}
-                <CheckBox applyToggle={toggleRecipient} id={recipient.id} />
+              {_.map(recipients, (recipient) => (
+                <div className="recipient-container">
+                  {' '}
+                  {`${recipient.name}`}
+                  <CheckBox applyToggle={toggleRecipient} id={recipient.id} />
+                </div>
+              ))}
+              <div className="space-div" />
+              {_.map(operations, (operation) => (
+                <div className="recipient-container">
+                  {' '}
+                  {`${operation.name}`}
+                  <CheckBox applyToggle={toggleOperation} id={operation.id} color={operation.color} />
+                </div>
+              ))}
               </div>
-            ))}
-            <div className="space-div" />
-            {_.map(operations, (operation) => (
-              <div className="recipient-container">
-                {' '}
-                {`${operation.name}`}
-                <CheckBox applyToggle={toggleOperation} id={operation.id} color={operation.color} />
-              </div>
-            ))}
-          </div>
+          </Scrollbars>
+            </div>
           <div className="sidebar-bottom-menu">
             <div className="sidebar-item-container" onClick={openOperationsPopup}>
                 <div className="label">

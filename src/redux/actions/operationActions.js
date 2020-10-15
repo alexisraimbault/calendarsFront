@@ -6,6 +6,10 @@ export const GET_OPERATIONS = 'GET_OPERATIONS';
 export const GET_OPERATIONS_SUCCESS = 'GET_OPERATIONS_SUCCESS';
 export const GET_OPERATIONS_FAILURE = 'GET_OPERATIONS_FAILURE';
 
+export const GET_MY_OPERATIONS = 'GET_MY_OPERATIONS';
+export const GET_MY_OPERATIONS_SUCCESS = 'GET_MY_OPERATIONS_SUCCESS';
+export const GET_MY_OPERATIONS_FAILURE = 'GET_MY_OPERATIONS_FAILURE';
+
 export const PUT_OPERATION = 'PUT_OPERATION';
 export const PUT_OPERATION_SUCCESS = 'PUT_OPERATION_SUCCESS';
 export const PUT_OPERATION_FAILURE = 'PUT_OPERATION_FAILURE';
@@ -55,7 +59,37 @@ export function fetchOperations(sessionToken) {
 
       dispatch(getOperationsSuccess(JSON.parse(data.body)));
     } catch (error) {
+      console.log('ALEXIS ', error)
       dispatch(getOperationsFailure());
+    }
+  };
+}
+
+export const getMyOperations = () => ({
+  type: GET_MY_OPERATIONS,
+});
+
+export const getMyOperationsSuccess =  (events) => ({
+    type: GET_MY_OPERATIONS_SUCCESS,
+    payload: events,
+  });
+
+export const getMyOperationsFailure = () => ({
+  type: GET_MY_OPERATIONS_FAILURE,
+});
+
+export function fetchMyOperations(user_id, sessionToken) {
+  return async (dispatch) => {
+    dispatch(getMyOperations());
+
+    try {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/myoperations?user_id=${user_id}`,
+        { headers: { authorization: sessionToken } });
+      const data = await response.json();
+
+      dispatch(getMyOperationsSuccess(JSON.parse(data.body)));
+    } catch (error) {
+      dispatch(getMyOperationsFailure());
     }
   };
 }
@@ -93,9 +127,8 @@ export const updateOperationSettings = () => ({
   type: UPDATE_OPERATION_SETTINGS,
 });
 
-export const updateOperationSettingsSuccess =  (events) => ({
+export const updateOperationSettingsSuccess =  () => ({
     type: UPDATE_OPERATION_SETTINGS_SUCCESS,
-    payload: events,
   });
 
 export const updateOperationSettingsFailure = () => ({
@@ -112,10 +145,9 @@ export function fetchUpdateOperationSettings(sessionToken, id, settings) {
         'Content-Type': 'application/json'},
         method: 'POST',
         body: formatApostrophe(settings) });
-      const data = await response.json();
       NotificationManager.success('You have edited operation settings!', 'Successful!', 1500);
 
-      dispatch(updateOperationSettingsSuccess(JSON.parse(data.body)));
+      dispatch(updateOperationSettingsSuccess());
     } catch (error) {
       NotificationManager.error('Error while editing operation settings!', 'Error!');
       dispatch(updateOperationSettingsFailure());
@@ -167,12 +199,12 @@ export const putOperationsFailure = () => ({
   type: PUT_OPERATION_FAILURE,
 });
 
-export function createOperation(name, infos, rdvloc, sessionToken) {
+export function createOperation(name, infos, documents, rdvloc, sessionToken) {
   return async (dispatch) => {
     dispatch(putOperations());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${formatApostrophe(name)}&data=${formatApostrophe(infos)}&rdvloc=${formatApostrophe(rdvloc)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?name=${formatApostrophe(name)}&data=${formatApostrophe(infos)}&documents=${formatApostrophe(documents)}&rdvloc=${formatApostrophe(rdvloc)}`, {
         headers: { authorization: sessionToken },
         method: 'PUT',
       });
@@ -200,12 +232,12 @@ export const updateOperationFailure = () => ({
   type: UPDATE_OPERATION_FAILURE,
 });
 
-export function callUpdateOperation(id, data, rdvloc, sessionToken) {
+export function callUpdateOperation(id, data, documents, rdvloc, name, sessionToken) {
   return async (dispatch) => {
     dispatch(updateOperation());
 
     try {
-      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?id=${formatApostrophe(id)}&data=${formatApostrophe(data)}&rdvloc=${formatApostrophe(rdvloc)}`, {
+      const response = await fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/operation?id=${formatApostrophe(id)}&data=${formatApostrophe(data)}&documents=${formatApostrophe(documents)}&name=${formatApostrophe(name)}&rdvloc=${formatApostrophe(rdvloc)}`, {
         headers: { authorization: sessionToken },
         method: 'POST',
       });

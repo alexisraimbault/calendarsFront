@@ -17,25 +17,31 @@ class EditOperationPopup extends Component {
     this.state = {
       data: props.data || '',
       location: props.location || '',
+      name: props.name || '',
+      documents: props.documents || '',
     };
   }
 
   updateOperation = () => {
     const { callUpdateOperation, sessionToken, towardsOperationPopup, id } = this.props;
-    const { data, location } = this.state;
+    const { data, location, name, documents } = this.state;
 
-    callUpdateOperation(id, data, location, sessionToken).then(() => {
+    callUpdateOperation(id, data, _.isEmpty(documents) ? '-' : documents, location, name, sessionToken).then(() => {
       towardsOperationPopup();
     });
   }
+
+  updateName = (e) => this.setState({ name: e.target.value });
 
   updateData = (e) => this.setState({ data: e.target.value });
 
   updateLocation = (e) => this.setState({ location: e.target.value });
 
+  updateDocuments = (e) => this.setState({ documents: e.target.value });
+
   render() {
-    const {  data, location } = this.state;
-    const { isLoading, userInfos, name } = this.props;
+    const {  data, location, name, documents } = this.state;
+    const { isLoading, userInfos } = this.props;
 
     const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
 
@@ -43,8 +49,9 @@ class EditOperationPopup extends Component {
       <div className="invitation-popup-container">
         <div className="title">Edit opération</div>
         <div className="bottom-space">
-          <div className="operation-title">{name}</div>
+        <EditableLabel value={name} onChange={this.updateName} placeholder="Nom de l'opération" />
           <EditableLabel value={data} onChange={this.updateData} placeholder="description (liens drive, codes KALITI, infos d'accès, ...)" isDescription={true} />
+          <EditableLabel value={documents} onChange={this.updateDocuments} placeholder="documents" isDescription={true} />
           <EditableLabel value={location} onChange={this.updateLocation} placeholder="Lieu de rdv" />
         </div>
           <ActionButton clickAction={this.updateOperation} label="Sauvegarder" isLoading={isLoading} />

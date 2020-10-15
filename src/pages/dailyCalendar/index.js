@@ -24,12 +24,12 @@ import ActionButton from '../../components/ActionButton';
 import SidebarMonth from '../../components/sideBarMonth';
 import './styles.scss';
 import { fetchEvents, fetchAmoEvents } from '../../redux/actions/eventActions';
-import { fetchOperations } from '../../redux/actions/operationActions';
+import { fetchOperations, fetchMyOperations } from '../../redux/actions/operationActions';
 import { logout } from '../../redux/actions/meActions';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 
 import {
   useParams,
@@ -59,7 +59,7 @@ class DailyCalendar extends Component {
 
   componentDidMount() {
     const {
-      sessionToken, fetchEvents, history, userInfos, fetchOperations,
+      sessionToken, fetchEvents, history, userInfos, fetchOperations, fetchMyOperations
     } = this.props;
     const { day, year } = this.props.match.params;
 
@@ -69,11 +69,17 @@ class DailyCalendar extends Component {
       history.push('/login');
     }
 
-    if (isMobile) {
-      history.push('/mcalendar');
-    }
+    // if (isMobileOnly) {
+    //   history.push('/mcalendar');
+    // }
 
-    fetchOperations(sessionToken);
+    const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
+
+    if(isAdmin) {
+      fetchOperations(sessionToken);
+    } else {
+      fetchMyOperations( _.get(userInfos, 'id'), sessionToken);
+    }
 
     if (_.isNil(day) || _.isNil(year)) {
       this.setState({ day: new Date() }, () => {
@@ -479,6 +485,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchEvents,
   fetchAmoEvents,
   logout,
+  fetchMyOperations,
 }, dispatch);
 // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(DailyCalendar);

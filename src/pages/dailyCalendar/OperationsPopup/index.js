@@ -11,7 +11,7 @@ import UserDisplay from '../../../components/UserDisplay';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import { fetchOperations, createOperation, postDeleteOperation } from '../../../redux/actions/operationActions';
+import { fetchOperations, createOperation, postDeleteOperation, fetchMyOperations } from '../../../redux/actions/operationActions';
 
 class OperationsPopup extends Component {
   constructor(props) {
@@ -23,16 +23,28 @@ class OperationsPopup extends Component {
   }
 
   componentDidMount() {
-    const { fetchOperations, sessionToken } = this.props;
+    const { fetchOperations, fetchMyOperations, sessionToken, userInfos } = this.props;
 
-    fetchOperations(sessionToken);
+    const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
+
+    if(isAdmin) {
+      fetchOperations(sessionToken);
+    } else {
+      fetchMyOperations( _.get(userInfos, 'id'), sessionToken);
+    }
   }
 
   callDeleteOperation = id => () => {
-    const { postDeleteOperation, fetchOperations, sessionToken } = this.props;
+    const { postDeleteOperation, fetchOperations, fetchMyOperations, sessionToken, userInfos } = this.props;
 
     postDeleteOperation(id, sessionToken).then(() => {
-      fetchOperations(sessionToken);
+      const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
+
+      if(isAdmin) {
+        fetchOperations(sessionToken);
+      } else {
+        fetchMyOperations( _.get(userInfos, 'id'), sessionToken);
+      }
     });
   }
 
@@ -82,7 +94,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  fetchOperations, createOperation, postDeleteOperation,
+  fetchOperations, createOperation, postDeleteOperation, fetchMyOperations,
 }, dispatch);
 // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(OperationsPopup);

@@ -18,14 +18,15 @@ class CreateOperationPopup extends Component {
       name: '',
       data: '',
       location: '',
+      documents: '',
     };
   }
 
   createOperation = () => {
     const { createOperation, sessionToken, towardsOperationPopup } = this.props;
-    const { name, data, location } = this.state;
+    const { name, data, documents, location } = this.state;
 
-    createOperation(name, data, location, sessionToken).then(() => {
+    createOperation(name, data, _.isEmpty(documents) ? '-' : documents, location, sessionToken).then(() => {
       towardsOperationPopup();
     });
   }
@@ -33,10 +34,10 @@ class CreateOperationPopup extends Component {
   updateName = (e) => this.setState({ name: e.target.value });
   updateData = (e) => this.setState({ data: e.target.value });
   updateLocation = (e) => this.setState({ location: e.target.value });
-
+  updateDocuments = (e) => this.setState({ documents: e.target.value });
 
   render() {
-    const { name, data, location } = this.state;
+    const { name, data, location, documents } = this.state;
     const { isLoading, userInfos } = this.props;
 
     const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
@@ -47,6 +48,7 @@ class CreateOperationPopup extends Component {
         <div className="bottom-space">
           <EditableLabel value={name} onChange={this.updateName} placeholder="nom de l'opération" isDescription={false} />
           <EditableLabel value={data} onChange={this.updateData} placeholder="description (liens drive, codes KALITI, infos d'accès, ...)" isDescription={true} />
+          <EditableLabel value={documents} onChange={this.updateDocuments} placeholder="documents" isDescription={true} />
           <EditableLabel value={location} onChange={this.updateLocation} placeholder="Lieu de rdv" />
         </div>
           <ActionButton clickAction={this.createOperation} label="Créer l'opération" isLoading={isLoading} />

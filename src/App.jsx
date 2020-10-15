@@ -14,10 +14,11 @@ import {
 } from 'react-router-dom';
 import './App.scss';
 import Calendar from './pages/calendar';
-import CalendarMobile from './pages/mobile/calendarMobile';
+import DailyCalendarMobile from './pages/DailyCalendarMobile';
 import MonthlyCalendar from './pages/monthlyCalendar';
 import RdvAcquereursConfig from './pages/RdvAcquereursConfig';
 import RdvAcquereurs from './pages/RdvAcquereurs';
+import PrivacyPopup from './components/PrivacyPopup';
 import OffDays from './pages/OffDays';
 import OffDaysBoard from './pages/OffDaysBoard';
 import CalendarCompanyExport from './pages/CalendarCompanyExport';
@@ -44,7 +45,7 @@ const App = () => (
       <Router>
         <Switch>
           {/* <Route path="/calendar/:week?/:year?" component={Calendar} /> */}
-          <Route path="/mcalendar/:day?/:year?" component={CalendarMobile} />
+          <Route path="/mcalendar/:day?/:year?" component={DailyCalendarMobile} />
           <Route path="/calendarmonth/:month?/:year?" component={MonthlyCalendar} />
           <Route path="/calendarday/:day?/:year?" component={DailyCalendar} />
           <Route path="/calendaroffdays/:month?/:year?" component={OffDays} />
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="/calendarexport/:operation_id/:week?/:year?" component={CalendarCompanyExport} />
           <Route path="/rdvconfig/:operation_id" component={RdvAcquereursConfig} />
           <Route path="/rdv/:operation_id" component={RdvAcquereurs} />
+          <Route path="/privacypolicy" component={PrivacyPopup} />
           <Route path="/login" component={LoginPage} />
           <Route path="/"  component={LoginPage} />
         </Switch>

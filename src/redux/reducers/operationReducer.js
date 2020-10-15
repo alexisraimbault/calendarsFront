@@ -21,14 +21,13 @@ export default function operationReducer(state = initialState, action) {
 
     switch (action.type) {
         case actions.GET_OPERATIONS:
+        case actions.GET_MY_OPERATIONS:
         case actions.UPDATE_OPERATION_SETTINGS:
         case actions.PUT_OPERATION:
         case actions.UPDATE_OPERATION:
         case actions.DELETE_OPERATION:
         case actions.UPDATE_OPERATION_TOTAL:
             return { ...state, loading: true };
-
-            
         case actions.GET_OPERATION_SETTINGS:
             return { ...state, loading: true, settings: {} };
 
@@ -38,7 +37,21 @@ export default function operationReducer(state = initialState, action) {
                 operation.color = colors[index % colors.length];
                 const regex2 = /<br>/gi;
                 const escapedOperationDesc = operation.data.replace(regex2, "\n");
+                const escapedOperationDocs = _.isNil(operation.documents) ? '' : operation.documents.replace(regex2, "\n");
                 operation.data = escapedOperationDesc;
+                operation.documents = escapedOperationDocs;
+            })
+            return { ...state, operations: action.payload, loading: false, hasErrors: false };
+
+        case actions.GET_MY_OPERATIONS_SUCCESS:
+            const operationList2 = action.payload;
+            _.each(_.orderBy(operationList2, 'id'), (operation, index) => {
+                operation.color = colors[index % colors.length];
+                const regex2 = /<br>/gi;
+                const escapedOperationDesc = operation.data.replace(regex2, "\n");
+                const escapedOperationDocs = _.isNil(operation.documents) ? '' : operation.documents.replace(regex2, "\n");
+                operation.data = escapedOperationDesc;
+                operation.documents = escapedOperationDocs;
             })
             return { ...state, operations: action.payload, loading: false, hasErrors: false };
         

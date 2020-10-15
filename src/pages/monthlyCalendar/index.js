@@ -23,12 +23,12 @@ import ActionButton from '../../components/ActionButton';
 import SidebarMonth from '../../components/sideBarMonth';
 import './styles.scss';
 import { fetchEvents, fetchAmoEvents } from '../../redux/actions/eventActions';
-import { fetchOperations } from '../../redux/actions/operationActions';
-import { logout } from '../../redux/actions/meActions';
+import { fetchOperations, fetchMyOperations } from '../../redux/actions/operationActions';
+import { logout, requestGetOffDays } from '../../redux/actions/meActions';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 
 import {
   useParams,
@@ -57,7 +57,7 @@ class MonthlyCalendar extends Component {
   componentDidMount() {
     const { month, year } = this.state;
     const {
-      sessionToken, fetchEvents, history, userInfos, fetchOperations,
+      sessionToken, fetchEvents, history, userInfos, fetchOperations, requestGetOffDays, fetchMyOperations
     } = this.props;
 
     moment.locale('fr');
@@ -66,11 +66,17 @@ class MonthlyCalendar extends Component {
       history.push('/login');
     }
 
-    if (isMobile) {
+    if (isMobileOnly) {
       history.push('/mcalendar');
     }
+    const isAdmin = _.get(userInfos, 'status', 'user') === 'admin';
 
-    fetchOperations(sessionToken);
+    if(isAdmin) {
+      fetchOperations(sessionToken);
+    } else {
+      fetchMyOperations( _.get(userInfos, 'id'), sessionToken);
+    }
+    requestGetOffDays(_.get(userInfos, 'id'), sessionToken);
 
     const monthFormatted = month < 10 ? `0${month}` : month;
     this.setState({ fetchDate: `${year}_${monthFormatted}` }, () => {
@@ -185,8 +191,8 @@ class MonthlyCalendar extends Component {
     });
   };
 
-  openEditOperationPopup = (id, name, data, location) => () => {
-    const EditOperationPopupContent = <EditOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} id={id} name={name} data={data} location={location} />;
+  openEditOperationPopup = (id, name, data, location, documents='') => () => {
+    const EditOperationPopupContent = <EditOperationPopup closePopup={() => { this.setPopupState(false); }} towardsOperationPopup={this.openOperationsPopup} id={id} name={name} data={data} location={location} documents={documents} />;
     this.setState({
       popupContent: EditOperationPopupContent,
       isPopupDisplayed: true,
@@ -408,7 +414,7 @@ class MonthlyCalendar extends Component {
 
   render() {
     const { isPopupDisplayed, popupContent, month, year, fetchDate, operationsToDisplay } = this.state;
-    const { userInfos, operations } = this.props;
+    const { userInfos, operations, offDays } = this.props;
 
     const filteredEvents = _.filter(this.props.events, (event) => event.type !== 'amo' || !_.isEmpty(_.intersection(this.state.collabsToDisplay, _.map(event.invitations, 'id'))));
 
@@ -500,6 +506,7 @@ class MonthlyCalendar extends Component {
             {_.map(daysOfMonthGrouped, (daysOfMonthGroup, index1) => (
               <div className="week-of-month">
                 {_.map(daysOfMonthGroup, (dayObject, index) => {
+                  const isOff = _.some(offDays, offDay => moment(offDay.day).format('DD/MM/YYYY') === moment(dayObject).format('DD/MM/YYYY'));
                   return (
                     //   <CalendarGridColumn
                     //     setPopupState={this.setPopupState}
@@ -510,6 +517,7 @@ class MonthlyCalendar extends Component {
                     //     fetchEventsData={this.fetchEventsData}
                     //   />
                     <DayCalendarDisplay
+                      isOff={isOff}
                       setPopupState={this.setPopupState}
                       setPopupContent={this.setPopupContent}
                       day={dayObject}
@@ -520,6 +528,7 @@ class MonthlyCalendar extends Component {
                       openAMOPopup={this.openAMOPopup}
                       goToDaily={this.goToDaily}
                       operations={operations}
+                      isAdmin={isAdmin}
                     />
                   );
                 })}
@@ -549,6 +558,7 @@ const mapStateToProps = (state) => ({
   userInfos: state.me.infos,
   operations: state.operations.operations,
   isOperationsLoading: state.operations.loading,
+  offDays: state.me.offDays,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
@@ -556,6 +566,8 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchEvents,
   fetchAmoEvents,
   logout,
+  requestGetOffDays,
+  fetchMyOperations,
 }, dispatch);
 // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(MonthlyCalendar);

@@ -17,6 +17,10 @@
         background-color: $disabled;
     }
 
+    &--off {
+        background-color: rgba($red, 0.1);
+    }
+
     .event-day-container {
         cursor: pointer;
         display: flex;

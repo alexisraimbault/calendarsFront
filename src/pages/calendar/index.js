@@ -24,7 +24,7 @@ import { logout } from '../../redux/actions/meActions';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import {isMobile} from 'react-device-detect';
+import {isMobileOnly} from 'react-device-detect';
 
 import {
   useParams,
@@ -62,7 +62,7 @@ class Calendar extends Component {
       history.push('/login');
     }
 
-    if(isMobile) {
+    if(isMobileOnly) {
       history.push('/mcalendar');
     }
 

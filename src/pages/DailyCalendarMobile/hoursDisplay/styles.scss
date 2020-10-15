@@ -1,0 +1,21 @@
+@import "src/utils/variables";
+
+.hours-container {
+    @include light-content;
+    position: absolute;
+    width: 30px;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    left: 0px;
+    transform: translateY(-13px);
+
+    .hour-container {
+        height: 26px;
+        display: flex;
+        align-items: center;
+        position: absolute;
+    }
+}
