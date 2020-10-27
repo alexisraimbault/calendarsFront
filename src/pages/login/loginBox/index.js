@@ -31,6 +31,10 @@ class LoginBox extends Component {
       requestAuthentication(login, password);
     };
 
+    towardsPasswordRequest = () => {
+      this.props.history.push('/password/request');
+    }
+
     render() {
       const { login, password } = this.state;
       const { isLoading } = this.props;
@@ -42,6 +46,7 @@ class LoginBox extends Component {
           <div className="login-btn">
             <ActionButton clickAction={this.sendAuthRequest} label="LOGIN" isLoading={isLoading} />
           </div>
+          <div className="login-link" onClick={this.towardsPasswordRequest}>Mot de passe oublié</div>
         </div>
       );
     }

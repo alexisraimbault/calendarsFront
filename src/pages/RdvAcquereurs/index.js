@@ -193,7 +193,8 @@ class RdvAcquereurs extends Component {
     const nbPIeces = _.parseInt(formatName);
     const canOnlyBeAtStart = nbPIeces >= 4 || isDuplex;
     
-    const formatDuration = _.parseInt(rdvFormats[chosenFormatIdx].duration) * 60 + _.parseInt(_.get(rdvFormats[chosenFormatIdx], 'mins', '0'));
+    const formatDuration = (_.parseInt(rdvFormats[chosenFormatIdx].duration) * 60) + (_.isEmpty(_.get(rdvFormats[chosenFormatIdx], 'mins', '0')) ? 0 : _.parseInt(_.get(rdvFormats[chosenFormatIdx], 'mins', '0')));
+
     let res = [];
 
     _.each(timeSpans, timeSpan => {
@@ -245,8 +246,8 @@ class RdvAcquereurs extends Component {
       _.each(potentials, potential => {
         const potentialStartMin = (saveStartMin + potential.from)%60;
         const potentialEndMin = (saveStartMin + potential.to)%60;
-        const potentialStartHour = saveStartHour + Math.floor(potential.from/60);
-        const potentialEndHour = saveStartHour + Math.floor(potential.to/60);
+        const potentialStartHour = saveStartHour + Math.floor((saveStartMin + potential.from)/60);
+        const potentialEndHour = saveStartHour + Math.floor((saveStartMin + potential.to)/60);
         res.push({
           from: `${potentialStartHour}:${potentialStartMin < 10 ? `0${potentialStartMin}` : potentialStartMin}`,
           to: `${potentialEndHour}:${potentialEndMin < 10 ? `0${potentialEndMin}` : potentialEndMin}`,

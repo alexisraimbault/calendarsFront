@@ -42,14 +42,14 @@ class LoginPage extends Component {
     };
 
     render() {
-      const { sessionToken } = this.props;
+      const { sessionToken, history } = this.props;
       const { createAccoundMode } = this.state;
 
       return (
         <div className="login-page-container">
           {createAccoundMode
             ? <CreateAccountBox />
-            : <LoginBox />}
+            : <LoginBox history={history} />}
           {createAccoundMode
             ? <div className="login-link" onClick={this.login}>Already have an account ? Login !</div>
             : <div className="login-link" onClick={this.createAccount}>Not user yet ? Create account !</div>}

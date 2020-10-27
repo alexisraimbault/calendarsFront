@@ -24,6 +24,8 @@ import OffDaysBoard from './pages/OffDaysBoard';
 import CalendarCompanyExport from './pages/CalendarCompanyExport';
 import DailyCalendar from './pages/dailyCalendar';
 import LoginPage from './pages/login/index';
+import PasswordChange from './pages/passwordChange/index';
+import PasswordRequest from './pages/passwordRequest/index';
 import rootReducer from './redux/reducers';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer } from 'react-notifications';
@@ -55,6 +57,8 @@ const App = () => (
           <Route path="/rdv/:operation_id" component={RdvAcquereurs} />
           <Route path="/privacypolicy" component={PrivacyPopup} />
           <Route path="/login" component={LoginPage} />
+          <Route path="/password/change/:code" component={PasswordChange} />
+          <Route path="/password/request" component={PasswordRequest} />
           <Route path="/"  component={LoginPage} />
         </Switch>
         <NotificationContainer />

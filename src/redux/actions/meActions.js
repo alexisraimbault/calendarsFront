@@ -119,6 +119,27 @@ export function requestGetCompanyOffDays(sessionToken) {
   };
 }
 
+export function requestChangePassword(mail, code, password) {
+  console.log('ALEXIS test one');
+  try {
+    fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/password/change?mail=${mail}&code=${code}&password=${password}`,
+      {method: 'POST'});
+      NotificationManager.success('Password successfully updated!', 'Successful!', 2500);
+  } catch (error) {
+    NotificationManager.error(`Error when trying to change password`, 'Error!');
+  }
+}
+
+export function requestRequestPasswordCode(mail) {
+  try {
+    fetch(`https://i8jk577b46.execute-api.eu-west-3.amazonaws.com/alpha/password/request?mail=${mail}`,
+      {method: 'POST'});
+      NotificationManager.success('Email successfully sent!', 'Successful!', 2500);
+  } catch (error) {
+    NotificationManager.error(`Error when trying to change password`, 'Error!');
+  }
+}
+
 export function addOffDay(user_id, day, sessionToken) {
   return async (dispatch) => {
 

@@ -112,9 +112,9 @@ class NewEventPopupAmo extends Component {
 
       const formattedDate = `${moment(eventDate).year()}-${moment(eventDate).month() + 1}-${moment(eventDate).date()}`;
 
-      const selectedUserIds = _.join(selectedUsersIds, ',');
+      const selectedUserIds = _.isEmpty(selectedUsersIds) ? '-' : _.join(selectedUsersIds, ',');
 
-      const tmpHoursKeys = _.join(_.map(selectedUsersIds, id => _.get(hoursKeys, `${id}`, 'all-day/nca')), ',');
+      const tmpHoursKeys = _.isEmpty(selectedUsersIds) ? '-' : _.join(_.map(selectedUsersIds, id => _.get(hoursKeys, `${id}`, 'all-day/nca')), ',');
 
       createEvent(title, description, formattedDate, start_time, end_time, selectedUserIds, sessionToken, _.get(userInfos, 'corpId'), 'amo', selectedOperationsIds[0], tmpHoursKeys, '-').then(() => {//TODO unmock
         fetchEventsData();
@@ -147,8 +147,9 @@ class NewEventPopupAmo extends Component {
             <OperationSelector setSelectedUsersIds={this.setSelectedOperationsIds} defaultSelected={this.props.selectedOperation}/>
           </div>
           <div className="day-time-selection">
-          {_.map(selectedUsersIds, (selectedUserId, index) => {
+          {!_.isEmpty(users) && _.map(selectedUsersIds, (selectedUserId, index) => {
             const user = _.find(users, {id: selectedUserId});
+            
             return (
               <SingleSelection
                 defaultToggledKey={_.get(hoursKeys, `${selectedUserId}` , 'all-day/nca')}
