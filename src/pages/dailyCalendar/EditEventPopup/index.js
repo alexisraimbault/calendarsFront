@@ -13,7 +13,7 @@ import UserSelector from '../../../components/UserSelector';
 import OperationSelector from '../../../components/OperationSelector';
 
 import ActionButton from '../../../components/ActionButton';
-import { postUpdateEvent } from '../../../redux/actions/eventActions';
+import { postUpdateEvent, postDeleteEvent } from '../../../redux/actions/eventActions';
 import { fetchUsers } from '../../../redux/actions/userActions';
 
 
@@ -84,6 +84,17 @@ class NewEventPopup extends Component {
       });
     };
 
+    deleteEvent = () => {
+      const {
+        postDeleteEvent, sessionToken, eventData, closePopup,
+      } = this.props;
+
+      postDeleteEvent(eventData.id, sessionToken).then(() => {
+        fetchEventsData();
+        closePopup();
+      })
+    }
+
     render() {
       const { title, description, mail, selectedOperationId } = this.state;
       const { isLoading, operations } = this.props;
@@ -125,8 +136,13 @@ class NewEventPopup extends Component {
             </div>
             <div className="operation-edit-event">{_.find(operations, {id: selectedOperationId}).name}</div>
           </div>
-          <div className="save-btn">
-            <ActionButton clickAction={this.sendCreateEventRequest} label="Save" isLoading={isLoading} />
+          <div className="save-btns">
+            <div className="save-btn">
+              <ActionButton clickAction={this.deleteEvent} label="Supprimer" isLoading={isLoading} isDanger/>
+            </div>
+            <div className="save-btn">
+              <ActionButton clickAction={this.sendCreateEventRequest} label="Sauvegarder" isLoading={isLoading} />
+            </div>
           </div>
         </div>
       );
@@ -148,6 +164,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   postUpdateEvent,
   fetchUsers,
+  postDeleteEvent,
 }, dispatch);
 // Connect Redux to React
 export default connect(mapStateToProps, mapDispatchToProps)(NewEventPopup);

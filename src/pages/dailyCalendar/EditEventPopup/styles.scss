@@ -83,7 +83,13 @@
         }
     }
 
-    .save-btn{
-        margin-top: 8px;
+    .save-btns {
+        display: flex;
+
+        .save-btn{
+            margin-left: 8px;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
     }
 }
