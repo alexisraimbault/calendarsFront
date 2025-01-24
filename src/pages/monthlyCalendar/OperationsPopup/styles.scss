@@ -1,76 +1,77 @@
 @import "src/utils/variables";
 
-.operations-popup-container{
-    width: 600px;
-    z-index: 3;
-    background-color: white;
+.operations-popup-container {
+  width: 80vw;
+  min-width: 600px;
+  z-index: 3;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  opacity: 1;
+  font-family: $font;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .bottom-space {
+    margin-bottom: 12px;
+  }
+
+  .operation-container {
+    margin-bottom: 24px;
+
+    .operation-top {
+      display: flex;
+      justify-content: space-between;
+
+      .left-container {
+        display: flex;
+        align-items: center;
+
+        .operation-title {
+          font-size: 16px;
+          font-weight: 600;
+          margin-right: 12px;
+          margin-top: 8px;
+        }
+
+        .edit-operation-btn {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .operation-data {
+      margin-top: 12px;
+      white-space: pre-wrap;
+    }
+  }
+
+  .link-exports {
+    margin-top: 8px;
+    cursor: pointer;
     border-radius: 8px;
-    padding: 20px;
-    opacity: 1;
-    font-family: $font;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    border: solid 1px $rose;
+    width: 400px;
+    padding: 4px 8px;
+    white-space: nowrap;
+    overflow: hidden;
 
-    .title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 12px;
+    .link-export {
+      display: flex;
+      align-items: center;
     }
 
-    .bottom-space{
-        margin-bottom: 12px;
+    input {
+      border: none;
+      margin-left: 8px;
     }
-
-    .operation-container {
-        margin-bottom: 24px;
-
-        .operation-top{
-            display: flex;
-            justify-content: space-between;
-
-            .left-container {
-                display: flex;
-                align-items: center;
-
-                .operation-title {
-                    font-size: 16px;
-                    font-weight: 600;
-                    margin-right: 12px;
-                    margin-top: 8px;
-                }
-
-                .edit-operation-btn {
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .operation-data {
-            margin-top: 12px;
-            white-space: pre-wrap;
-        }
-    }
-
-    .link-exports {
-        margin-top: 8px;
-        cursor: pointer;
-        border-radius: 8px;
-        border: solid 1px $rose;
-        width: 400px;
-        padding: 4px 8px;
-        white-space: nowrap;
-        overflow: hidden;
-
-        .link-export {
-            display: flex;
-            align-items: center;
-        }
-
-        input {
-            border: none;
-            margin-left: 8px;
-        }
-    }
+  }
 }

@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
-import _ from 'lodash';
-import { isToday } from 'date-fns';
-import classNames from 'classnames';
-import './styles.scss';
-import * as moment from 'moment';
-import { Scrollbars } from 'react-custom-scrollbars';
-import OperationCard from '../OperationCard';
+import React, { Component } from "react";
+import _ from "lodash";
+import { isToday } from "date-fns";
+import classNames from "classnames";
+import "./styles.scss";
+import * as moment from "moment";
+import { Scrollbars } from "react-custom-scrollbars";
+import OperationCard from "../OperationCard";
 
 class CalendarGridColumn extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
 
   // "10:30" => (10.5 - 6) * 100 / (20 - 6) -> bring the time t from an interval from 6h00 to 20h00 to an interval from 0 to 100
   // 6h -> 0
@@ -22,11 +21,11 @@ class CalendarGridColumn extends Component {
   // 10h -> 28.6
   // ...
 
-
   formatTime = (time) => {
-    const timeData = _.split(time, ':');
-    const normalizedTime = _.parseInt(timeData[0]) + (_.parseInt(timeData[1]) / 60);
-    return Math.floor((normalizedTime - 6) * 100 / (20 - 6));
+    const timeData = _.split(time, ":");
+    const normalizedTime =
+      _.parseInt(timeData[0]) + _.parseInt(timeData[1]) / 60;
+    return Math.floor(((normalizedTime - 6) * 100) / (20 - 6));
   };
 
   // from 6h00 to 20h00, only y coords (vertical), in %
@@ -35,7 +34,8 @@ class CalendarGridColumn extends Component {
     to: this.formatTime(event.time_to),
   });
 
-  checkOverleap = (coords1, coords2) => (coords1.from < coords2.to && coords2.from < coords1.to);
+  checkOverleap = (coords1, coords2) =>
+    coords1.from < coords2.to && coords2.from < coords1.to;
 
   formatWidth = (events) => {
     const overleapMap = {};
@@ -57,26 +57,37 @@ class CalendarGridColumn extends Component {
 
     _.forEach(overleapMap, (overleapingEvents, id) => {
       // const nbOverleap = _.size(overleapingEvents) + 1;
-      const nbOverleap = _.size(_.maxBy(groupedOverleapMap[id], (group) => _.size(group))) + 1;
+      const nbOverleap =
+        _.size(_.maxBy(groupedOverleapMap[id], (group) => _.size(group))) + 1;
       const defaultWidth = Math.floor(100 / nbOverleap);
       const widthGained = {};
       const takenPositions = [];
       widthMap[id] = { width: defaultWidth };
-      _.forEach(_.orderBy(overleapingEvents, (e) => _.get(widthMap, `${e}.width`, 0), 'asc'), (eventId) => {
-        if (!_.isNil(widthMap[eventId])) {
-          const prevWidth = widthMap[eventId].width;
-          takenPositions.push(widthMap[eventId].position);
-          if (prevWidth > defaultWidth) {
-            widthMap[eventId].width = widthMap[id].width;
-            // TODO gained width in an eventId row
-          }
-          if (prevWidth < defaultWidth) {
-            widthMap[id].width = prevWidth;
-            widthGained[eventId] = defaultWidth - prevWidth;
+      _.forEach(
+        _.orderBy(
+          overleapingEvents,
+          (e) => _.get(widthMap, `${e}.width`, 0),
+          "asc"
+        ),
+        (eventId) => {
+          if (!_.isNil(widthMap[eventId])) {
+            const prevWidth = widthMap[eventId].width;
+            takenPositions.push(widthMap[eventId].position);
+            if (prevWidth > defaultWidth) {
+              widthMap[eventId].width = widthMap[id].width;
+              // TODO gained width in an eventId row
+            }
+            if (prevWidth < defaultWidth) {
+              widthMap[id].width = prevWidth;
+              widthGained[eventId] = defaultWidth - prevWidth;
+            }
           }
         }
-      });
-      widthMap[id].position = _.difference(_.times(nbOverleap), takenPositions)[0];
+      );
+      widthMap[id].position = _.difference(
+        _.times(nbOverleap),
+        takenPositions
+      )[0];
     });
 
     return widthMap;
@@ -124,63 +135,85 @@ class CalendarGridColumn extends Component {
     return res;
   };
 
-  renderAmoInfo = displayedEvents => {
+  renderAmoInfo = (displayedEvents) => {
     const { events, operations } = this.props;
 
     let amos = [];
-    _.each(displayedEvents, event => {
-      amos = _.concat(amos, _.map(event.invitations, invitation => {
-        return {
-          operation_id: event.operation_id,
-          ...invitation,
-        }
-      }));
-    })
+    _.each(displayedEvents, (event) => {
+      amos = _.concat(
+        amos,
+        _.map(event.invitations, (invitation) => {
+          return {
+            operation_id: event.operation_id,
+            ...invitation,
+          };
+        })
+      );
+    });
 
     return (
       _.size(amos) > 0 && (
-        
         <div className="event-day-recipients">
-            {_.map(_.groupBy(amos, 'operation_id'), (amoGroup) => (
-                <OperationCard
-                  operation={_.find(operations, {id: amoGroup[0].operation_id})}
-                  amos={amoGroup}
-                />
-                // <>
-                // <div 
-                //   className="amo-name right-margin"
-                //   style={{backgroundColor: `${_.find(operations, {id: amo.operation_id}).color}`}}
-                // >
-                //   {amo.name}
-                // </div>
-                // <div className="amo-tel">{_.get(amo, 'phone', 'pas de téléphone renseigné') || 'Pas de téléphone renseigné'}</div>
-                // </>
-              ))}
-        </div>)
+          {_.map(_.groupBy(amos, "operation_id"), (amoGroup) => (
+            <OperationCard
+              operation={_.find(operations, { id: amoGroup[0].operation_id })}
+              amos={amoGroup}
+            />
+            // <>
+            // <div
+            //   className="amo-name right-margin"
+            //   style={{backgroundColor: `${_.find(operations, {id: amo.operation_id}).color}`}}
+            // >
+            //   {amo.name}
+            // </div>
+            // <div className="amo-tel">{_.get(amo, 'phone', 'pas de téléphone renseigné') || 'Pas de téléphone renseigné'}</div>
+            // </>
+          ))}
+        </div>
+      )
     );
-  }
+  };
 
   generateRGBAFromHex = (hex, a) => {
-    return 'rgba('+parseInt(hex.substring(1,3),16)+','+parseInt(hex.substring(3,5),16)+','+parseInt(hex.substring(5,7),16)+','+a+')';
-  }
+    return (
+      "rgba(" +
+      parseInt(hex?.substring(1, 3) || "dd", 16) +
+      "," +
+      parseInt(hex?.substring(3, 5) || "dd", 16) +
+      "," +
+      parseInt(hex?.substring(5, 7) || "dd", 16) +
+      "," +
+      a +
+      ")"
+    );
+  };
 
   render() {
     const {
-      events, index, day, setPopupState, setPopupContent, operations, openEditEventPopup
+      events,
+      index,
+      day,
+      setPopupState,
+      setPopupContent,
+      operations,
+      openEditEventPopup,
     } = this.props;
 
-    const AMOEvents = _.filter(events, event => event.type === 'amo');
-    const externalEvents = _.filter(events, event => event.type === 'rdv');
+    const AMOEvents = _.filter(events, (event) => event.type === "amo");
+    const externalEvents = _.filter(events, (event) => event.type === "rdv");
 
     const widthMap = this.formatWidth(externalEvents);
 
     const columnClass = classNames({
-      'col-container': true,
-      'col-container--today': isToday(day),
+      "col-container": true,
+      "col-container--today": isToday(day),
     });
 
     return (
-      <div className={columnClass} style={{ left: `calc(${index * 20}% + 40px)` }}>
+      <div
+        className={columnClass}
+        style={{ left: `calc(${index * 20}% + 40px)` }}
+      >
         <div className="col-holder">
           {_.map(externalEvents, (event) => {
             const coords = this.calculateCoords(event);
@@ -189,24 +222,46 @@ class CalendarGridColumn extends Component {
               <div
                 className="event-container"
                 style={{
-                  top: `${coords.from}%`, height: `${coords.to - coords.from}%`, 
-                  left: `${widthMap[event.id].position * widthMap[event.id].width}%`, 
+                  top: `${coords.from}%`,
+                  height: `${coords.to - coords.from}%`,
+                  left: `${
+                    widthMap[event.id].position * widthMap[event.id].width
+                  }%`,
                   width: `${widthMap[event.id].width}%`,
                 }}
                 onClick={openEditEventPopup(event)}
               >
-                <div className="event-holder"
+                <div
+                  className="event-holder"
                   style={{
-                    backgroundColor: this.generateRGBAFromHex(_.find(operations, {id: event.operation_id}).color, 0.3), 
+                    backgroundColor: this.generateRGBAFromHex(
+                      _.find(operations, { id: event.operation_id })?.color,
+                      0.3
+                    ),
                   }}
                 >
                   <div className="event-holder-2">
-                    <Scrollbars className="custom-scrollbars" renderTrackHorizontal={(props) => <div {...props} style={{ display: 'none' }} className="track-horizontal" />}>
-                      <div className="event-author">{event.name}</div>
+                    <Scrollbars
+                      className="custom-scrollbars"
+                      renderTrackHorizontal={(props) => (
+                        <div
+                          {...props}
+                          style={{ display: "none" }}
+                          className="track-horizontal"
+                        />
+                      )}
+                    >
+                      <div className="event-author">{event?.name}</div>
                       <div className="event-recipients">
-                        {_.map(event.invitations, (recipient) => <div className="event-recipient">{recipient.name}</div>)}
+                        {_.map(event.invitations, (recipient) => (
+                          <div className="event-recipient">
+                            {recipient.name}
+                          </div>
+                        ))}
                       </div>
-                      <div className="event-description">{event.description}</div>
+                      <div className="event-description">
+                        {event.description}
+                      </div>
                     </Scrollbars>
                   </div>
                 </div>
